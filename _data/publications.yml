@@ -1,6 +1,6 @@
 main:
 
-  - title: Push: Concurrent Probabilistic Programming for Bayesian Deep Learning
+  - title: Push Concurrent Probabilistic Programming for Bayesian Deep Learning
     authors: Daniel Huang, Chris Camaño, Jonathan Tsegaye, Jonathan Austin Gale
     conference_short: ICML
     conference: International Conference on Machine Learning
