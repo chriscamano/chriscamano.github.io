@@ -4,12 +4,14 @@ layout: homepage
 
 ## About Me
 
-Test
+I am a student at San Francisco State University Currently applying for the fall 2024 PhD cycle for a PhD in Applied Mathematics
 
 ## Research Interests
 
-- **Computer Vision:** image recognition, image generation, video captioning
-- **Machine Learning:** meta-learning, incremental learning, transfer learning
+- **Randomized Numerical Linear Algebra** dimensionality reduction, fast linear solvers, randomized eigensolvers, algorithm acceleration
+- **Tensor Networks and Quantum Mechanical Simulation** MPO MPS contraction, randomized methods for the tensor network format, hamiltonian time evolution 
+- **Bayesian Inference** bayesian neural networks, non-parametric variational inference methods, uncertainty quantification
+
 
 ## News
 
