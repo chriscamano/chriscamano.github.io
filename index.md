@@ -17,9 +17,10 @@ I am a student at San Francisco State University currently applying for the fall
 
 - **[Jan. 2024]** Invited to speak on randomized tensor network algorithms at the Joint Math Meeting 2024
 - **[Oct. 2023]** Invited to speak on Uniform Manifold Approximate Projection (UMAP) at the Great Minds in STEM conference 2023 (3rd place)
-- **[Jun. 2023]** Invited to work with Joel Tropp and Ethan Epperly at Caltech University on Randomized Tensor Networks
+- **[Jun. 2023]** Invited to research with Joel Tropp and Ethan Epperly at Caltech University on Randomized Tensor Networks
 - **[Jun. 2023]** Invited to the Mathematical Science Research Institute (MSRI) to learn Lean4 with Jeremey Avigad and others. 
 - **[Jan. 2023]** Invited to speak on randomized eigensolvers at the Joint Math Meeting 2023
+- **[Jun. 2023]** Invited to research with Xioye Li and Roel Van Beeumen on randomized eigensolvers at Lawrence Berkeley National Laboratory
 
 {% include_relative _includes/publications.md %}
 
