@@ -1,7 +1,11 @@
 main:
-- title: "Project Title"
-  description: "Brief description of the project, highlighting the main objectives, technologies used, and any significant outcomes."
-  date_completed: "Month Year"
-  image: "path/to/project_image.jpg"
-  more_info: "path/to/detailed_project_info.html"
+
+  - title: Push Concurrent Probabilistic Programming for Bayesian Deep Learning
+    authors: Daniel Huang, Chris Camaño, Jonathan Tsegaye, Jonathan Austin Gale
+    conference_short: ICML
+    conference: International Conference on Machine Learning
+    pdf: https://arxiv.org/pdf/2306.06528.pdf
+    code: https://github.com/lbai-lab/push
+    image: ./assets/img/push_image.PNG
+    notes: Under Review
 
