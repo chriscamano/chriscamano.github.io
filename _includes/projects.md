@@ -1,6 +1,4 @@
-<h2 id="projects" style="margin: 2px 0px -15px;">
-  <a href="projects_page.html">Projects</a>
-</h2>
+<h2 id="publications" style="margin: 2px 0px -15px;">Projects</h2>
 
 <div class="projects">
   <ol class="project-list">
