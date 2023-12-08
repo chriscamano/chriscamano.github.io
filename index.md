@@ -15,10 +15,11 @@ I am a student at San Francisco State University currently applying for the fall
 
 ## News
 
-- **[Feb. 2020]** Our paper about incremental learning is accepted to CVPR 2020.
-- **[Feb. 2020]** We will host the ACM Multimedia Asia 2020 conference in Singapore!
-- **[Sept. 2019]** Our paper about few-shot learning is accepted to NeurIPS 2019.
-- **[Mar. 2019]** Our paper about few-shot learning is accepted to CVPR 2019.
+- **[Jan. 2024]** Invited to speak on randomized tensor network algorithms at the Joint Math Meeting 2024
+- **[Oct. 2023]** Invited to speak on Uniform Manifold Approximate Projection (UMAP) at the Great Minds in STEM conference 2023 (3rd place)
+- **[June 2023]** Invited to work with Joel Tropp and Ethan Epperly at Caltech University on Randomized Tensor Networks
+- **[June 2023]** Invited to the Mathematical Science Research Institute to learn Lean4 with Jeremey Avigad and others. 
+- **[Jan. 2023]** Invited to speak on randomized eigensolvers at the Joint Math Meeting 2024
 
 {% include_relative _includes/publications.md %}
 
