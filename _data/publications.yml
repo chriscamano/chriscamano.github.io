@@ -1,11 +1,11 @@
 main:
 
-  - title: Continual Learning for Abdominal Multi-Organ and Tumor Segmentation
-    authors: Yixiao Zhang, Xinyi Li, Huimiao Chen, Alan Yuille, <strong>Yaoyao Liu*</strong>, Zongwei Zhou* (*Corresponding authors)
-    conference_short: MICCAI
-    conference: International Conference on Medical Image Computing and Computer-Assisted Intervention <strong>(MICCAI)</strong>, 2023.
+  - title: Push: Concurrent Probabilistic Programming for Bayesian Deep Learning
+    authors: Daniel Huang, Chris Camaño, Jonathan Tsegaye, Jonathan Austin Gale
+    conference_short: ICML
+    conference: International Conference on Machine Learning
     pdf: https://arxiv.org/pdf/2306.06528.pdf
     code: https://github.com/lbai-lab/push
-    image: ./assets/img/push_image.png
+    image: ./assets/img/push_image.PNG
     notes: Under Review
 
