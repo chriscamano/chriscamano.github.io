@@ -4,7 +4,7 @@ layout: homepage
 
 ## About Me
 
-I am a student at San Francisco State University Currently applying for the fall 2024 PhD cycle for a PhD in Applied Mathematics
+I am a student at San Francisco State University currently applying for the fall 2024 PhD cycle for a PhD in Applied Mathematics
 
 ## Research Interests
 
