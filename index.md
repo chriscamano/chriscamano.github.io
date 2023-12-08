@@ -21,6 +21,6 @@ I am a student at San Francisco State University currently applying for the fall
 - **[Jun. 2023]** Invited to the Mathematical Science Research Institute (MSRI) to learn Lean4 with Jeremey Avigad and others. 
 - **[Jan. 2023]** Invited to speak on randomized eigensolvers at the Joint Math Meeting 2023
 
-<!-- {% include_relative _includes/publications.md %}
+{% include_relative _includes/publications.md %}
 
-{% include_relative _includes/services.md %} -->
+<!-- {% include_relative _includes/services.md %} -->
