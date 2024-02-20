@@ -1,7 +1,7 @@
 ---
 layout: homepage
 ---
-<a href="/_blog/index.html" class="btn btn-sm z-depth-0" role="button" target="_blank" style="font-size:20px;">Blog</a>
+<a href="/_blog/blogpage.md" class="btn btn-sm z-depth-0" role="button" target="_blank" style="font-size:20px;">Blog</a>
 
 ## About Me
 
