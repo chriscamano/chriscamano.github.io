@@ -17,13 +17,10 @@
   <div class="wrapper">
     <header>
       <h1>{{ page.title }}</h1>
-
-      <!-- You can include navigation links or other header content here -->
     </header>
     <section>
       <h1>{{ page.title }}</h1>
       <hr class="section-divider">
-
       {{ content }} 
       <div class="blog-feed">
         {% for post in site.posts %}
@@ -44,8 +41,6 @@
         {% endfor %}
       </div>
     </section>
-
-    
     <footer>
       {% if site.enable_footnote %}
       <p><small>Powered by Jekyll and <a href="https://github.com/yaoyao-liu/minimal-light" target="_blank" rel="noopener">Minimal Light</a> theme.</small></p>
