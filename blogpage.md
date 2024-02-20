@@ -1,6 +1,7 @@
 ---
-layout: default  # Or any layout that fits your site's theme
-title: Blog
+layout: page
+title: Blog Page
+permalink: /blogpage/
 ---
 
 <h2 id="blog" style="margin: 2px 0px -15px;">Blog</h2>
