@@ -2,18 +2,3 @@
 ---
 
 @import "minimal-light";
-/* Button Styles */
-.btn {
-    display: inline-block;
-    background-color: #007bff; /* Blue */
-    color: white;
-    padding: 8px 12px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    &:hover {
-        background-color: #0056b3; /* Darker blue on hover */
-        cursor: pointer;
-    }
-}
