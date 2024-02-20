@@ -20,7 +20,7 @@ I am a student at San Francisco State University currently applying for the fall
 - **[Jun. 2023]** Invited to research with Joel Tropp and Ethan Epperly at Caltech University on Randomized Tensor Networks
 - **[Jun. 2023]** Invited to the Mathematical Science Research Institute (MSRI) Formalization of Mathematics summer school to learn the *Lean4* language. Project culimated with an accepted pull request to *mathlib4*
 - **[Jan. 2023]** Invited to speak on randomized eigensolvers at the Joint Math Meeting 2023
-- **[Jun. 2023]** Invited to research with Xioye Li and Roel Van Beeumen on randomized eigensolvers at Lawrence Berkeley National Laboratory
+- **[Jun. 2022]** Invited to research with Xioye Li and Roel Van Beeumen on randomized eigensolvers at Lawrence Berkeley National Laboratory
 
 {% include_relative _includes/publications.md %}
 {% include_relative _includes/projects.md %}
