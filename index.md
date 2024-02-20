@@ -1,7 +1,8 @@
 ---
 layout: homepage
 ---
-<a href="/_blog/index.html" class="btn btn-sm z-depth-0" role="button" target="_blank" style="font-size:12px;">Blog</a>
+<a href="/_blog/index.html" class="btn btn-sm z-depth-0" role="button" target="_blank" style="font-size:20px;">Blog</a>
+
 ## About Me
 
 I am a student at San Francisco State University currently applying for the fall 2024 PhD cycle for a PhD in Applied Mathematics
