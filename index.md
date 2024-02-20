@@ -1,7 +1,7 @@
 ---
 layout: homepage
 ---
-<a href="blogpage.md" class="btn btn-sm z-depth-0" role="button" target="_blank" style="font-size:20px;">Blog</a>
+<!-- <a href="/blog/" class="btn btn-sm z-depth-0" role="button" style="font-size:20px;">Blog</a> -->
 
 ## About Me
 
@@ -13,7 +13,7 @@ I am a student at San Francisco State University currently applying for the fall
 - **Tensor Networks and Quantum Mechanical Simulation** MPO MPS contraction, randomized methods for the tensor network format, hamiltonian time evolution 
 - **Bayesian Inference** bayesian neural networks, non-parametric variational inference methods, uncertainty quantification
 
-
+{% include_relative _includes/publications.md %}
 ## News
 
 - **[Jan. 2024]** Invited to speak on randomized tensor network algorithms at the Joint Math Meeting 2024
@@ -23,6 +23,6 @@ I am a student at San Francisco State University currently applying for the fall
 - **[Jan. 2023]** Invited to speak on randomized eigensolvers at the Joint Math Meeting 2023
 - **[Jun. 2022]** Invited to research with Xioye Li and Roel Van Beeumen on randomized eigensolvers at Lawrence Berkeley National Laboratory
 
-{% include_relative _includes/publications.md %}
-{% include_relative _includes/projects.md %}
+
+<!-- {% include_relative _includes/projects.md %} -->
 <!-- {% include_relative _includes/services.md %} -->

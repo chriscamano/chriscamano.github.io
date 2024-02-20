@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+<head>
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+  <!-- Include other necessary CSS and JS files as in the homepage layout -->
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1>{{ page.title }}</h1>
+
+      <!-- You can include navigation links or other header content here -->
+    </header>
+    <section>
+      <h1>{{ page.title }}</h1>
+      <nav class="navbar">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/">Home</a></li>
+          <li class="nav-item"><a href="/blog/">Blog</a></li>
+          <li class="nav-item"><a href="/gallery/">Gallery</a></li>
+        </ul>
+      </nav>
+      <hr class="section-divider">
+
+      {{ content }} 
+      <div class="blog-feed">
+        {% for post in site.posts %}
+          <article class="blog-post">
+            <div class="post-thumbnail">
+              {% if post.thumbnail %}
+                <img src="{{ post.thumbnail | relative_url }}" alt="{{ post.title }} thumbnail">
+              {% endif %}
+            </div>
+            <div class="post-content">
+              <h2 class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
+              <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 160 }}</p>
+              <div class="post-meta">{{ post.date | date: "%B %d, %Y" }}</div>
+              <a href="{{ post.url }}" class="read-more">Read More</a>
+            </div>
+          </article>
+          <hr class="section-divider"> <!-- Horizontal divider -->
+        {% endfor %}
+      </div>
+    </section>
+
+    
+    <footer>
+      {% if site.enable_footnote %}
+      <p><small>Powered by Jekyll and <a href="https://github.com/yaoyao-liu/minimal-light" target="_blank" rel="noopener">Minimal Light</a> theme.</small></p>
+      {% endif %}
+      <!-- Footer content -->
+    </footer>
+  </div>
+</body>
+</html>

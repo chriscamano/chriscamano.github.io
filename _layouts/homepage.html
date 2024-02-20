@@ -32,12 +32,17 @@
     <link rel="stylesheet" href="./assets/css/style-no-dark-mode.css">
     <link rel="stylesheet" href="./assets/css/publications-no-dark-mode.css">
     {% endif %}
-
+    <nav class="navbar">
+      <ul class="nav-list">
+        <li class="nav-item"><a href="/">Home</a></li>
+        <li class="nav-item"><a href="/blog/">Blog</a></li>
+        <li class="nav-item"><a href="/gallery/">Gallery</a></li>
+      </ul>
+    </nav>
   </head>
   <body>
     <div class="wrapper">
       <header>
-        
         {% if site.avatar %}
         <a class="image avatar"><img src="{{ site.avatar }}" alt="avatar" /></a>
         {% endif %}
@@ -93,8 +98,8 @@
 
       </header>
       <section>
-
-      {{ content }}
+        <h1>{{ page.title }}</h1>
+            {{ content }}
 
       <br>
 

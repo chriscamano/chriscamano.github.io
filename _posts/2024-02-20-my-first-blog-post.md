@@ -1,6 +1,9 @@
 ---
-title: "My First Blog Post"
-date: 2024-02-20
+layout: post
+title: "Stein Variational Gradient Descent"
+date: 2024-02-19
+excerpt: "An introduction to SVGD"
+thumbnail: "/assets/img/svgd_header_temp.jpg"
 ---
 
-Here is the content of my first blog post.yes
+Under Active Development
