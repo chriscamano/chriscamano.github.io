@@ -5,7 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
-  <!-- Include other necessary CSS and JS files as in the homepage layout -->
+  <nav class="navbar">
+    <ul class="nav-list">
+      <li class="nav-item"><a href="/">Home</a></li>
+      <li class="nav-item"><a href="./blog/">Blog</a></li>
+      <li class="nav-item"><a href="/gallery/">Gallery</a></li>
+    </ul>
+  </nav>
 </head>
 <body>
   <div class="wrapper">
@@ -16,13 +22,6 @@
     </header>
     <section>
       <h1>{{ page.title }}</h1>
-      <nav class="navbar">
-        <ul class="nav-list">
-          <li class="nav-item"><a href="/">Home</a></li>
-          <li class="nav-item"><a href="/blog/">Blog</a></li>
-          <li class="nav-item"><a href="/gallery/">Gallery</a></li>
-        </ul>
-      </nav>
       <hr class="section-divider">
 
       {{ content }} 
