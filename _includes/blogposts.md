@@ -1,19 +1,18 @@
 <h2 id="blogposts" style="margin: 2px 0px -15px;">Blog Posts</h2>
 
-<div class="blogposts">
-  <ol class="blogposts-list">
+<div class="blogposts" style="width: 100%; margin: 0;">
+  <ol class="blogposts-list" style="padding: 0; list-style: none;">
 
     {% for post in site.data.blogposts.main %}
 
-    <li>
-      <div class="post-row">
-        <div class="col-sm-3" style="position: relative;padding-right: 15px;padding-left: 15px;">
+    <li style="margin-bottom: 20px;">
+      <div class="post-row" style="display: flex; flex-wrap: wrap; margin-right: -15px; margin-left: -15px;">
+        <div class="col-sm-3" style="flex: 0 0 25%; max-width: 25%; position: relative; padding-right: 15px; padding-left: 15px;">
           {% if post.image %} 
-          <img src="{{ post.image }}" class="post-teaser img-fluid z-depth-1" style="height: 200px; width: auto;">
-
+          <img src="{{ post.image }}" class="post-teaser img-fluid z-depth-1" style="width: 100%; height: auto;">
           {% endif %}
         </div>
-        <div class="col-sm-9" style="position: relative;padding-right: 15px;padding-left: 20px;">
+        <div class="col-sm-9" style="flex: 0 0 75%; max-width: 75%; position: relative; padding-right: 15px; padding-left: 15px;">
           <div class="title">
             <a href="{{ post.more_info }}">{{ post.title }}</a>
           </div>
@@ -27,8 +26,6 @@
         </div>
       </div>
     </li>
-
-    <br>
 
     {% endfor %}
 

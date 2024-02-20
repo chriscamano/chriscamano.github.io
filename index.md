@@ -23,6 +23,5 @@ I am a student at San Francisco State University currently applying for the fall
 - **[Jan. 2023]** Invited to speak on randomized eigensolvers at the Joint Math Meeting 2023
 - **[Jun. 2022]** Invited to research with Xioye Li and Roel Van Beeumen on randomized eigensolvers at Lawrence Berkeley National Laboratory
 
-
 <!-- {% include_relative _includes/projects.md %} -->
 <!-- {% include_relative _includes/services.md %} -->
