@@ -1,0 +1,14 @@
+title: "My Jupyter Book"
+author: "Your Name"
+
+repository:
+  url: "https://github.com/chriscamano/chriscamano.github.io"  # URL to your book's repository
+  path_to_book: "/_posts/blog_post_001/config.yml"  # Path in the repository to the book files
+
+html:
+  use_issues_button: true
+  use_repository_button: true
+  use_download_button: true
+
+execute:
+  execute_notebooks: "off"  # Change to "force" if you want to execute all notebooks on build
