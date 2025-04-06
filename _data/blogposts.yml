@@ -1,10 +1,10 @@
 main:
 
-- title: Stein Variational Gradient Descent
-  description: An overview of Stein Variational Gradient Descent with animations
-  date_completed: October 2023
-  image: /assets/img/svgd_header_temp.jpg
-  more_info: path/to/detailed_project_info.html
+# - title: Stein Variational Gradient Descent
+#   description: An overview of Stein Variational Gradient Descent with animations
+#   date_completed: October 2023
+#   image: /assets/img/svgd_header_temp.jpg
+#   more_info: path/to/detailed_project_info.html
 
 # - title: "Gaussian Process Regression from Scratch"
 #   description: "Brief description of the project, highlighting the main objectives, technologies used, and any significant outcomes."

@@ -1,10 +1,17 @@
 main:
-
-  - title: Push Concurrent Probabilistic Programming for Bayesian Deep Learning
-    authors: Daniel Huang, Chris Camaño, Jonathan Tsegaye, Jonathan Austin Gale
-    conference_short: arxiv
-    pdf: https://arxiv.org/pdf/2306.06528.pdf
-    code: https://github.com/lbai-lab/push
-    image: ./assets/img/push_image.PNG
+  - title: "SoftKI: Soft Kernel Interpolation for High dimensional Approximate Gaussian Process Regression (2024)"
+    # year: "2024"
+    authors: "Daniel Huang, Chris Camaño"
+    conference_short: "arxiv"
+    pdf: "https://arxiv.org/abs/2410.21419"
+    code: "https://github.com/danehuang/softki"
+    image: "./assets/img/pca_slice.png"
     notes: 
-
+  - title: "Push: Concurrent Probabilistic Programming for Bayesian Deep Learning (2023)"
+    # year: "2024"
+    authors: "Daniel Huang, Chris Camaño, Jonathan Tsegaye, Jonathan Austin Gale"
+    conference_short: "arxiv"
+    pdf: "https://arxiv.org/pdf/2306.06528.pdf"
+    code: "https://github.com/lbai-lab/push"
+    image: "./assets/img/push_image.PNG"
+    notes: 
