@@ -1,5 +1,13 @@
 main:
-  - title: "SoftKI: Soft Kernel Interpolation for High dimensional Approximate Gaussian Process Regression (2024)"
+  - title: "Successive randomized compression: A randomized algorithm for the compressed MPO-MPS product (2025)"
+    # year: "2024"
+    authors: "Chris Camaño, Ethan N. Epperly, Joel A. Tropp"
+    conference_short: "arxiv"
+    pdf: "https://arxiv.org/abs/2504.06475"
+    code: "https://github.com/chriscamano/RandomMPOMPS"
+    image: "./assets/img/contract17.PNG"
+    notes:  
+  - title: "SoftKI: High-Dimensional Gaussian Process Regression with Soft Kernel Interpolation (2024)"
     # year: "2024"
     authors: "Daniel Huang, Chris Camaño"
     conference_short: "arxiv"
@@ -15,3 +23,4 @@ main:
     code: "https://github.com/lbai-lab/push"
     image: "./assets/img/push_image.PNG"
     notes: 
+
