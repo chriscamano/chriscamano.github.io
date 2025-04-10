@@ -5,7 +5,7 @@ main:
     conference_short: "arxiv"
     pdf: "https://arxiv.org/abs/2504.06475"
     code: "https://github.com/chriscamano/RandomMPOMPS"
-    image: "./assets/img/contract17.PNG"
+    image: "./assets/img/TDVP2.png"
     notes:  
   - title: "SoftKI: High-Dimensional Gaussian Process Regression with Soft Kernel Interpolation (2024)"
     # year: "2024"
