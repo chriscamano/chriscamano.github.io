@@ -17,6 +17,7 @@ I am currently funded through the [National Science Foundation Graduate Research
 
 {% include_relative _includes/publications.md %}
 ## News
+- **[Apr. 2025]** Invited to speak at [Southern California Applied Math Symposium](https://www.math.uci.edu/node/38364) on randomized tensor networks.
 - **[Apr. 2025]** Invited to speak at [UCSD Mathematics of Information, Data, and Signals Seminar](https://sites.google.com/ucsd.edu/ucsd-minds/home) on randomized tensor networks.
 - **[Feb. 2025]** Invited to speak at the [Argonne National Laboratory Toward Next-Generation Ecosystems for Scientific Computing workshop](https://events.cels.anl.gov/event/602/registrations/268/) on randomized tensor networks.
 - **[March. 2024]** Awarded the NSF GRFP & Kortschak fellowships 🎉.
