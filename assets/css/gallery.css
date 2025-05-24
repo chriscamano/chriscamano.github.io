@@ -123,6 +123,8 @@ html {
     border: 3px solid var(--color-primary);
     border-radius: 18px;
     display: block;
+    flex-shrink: 1;
+
     margin: 0 auto;
   }
   /* override gallery captions to be left-aligned and normal weight */
