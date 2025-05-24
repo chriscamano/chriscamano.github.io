@@ -94,17 +94,7 @@ html {
     margin-top: 2rem;
   }
   
-  .gallery-figure {
-    max-width: 100%;
-    width: 100%;
-    text-align: center;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 2rem;
 
-  }
   
   .section-intro,
 .image-discussion {
@@ -117,14 +107,36 @@ html {
   text-align: left !important;
   margin: 0 0 0 0;
 }
-  .gallery-figure img {
+
+.gallery-figure {
+    /* allow the figure itself to shrink past its content’s intrinsic width */
+    min-width: 0;
+  
+    /* your existing properties */
+    max-width: 100%;
     width: 100%;
+    text-align: center;
+    margin: 0 auto 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .gallery-figure img {
+    /* use max-width rather than forcing width, so it never overflows */
+    max-width: 100%;
     height: auto;
+  
+    /* permit the image to flex-shrink inside its container */
+    flex-shrink: 1;
+  
+    /* ensure its own min-width doesn’t block shrinking */
+    min-width: 0;
+  
+    /* preserve your styling */
     border: 3px solid var(--color-primary);
     border-radius: 18px;
     display: block;
-    flex-shrink: 1;
-
     margin: 0 auto;
   }
   /* override gallery captions to be left-aligned and normal weight */
