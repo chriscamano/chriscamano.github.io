@@ -1,0 +1,162 @@
+---
+layout: default
+title: Gallery
+---
+
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'en-US' }}">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ page.title }} | {{ site.title }}</title>
+
+  <!-- Shared fonts and icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css"
+    integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw="
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
+    integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ="
+    crossorigin="anonymous"
+  />
+    <!-- load Google Fonts -->
+    <link
+    href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,500;1,600&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- then your normal theme CSS -->
+  {% if site.auto_dark_mode %}
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
+  {% else %}
+    <link rel="stylesheet" href="{{ '/assets/css/style-no-dark-mode.css' | relative_url }}" />
+  {% endif %}
+  <link rel="stylesheet" href="{{ '/assets/css/gallery.css' | relative_url }}" />
+
+  <!-- finally, override to force Crimson Pro -->
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Crimson Pro', serif !important;
+      font-size: 18px !important;
+      line-height: 1.5 !important;
+      color: #463935 !important;
+    }
+    code, pre {
+      font-family: 'Ubuntu Mono', monospace !important;
+    }
+  </style>
+
+  <!-- Your site’s base CSS and gallery‐specific CSS -->
+  {% if site.auto_dark_mode %}
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
+  {% else %}
+    <link rel="stylesheet" href="{{ '/assets/css/style-no-dark-mode.css' | relative_url }}" />
+  {% endif %}
+  <link rel="stylesheet" href="{{ '/assets/css/gallery.css' | relative_url }}" />
+
+  <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+        ignoreHtmlClass: 'nostem',
+        processHtmlClass: 'mathjax-process'
+      }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+  <!-- Shared top navbar -->
+  <nav class="navbar">
+    <ul class="nav-list">
+      <li class="nav-item"><a href="{{ '/' | relative_url }}">Home</a></li>
+      <li class="nav-item"><a href="{{ '/gallery/' | relative_url }}">Gallery</a></li>
+    </ul>
+  </nav>
+
+  <div class="gallery-wrapper">
+    <!-- TOC sidebar -->
+    <aside class="toc" id="gallery-toc"><ul></ul></aside>
+
+    <!-- Gallery content -->
+    <main id="gallery-content">
+      <h1>{{ page.title }}</h1>
+
+      <!-- Intro paragraph -->
+      <div class="gallery-intro">
+        <p>
+          Welcome to the Research Gallery. Here I collect my favorite visualizations and results from my research projects, most of these examples come with reproducibe code if you want to try them out yourself.
+        </p>
+      </div>
+
+      {% assign entries = site.gallery | sort: 'title' %}
+      {% for item in entries %}
+        <div class="gallery-item">
+          <h2 id="{{ item.slug }}">{{ item.title }}</h2>
+          <div class="gallery-item-content mathjax-process">
+            {{ item.content | markdownify }}
+          </div>
+        </div>
+      {% endfor %}
+    </main>
+  </div>
+
+  <!-- JavaScript for TOC highlighting -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const tocUl = document.querySelector("#gallery-toc ul");
+      const sections = Array.from(document.querySelectorAll("#gallery-content h2"));
+      const navHeight = document.querySelector(".navbar").offsetHeight;
+
+      // Build TOC if empty
+      if (!tocUl.children.length) {
+        sections.forEach(sec => {
+          let id = sec.id;
+          if (!id) {
+            id = sec.textContent.trim().toLowerCase().replace(/\s+/g, "-");
+            sec.id = id;
+          }
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = `#${id}`;
+          a.textContent = sec.textContent;
+          li.appendChild(a);
+          tocUl.appendChild(li);
+        });
+      }
+
+      // Highlight on scroll
+      const links = Array.from(document.querySelectorAll("#gallery-toc a"));
+      function highlightClosest() {
+        let closest = sections[0], minDist = Infinity;
+        sections.forEach(sec => {
+          const dist = Math.abs(sec.getBoundingClientRect().top - navHeight);
+          if (dist < minDist) { minDist = dist; closest = sec; }
+        });
+        links.forEach(a => {
+          a.classList.toggle("active", a.getAttribute("href") === `#${closest.id}`);
+        });
+      }
+      window.addEventListener("scroll", highlightClosest, { passive: true });
+      highlightClosest();
+    });
+  </script>
+</body>
+</html>

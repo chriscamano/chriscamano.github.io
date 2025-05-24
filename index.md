@@ -1,9 +1,8 @@
 ---
 layout: homepage
----
-<!-- <a href="/blog/" class="btn btn-sm z-depth-0" role="button" style="font-size:20px;">Blog</a> -->
+title: About Me
 
-## About Me
+---
 I’m a first-year PhD student in the [Applied and Computational Mathematics department](https://www.cms.caltech.edu/academics/grad/grad_acm) at Caltech, advised by Professor Joel Tropp. My research focuses on the intersection of randomized numerical linear algebra (rNLA) and large-scale data science, with an emphasis on scalable algorithms and high-dimensional computation. 
 
 I am currently funded through the [National Science Foundation Graduate Research Fellowship](https://www.nsfgrfp.org) and the      [Kortschak Scholars Fellowship](https://www.cms.caltech.edu/research/kortschak-scholars).

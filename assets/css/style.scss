@@ -98,9 +98,10 @@
 
 .nav-item a {
   display: block;
+  font-size: 1.2rem !important;
   color: white !important;
   text-align: center;
-  padding: 14px 20px;
+  padding: 16px 20px;
   text-decoration: none;
 }
 
@@ -303,4 +304,55 @@ a:focus {
   color: grey;
   opacity: 0.6;
   font-size: 0.9em;
+}
+
+/* ========== Gallery Overrides ========== */
+#gallery-content {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.gallery-item {
+  margin-bottom: 2rem;
+}s
+
+.placeholder-image {
+  width: 100%;
+  height: 300px;
+  background-color: #ddd;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.placeholder-description {
+  width: 100%;
+  height: 100px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+html {
+  font-size: 18px; // or 1rem, 110%, etc.
+}
+
+body {
+  font-size: 1rem; // inherits from html → 1rem = 18px
+  line-height: 1.6;
+}
+:root {
+  --base-font-size: 17px;
+  --base-font-family: 'Crimson Pro', serif;
+}
+
+body {
+  font-size: var(--base-font-size);
+  font-family: var(--base-font-family);
+}
+hr {
+  border: none;
+  height: 3px;
+  background-color: var(--color-primary);
+  width: 100%;
+  margin: 2rem auto;
 }

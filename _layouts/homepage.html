@@ -1,5 +1,39 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: "en-US" }}">
+
+  <!-- load Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,500;1,600&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- then your normal theme CSS -->
+  {% if site.auto_dark_mode %}
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
+  {% else %}
+    <link rel="stylesheet" href="{{ '/assets/css/style-no-dark-mode.css' | relative_url }}" />
+  {% endif %}
+  <link rel="stylesheet" href="{{ '/assets/css/gallery.css' | relative_url }}" />
+
+  <!-- finally, override to force Crimson Pro -->
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Crimson Pro', serif !important;
+      font-size: 18px !important;
+      line-height: 1.5 !important;
+      color: #463935 !important;
+    }
+    code, pre {
+      font-family: 'Ubuntu Mono', monospace !important;
+    }
+  </style>
+
   <head>
     <title>{{ site.title }} | {{site.affiliation}}</title>
     <meta charset="UTF-8">
@@ -32,15 +66,15 @@
     <link rel="stylesheet" href="./assets/css/style-no-dark-mode.css">
     <link rel="stylesheet" href="./assets/css/publications-no-dark-mode.css">
     {% endif %}
+
+  </head>
+  <body>
     <nav class="navbar">
       <ul class="nav-list">
         <li class="nav-item"><a href="/">Home</a></li>
-        <!-- <li class="nav-item"><a href="/blog/">Blog</a></li>
-        <li class="nav-item"><a href="/gallery/">Gallery</a></li> -->
+        <li class="nav-item"><a href="/gallery/">Gallery</a></li>
       </ul>
     </nav>
-  </head>
-  <body>
     <div class="wrapper">
       <header>
         {% if site.avatar %}
@@ -54,7 +88,9 @@
         <br>
         {% endif %}
         {% if site.affiliation %}
-        <a href="{{ site.affiliation_link }}" rel="noopener"><autocolor>{{ site.affiliation }}</autocolor></a>
+        <a href="https://www.caltech.edu/" rel="noopener">
+          <autocolor>{{ site.affiliation }}</autocolor>
+        </a>
         <br>
         {% endif %}
         {% if site.email %}
