@@ -25,11 +25,11 @@ matrix) or more accurate (zip-up, variational/fitting) than other leading method
   </figcaption>
 
   <div class="image-discussion mathjax-process">
-    <p>To demonstrate the effectiveness of the SRC, we simulate the unitary time evolution of a $n=101$ site state vector
+    <p>To demonstrate the effectiveness of SRC, we simulate the unitary time evolution 
       \[
         |\boldsymbol{\psi}(t)\rangle = \mathrm{e}^{-i t \mathbf{H}}\,|\boldsymbol{\psi}(0)\rangle 
       \]
-      starting from a locally preturbed initial state 
+      starting from a locally preturbed initial state vector of $n=101$ spins
       \[
         |\boldsymbol{\psi}(0)\rangle = \mathrm{e}^{i(\pi/4)\,\mathbf{Y}_{\lceil n/2\rceil}}\,|\boldsymbol{\psi}_{\min}\rangle\in \mathbb{C}^{2^{101}},
       \]
