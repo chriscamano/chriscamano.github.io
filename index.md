@@ -3,7 +3,7 @@ layout: homepage
 title: About Me
 
 ---
-I’m a first-year PhD student in the [Applied and Computational Mathematics department](https://www.cms.caltech.edu/academics/grad/grad_acm) at Caltech, advised by Professor Joel Tropp. My research focuses on the intersection of randomized numerical linear algebra (rNLA) and large-scale data science, with an emphasis on scalable algorithms and high-dimensional computation. 
+I’m a second-year PhD student in the [Applied and Computational Mathematics department](https://www.cms.caltech.edu/academics/grad/grad_acm) at Caltech, advised by Professor Joel Tropp. My research focuses on the intersection of randomized numerical linear algebra (rNLA) and large-scale data science, with an emphasis on scalable algorithms and high-dimensional computation. 
 
 I am currently funded through the [National Science Foundation Graduate Research Fellowship](https://www.nsfgrfp.org) and the      [Kortschak Scholars Fellowship](https://www.cms.caltech.edu/research/kortschak-scholars).
 
@@ -16,7 +16,7 @@ I am currently funded through the [National Science Foundation Graduate Research
 
 {% include_relative _includes/publications.md %}
 ## News
-- **[Aug. 2025]** Attended the[Institute of Pure and Applied Mathematics (IPAM) RNLA workshop](https://www.ipam.ucla.edu/programs/special-events-and-conferences/research-collaboration-workshop-randomized-numerical-linear-algebra-rnla/) on randomized Krylov methods.
+- **[Aug. 2025]** Attended the [Institute of Pure and Applied Mathematics (IPAM) RNLA workshop](https://www.ipam.ucla.edu/programs/special-events-and-conferences/research-collaboration-workshop-randomized-numerical-linear-algebra-rnla/) on randomized Krylov methods.
 - **[Apr. 2025]** Invited to speak at [Southern California Applied Math Symposium](https://www.math.uci.edu/node/38364) on randomized tensor networks.
 - **[Apr. 2025]** Invited to speak at [UCSD Mathematics of Information, Data, and Signals Seminar](https://sites.google.com/ucsd.edu/ucsd-minds/home) on randomized tensor networks.
 - **[Feb. 2025]** Invited to speak at the [Argonne National Laboratory Toward Next-Generation Ecosystems for Scientific Computing workshop](https://events.cels.anl.gov/event/602/registrations/268/) on randomized tensor networks.

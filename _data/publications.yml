@@ -1,5 +1,5 @@
 main:
-  - title: "Debiasing Polynomial and Fourier Regression"
+  - title: "Debiasing Polynomial and Fourier Regression (2025)"
     # year: "2025"
     authors: "Chris Camaño, Raphael A. Meyer, Kevin Shu"
     conference_short: "arxiv"
@@ -15,13 +15,13 @@ main:
     code: "https://github.com/chriscamano/RandomMPOMPS"
     image: "./assets/img/TDVP2.png"
     notes:  
-  - title: "SoftKI: High-Dimensional Gaussian Process Regression with Soft Kernel Interpolation (2024)"
+  - title: "SoftKI: High-Dimensional Gaussian Process Regression with Soft Kernel Interpolation (2024/2025)"
     # year: "2025"
     authors: "Daniel Huang, Chris Camaño"
     conference_short: "TMLR"
     pdf: "https://arxiv.org/abs/2410.21419"
     code: "https://github.com/danehuang/softki"
-    image: "./assets/img/pca_slice.png"
+    image: "./assets/img/SGPRComparison7.png"
     notes: 
   - title: "Push: Concurrent Probabilistic Programming for Bayesian Deep Learning (2023)"
     # year: "2024"
