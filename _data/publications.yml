@@ -1,6 +1,14 @@
 main:
+  - title: "Debiasing Polynomial and Fourier Regression"
+    # year: "2025"
+    authors: "Chris Camaño, Raphael A. Meyer, Kevin Shu"
+    conference_short: "arxiv"
+    pdf: "https://arxiv.org/abs/2508.05920"
+    code: "https://github.com/chriscamano/Debiased-Polynomial-Regression"
+    image: "./assets/img/debiased.png"
+    notes:  
   - title: "Successive randomized compression: A randomized algorithm for the compressed MPO-MPS product (2025)"
-    # year: "2024"
+    # year: "2025"
     authors: "Chris Camaño, Ethan N. Epperly, Joel A. Tropp"
     conference_short: "arxiv"
     pdf: "https://arxiv.org/abs/2504.06475"
@@ -8,9 +16,9 @@ main:
     image: "./assets/img/TDVP2.png"
     notes:  
   - title: "SoftKI: High-Dimensional Gaussian Process Regression with Soft Kernel Interpolation (2024)"
-    # year: "2024"
+    # year: "2025"
     authors: "Daniel Huang, Chris Camaño"
-    conference_short: "arxiv"
+    conference_short: "TMLR"
     pdf: "https://arxiv.org/abs/2410.21419"
     code: "https://github.com/danehuang/softki"
     image: "./assets/img/pca_slice.png"
