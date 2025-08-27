@@ -15,19 +15,29 @@ I am currently funded through the [National Science Foundation Graduate Research
 <!-- - **Bayesian Inference**: Approximate Gaussian processes, structured priors and uncertainty quantification in modern machine learning models. -->
 
 {% include_relative _includes/publications.md %}
+
 ## News
+
 - **[Aug. 2025]** Attended the [Institute of Pure and Applied Mathematics (IPAM) RNLA workshop](https://www.ipam.ucla.edu/programs/special-events-and-conferences/research-collaboration-workshop-randomized-numerical-linear-algebra-rnla/) on randomized Krylov methods.
 - **[Apr. 2025]** Invited to speak at [Southern California Applied Math Symposium](https://www.math.uci.edu/node/38364) on randomized tensor networks.
 - **[Apr. 2025]** Invited to speak at [UCSD Mathematics of Information, Data, and Signals Seminar](https://sites.google.com/ucsd.edu/ucsd-minds/home) on randomized tensor networks.
 - **[Feb. 2025]** Invited to speak at the [Argonne National Laboratory Toward Next-Generation Ecosystems for Scientific Computing workshop](https://events.cels.anl.gov/event/602/registrations/268/) on randomized tensor networks.
-- **[March. 2024]** Awarded the NSF GRFP & Kortschak fellowships 🎉.
-- **[Feb. 2024]** Accepeted to the Caltech PhD program 🎉.
-- **[Jan. 2024]** Invited to speak at the [Joint Math Meeting](https://jointmathematicsmeetings.org/jmm) 2024 on randomized tensor networks.
-- **[Oct. 2023]** Invited to speak on Uniform Manifold Approximate Projection (UMAP) at the [Great Minds in STEM conference](https://greatmindsinstem.org/) 2023 (3rd place).
-- **[Jun. 2023]** Invited to research with [Joel Tropp](https://tropp.caltech.edu/) and [Ethan Epperly](https://www.ethanepperly.com) at Caltech University on randomized tensor networks.
-- **[Jun. 2023]** Invited to the [Mathematical Science Research Institute(MSRI)](https://www.slmath.org) Formalization of Mathematics summer school to learn the *Lean4* language. Project culimated with an accepted pull request to [*mathlib4*](https://github.com/leanprover-community/mathlib4).
-- **[Jan. 2023]** Invited to speak on randomized eigensolvers & tensor networks at the [Joint Math Meeting](https://jointmathematicsmeetings.org/jmm) 2023.
-- **[Jun. 2022]** Invited to research with Xioye Li and Roel Van Beeumen on randomized eigensolvers & tensor networks at [Lawrence Berkeley National Laboratory](https://crd.lbl.gov/divisions/amcr/computational-science-dept/).
 
-<!-- {% include_relative _includes/projects.md %} -->
-<!-- {% include_relative _includes/services.md %} -->
+<details>
+<summary style="cursor:pointer; font-weight:bold;">Show older news</summary>
+
+<hr style="border: none; height: 1px; background-color: #463935; margin: 0.5em 0;">
+
+<div markdown="1">
+
+- **[March. 2024]** Awarded the NSF GRFP & Kortschak fellowships 🎉.  
+- **[Feb. 2024]** Accepted to the Caltech PhD program 🎉.  
+- **[Jan. 2024]** Invited to speak at the [Joint Math Meeting](https://jointmathematicsmeetings.org/jmm) 2024 on randomized tensor networks.  
+- **[Oct. 2023]** Invited to speak on UMAP at the [Great Minds in STEM conference](https://greatmindsinstem.org/) 2023 (3rd place).  
+- **[Jun. 2023]** Invited to research with [Joel Tropp](https://tropp.caltech.edu/) and [Ethan Epperly](https://www.ethanepperly.com) at Caltech University on randomized tensor networks.  
+- **[Jun. 2023]** Invited to the [Mathematical Science Research Institute (MSRI)](https://www.slmath.org) Formalization of Mathematics summer school to learn the *Lean4* language. Project culminated with a PR to [*mathlib4*](https://github.com/leanprover-community/mathlib4).  
+- **[Jan. 2023]** Invited to speak on randomized eigensolvers & tensor networks at the [Joint Math Meeting](https://jointmathematicsmeetings.org/jmm) 2023.  
+- **[Jun. 2022]** Invited to research with [Xiaoye Li](https://crd.lbl.gov/divisions/amcr/applied-mathematics-dept/scalable-solvers/members/staff-members/xiaoye-li/) and [Roel Van Beeumen](https://crd.lbl.gov/divisions/amcr/applied-mathematics-dept/scalable-solvers/members/staff-members/roel-van-beeumen/) at [Lawrence Berkeley National Laboratory](https://crd.lbl.gov/divisions/amcr/computational-science-dept/).  
+
+</div>
+</details>
