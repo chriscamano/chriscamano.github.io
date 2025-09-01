@@ -9,24 +9,23 @@ I am currently funded through the [National Science Foundation Graduate Research
 
 ## Research Interests
 
-- **Randomized Numerical Linear Algebra**: matrix sketching, fast linear solvers, randomized eigensolvers, algorithm acceleration.
-- **Tensor Networks and Quantum Mechanical Simulation**: MPO-MPS contraction, randomized methods for tensor networks, efficient Hamiltonian time evolution.
-- **Approximate Gaussian Processes**: sub-cubic gaussian process models, inducing point approximations, conjugate gradient methods for kernel inversion.
+- <span style="font-size:1.05em; font-weight:bold;">Randomized Numerical Linear Algebra</span>: matrix sketching, fast linear solvers, randomized eigensolvers, algorithm acceleration.
+- <span style="font-size:1.05em; font-weight:bold;">Tensor Networks and Quantum Mechanical Simulation</span>: MPO-MPS contraction, randomized methods for tensor networks, efficient Hamiltonian time evolution.
+- <span style="font-size:1.05   em; font-weight:bold;">Approximate Gaussian Processes</span>: sub-cubic gaussian process models, inducing point approximations, conjugate gradient methods for kernel inversion.
 <!-- - **Bayesian Inference**: Approximate Gaussian processes, structured priors and uncertainty quantification in modern machine learning models. -->
 
 {% include_relative _includes/publications.md %}
-
-## News
-
+## <span style="display:inline-block; padding-top:1em;">News</span>
+<hr style="border: none; height: 3px; background-color: #463935; margin: 1em 0;">
 - **[Aug. 2025]** Attended the [Institute of Pure and Applied Mathematics (IPAM) RNLA workshop](https://www.ipam.ucla.edu/programs/special-events-and-conferences/research-collaboration-workshop-randomized-numerical-linear-algebra-rnla/) on randomized Krylov methods.
 - **[Apr. 2025]** Invited to speak at [Southern California Applied Math Symposium](https://www.math.uci.edu/node/38364) on randomized tensor networks.
 - **[Apr. 2025]** Invited to speak at [UCSD Mathematics of Information, Data, and Signals Seminar](https://sites.google.com/ucsd.edu/ucsd-minds/home) on randomized tensor networks.
 - **[Feb. 2025]** Invited to speak at the [Argonne National Laboratory Toward Next-Generation Ecosystems for Scientific Computing workshop](https://events.cels.anl.gov/event/602/registrations/268/) on randomized tensor networks.
 
 <details>
-<summary style="cursor:pointer; font-weight:bold;">Show older news</summary>
+<summary style="cursor:pointer; font-weight:bold;font-size:1.25em;">Show older news</summary>
 
-<hr style="border: none; height: 1px; background-color: #463935; margin: 0.5em 0;">
+<hr style="border: none; height: 2px; background-color: #463935; margin: 0.5em 0;">
 
 <div markdown="1">
 

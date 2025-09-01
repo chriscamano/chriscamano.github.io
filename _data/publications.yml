@@ -1,6 +1,12 @@
-main:
+recent:
+  - title: "Faster Linear Algebra Algorithms with Structured Random Matrices (2025)"
+    authors: "Chris Camaño, Ethan N. Epperly, Raphael A. Meyer, and Joel A. Tropp"
+    conference_short: "arxiv"
+    pdf: "https://arxiv.org/abs/2508.21189"
+    code: "https://github.com/chriscamano/OSI-and-Structured-Random-Matrices"
+    image: "./assets/img/Sparse_final.png"
+    notes:  
   - title: "Debiasing Polynomial and Fourier Regression (2025)"
-    # year: "2025"
     authors: "Chris Camaño, Raphael A. Meyer, Kevin Shu"
     conference_short: "arxiv"
     pdf: "https://arxiv.org/abs/2508.05920"
@@ -8,7 +14,6 @@ main:
     image: "./assets/img/debiased.png"
     notes:  
   - title: "Successive randomized compression: A randomized algorithm for the compressed MPO-MPS product (2025)"
-    # year: "2025"
     authors: "Chris Camaño, Ethan N. Epperly, Joel A. Tropp"
     conference_short: "arxiv"
     pdf: "https://arxiv.org/abs/2504.06475"
@@ -16,19 +21,18 @@ main:
     image: "./assets/img/TDVP2.png"
     notes:  
   - title: "SoftKI: High-Dimensional Gaussian Process Regression with Soft Kernel Interpolation (2024/2025)"
-    # year: "2025"
     authors: "Daniel Huang, Chris Camaño"
     conference_short: "TMLR"
     pdf: "https://arxiv.org/abs/2410.21419"
     code: "https://github.com/danehuang/softki"
     image: "./assets/img/SGPRComparison7.png"
     notes: 
+
+past:
   - title: "Push: Concurrent Probabilistic Programming for Bayesian Deep Learning (2023)"
-    # year: "2024"
     authors: "Daniel Huang, Chris Camaño, Jonathan Tsegaye, Jonathan Austin Gale"
     conference_short: "arxiv"
     pdf: "https://arxiv.org/pdf/2306.06528.pdf"
     code: "https://github.com/lbai-lab/push"
     image: "./assets/img/push_image.PNG"
-    notes: 
-
+    notes:
