@@ -11,7 +11,7 @@ recent:
     conference_short: "arxiv"
     pdf: "https://arxiv.org/abs/2508.05920"
     code: "https://github.com/chriscamano/Debiased-Polynomial-Regression"
-    image: "./assets/img/debiased.png"
+    image: "./assets/img/opener2.png"
     notes:  
   - title: "Successive randomized compression: A randomized algorithm for the compressed MPO-MPS product (2025)"
     authors: "Chris Camaño, Ethan N. Epperly, Joel A. Tropp"
