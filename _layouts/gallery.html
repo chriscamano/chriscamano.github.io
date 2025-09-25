@@ -42,6 +42,9 @@ title: Gallery
   {% endif %}
   <link rel="stylesheet" href="{{ '/assets/css/gallery.css' | relative_url }}" />
 
+   <!-- Navbar + Gallery styles -->
+   <link rel="stylesheet" href="{{ '/assets/css/navbar.css' | relative_url }}" />
+ 
   <!-- finally, override to force Crimson Pro -->
   <style>
     body {
@@ -86,10 +89,11 @@ title: Gallery
   <!-- Shared top navbar -->
   <nav class="navbar">
     <ul class="nav-list">
-      <li class="nav-item"><a href="{{ '/' | relative_url }}">Home</a></li>
-      <li class="nav-item"><a href="{{ '/gallery/' | relative_url }}">Gallery</a></li>
+      <li class="nav-item"><a href="/">Home</a></li>
+      <li class="nav-item"><a href="/gallery/">Gallery</a></li>
+      <li class="nav-item"><a href="/blog/">Blog</a></li>
     </ul>
-  </nav>
+  </nav>  
 
   <div class="gallery-wrapper">
     <!-- TOC sidebar -->

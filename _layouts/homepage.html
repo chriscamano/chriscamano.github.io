@@ -13,11 +13,17 @@
   />
 
   <!-- then your normal theme CSS -->
+
   {% if site.auto_dark_mode %}
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
   {% else %}
     <link rel="stylesheet" href="{{ '/assets/css/style-no-dark-mode.css' | relative_url }}" />
   {% endif %}
+
+
+
+  <!-- Navbar + Gallery styles -->
+  <link rel="stylesheet" href="{{ '/assets/css/navbar.css' | relative_url }}" />
   <link rel="stylesheet" href="{{ '/assets/css/gallery.css' | relative_url }}" />
 
   <!-- finally, override to force Crimson Pro -->
@@ -72,8 +78,9 @@
       <ul class="nav-list">
         <li class="nav-item"><a href="/">Home</a></li>
         <li class="nav-item"><a href="/gallery/">Gallery</a></li>
+        <li class="nav-item"><a href="/blog/">Blog</a></li>
       </ul>
-    </nav>
+    </nav>    
     <div class="wrapper">
       <header>
         {% if site.avatar %}

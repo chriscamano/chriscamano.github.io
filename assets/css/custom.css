@@ -1,6 +1,0 @@
-.avatar {
-    border-radius: 50%;        /* Makes the image circular */
-    width: 180px;              /* Change size */
-    border: 3px solid #444;    /* Add a border */
-    box-shadow: 0 0 10px #ccc; /* Optional: add a soft shadow */
-  }

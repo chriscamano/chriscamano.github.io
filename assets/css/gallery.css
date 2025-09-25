@@ -1,172 +1,128 @@
-/* === Base & Scroll Behavior === */
-html {
-    scroll-behavior: smooth;
-  }
-  
-  body {
-    margin: 0;
-    padding-top: 60px; /* account for fixed navbar */
-    font-family: var(--base-font-family);
-    font-size: var(--base-font-size);
-    background: #fff;
-    color: #463935;
-  }
-  
-  :root {
-    --base-font-size: 17px;
-    --base-font-family: 'Crimson Pro', serif;
-    --color-primary: #463935;      /* Replace with your desired color */
-    --color-hover: #555;        /* Replace with your hover color */
-  }
-  
-  /* === Navbar === */
-  .navbar {
-    font-size: 1.2rem !important;
-    background-color: var(--color-primary) !important;
-  }
-  
-  .nav-item a {
-    font-size: 1.2rem !important;
-    padding: 16px 20px !important;
-    text-align: center;
-    color: white !important;
-  }
-  
-  /* === Gallery Layout === */
-  .gallery-wrapper {
-    display: grid;
-    grid-template-columns: 220px 1.8fr;
-    gap: 2rem;
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 2rem 3rem;
-  }
-  
-  /* === TOC Sidebar === */
-  .toc {
-    position: sticky;
-    top: 80px;
-    align-self: start;
-    font-size: 1.2rem;
-  }
-  
-  .toc ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .toc a {
-    text-decoration: none;
-    color: var(--color-primary);
-    display: block;
-    padding: 0.5rem 0;
-    transition: color 0.2s;
-  }
-  
-  .toc a:hover {
-    color: var(--color-hover);
-  }
-  
-  .toc a.active {
-    font-weight: bold;
-  }
-  
-  /* === Gallery Section Titles === */
-  #gallery-content h2 {
-    scroll-margin-top: 70px;
-    margin-top: 2rem;
-  }
-  
-  /* === Gallery Items === */
-  .gallery-item {
-    margin-bottom: 4rem;
-  }
-  .gallery-item-content {
-    margin-top: 2rem;
-    text-align: left;
-  }
-  .gallery-images {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2.5rem;
-    margin-top: 2rem;
-  }
-  
+/* === Gallery Layout === */
+.gallery-wrapper {
+  display: grid;
+  grid-template-columns: 220px 1.8fr;
+  gap: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem 3rem;
+}
 
-  
-  .section-intro,
+/* === TOC Sidebar === */
+.toc {
+  position: sticky;
+  top: 80px;
+  align-self: start;
+  font-size: 1.2rem;
+}
+
+.toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc a {
+  text-decoration: none;
+  color: var(--color-primary);
+  display: block;
+  padding: 0.5rem 0;
+  transition: color 0.2s;
+}
+
+.toc a:hover {
+  color: var(--color-hover);
+}
+
+.toc a.active {
+  font-weight: bold;
+}
+
+/* === Gallery Section Titles === */
+#gallery-content h2 {
+  scroll-margin-top: 70px;
+  margin-top: 2rem;
+}
+
+/* === Gallery Items === */
+.gallery-item {
+  margin-bottom: 4rem;
+}
+
+.gallery-item-content {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.gallery-images {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+  margin-top: 2rem;
+}
+
+.section-intro,
 .image-discussion {
   text-align: left !important;
 }
 
-/* Specifically override any p tags inside these that were auto-centered */
 .section-intro p,
 .image-discussion p {
   text-align: left !important;
-  margin: 0 0 0 0;
+  margin: 0;
 }
 
+/* === Figures === */
 .gallery-figure {
-    /* allow the figure itself to shrink past its content’s intrinsic width */
-    min-width: 0;
-  
-    /* your existing properties */
-    max-width: 100%;
-    width: 100%;
-    text-align: center;
-    margin: 0 auto 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .gallery-figure img {
-    /* use max-width rather than forcing width, so it never overflows */
-    max-width: 100%;
-    height: auto;
-  
-    /* permit the image to flex-shrink inside its container */
-    flex-shrink: 1;
-  
-    /* ensure its own min-width doesn’t block shrinking */
-    min-width: 0;
-  
-    /* preserve your styling */
-    border: 3px solid var(--color-primary);
-    border-radius: 18px;
-    display: block;
-    margin: 0 auto;
-  }
-  /* override gallery captions to be left-aligned and normal weight */
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
+.gallery-figure img {
+  max-width: 100%;
+  height: auto;
+  flex-shrink: 1;
+  min-width: 0;
+  border: 3px solid var(--color-primary);
+  border-radius: 18px;
+  display: block;
+  margin: 0 auto;
+}
 
-  .image-titlecard {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #222;
-    margin-top: 0.8rem;
-    text-align: left !important;
-    font-weight: normal !important;
-    max-width: 90%;
-  }
-  .image-titlecard strong {
-    font-weight: bold !important; /* allow <strong> to override */
-  }
-  /* === General Paragraphs (optional) === */
- /* after */
+/* === Captions === */
+.image-titlecard {
+  font-size: 1.1rem;
+  color: #222;
+  margin-top: 0.8rem;
+  text-align: left !important;
+  font-weight: normal !important;
+  max-width: 90%;
+}
+
+.image-titlecard strong {
+  font-weight: bold !important;
+}
+
+/* === Paragraphs === */
 .gallery-item p {
-    line-height: 1.5;
-    text-align: left;
-    margin-top: 1rem;
-  }
-  .section-intro {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #444;
-    margin-top: 0.5rem;
-    margin-bottom: 2rem;
-    max-width: 85%;
-    text-align: left;
-  }
+  line-height: 1.5;
+  text-align: left;
+  margin-top: 1rem;
+}
+
+.section-intro {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #444;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+  max-width: 85%;
+  text-align: left;
+}

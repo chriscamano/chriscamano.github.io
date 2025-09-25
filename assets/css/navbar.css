@@ -1,0 +1,38 @@
+/* === Base & Scroll Behavior === */
+html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    margin: 0;
+    padding-top: 60px; /* account for fixed navbar */
+    font-family: var(--base-font-family);
+    font-size: var(--base-font-size);
+    background: #fff;
+    color: #463935;
+  }
+  
+  :root {
+    --base-font-size: 17px;
+    --base-font-family: 'Crimson Pro', serif;
+    --color-primary: #463935; /* Replace with your desired color */
+    --color-hover: #555;       /* Replace with your hover color */
+  }
+  
+  /* === Navbar === */
+  .navbar {
+    font-size: 1.2rem !important;
+    background-color: var(--color-primary) !important;
+    border-bottom: 4px solid #120e0d !important; /* Bright red trim */
+  }
+  .nav-item a:hover {
+    color: var(--color-hover) !important;
+    text-decoration: none !important; /* stop underline on hover */
+  }
+  .nav-item a {
+    font-size: 1.2rem !important;
+    padding: 16px 20px !important;
+    text-align: center;
+    color: white !important;
+  }
+  
