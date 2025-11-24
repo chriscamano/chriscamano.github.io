@@ -1,0 +1,9 @@
+{% assign scale = include.zoom | default: 100 %}
+<figure class="post-figure">
+  <div class="post-figure-frame" style="--zoom-scale: {{ scale | divided_by: 100.0 }};">
+    <img src="{{ include.src }}" alt="{{ include.alt | default: include.caption }}" loading="lazy">
+  </div>
+  {% if include.caption %}
+    <figcaption>{{ include.caption }}</figcaption>
+  {% endif %}
+</figure>

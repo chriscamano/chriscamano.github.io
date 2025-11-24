@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: "en-US" }}">
-  <link rel="icon" href="/assets/img/tensor.png?v=5" type="image/png">    <link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin=anonymous>
+  <link rel="icon" href="/assets/img/tensor.png?v=5" type="image/png">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css"
+        integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw="
+        crossorigin="anonymous">
 
   <!-- load Google Fonts -->
   <link
@@ -12,21 +16,17 @@
     rel="stylesheet"
   />
 
-  <!-- then your normal theme CSS -->
-
   {% if site.auto_dark_mode %}
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
   {% else %}
     <link rel="stylesheet" href="{{ '/assets/css/style-no-dark-mode.css' | relative_url }}" />
   {% endif %}
-
-
 
   <!-- Navbar + Gallery styles -->
   <link rel="stylesheet" href="{{ '/assets/css/navbar.css' | relative_url }}" />
   <link rel="stylesheet" href="{{ '/assets/css/gallery.css' | relative_url }}" />
 
-  <!-- finally, override to force Crimson Pro -->
+  <!-- Base typography overrides -->
   <style>
     body {
       margin: 0;
@@ -39,6 +39,75 @@
     code, pre {
       font-family: 'Ubuntu Mono', monospace !important;
     }
+
+    /* === About-me + tensor layout (only affects pages using .home-main) === */
+    .home-main {
+      display: flex;
+      gap: 2.5rem;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
+    .home-text {
+      flex: 3;
+      min-width: 0;
+    }
+
+    .home-tensor {
+      flex: 1.4;
+      min-width: 240px;
+      max-width: 340px;
+      align-self: flex-start;
+    }
+
+    #tensor-plot {
+      width: 100%;
+      height: 230px; /* small so it doesn't crunch your text */
+    }
+
+    @media (max-width: 900px) {
+      .home-main {
+        flex-direction: column;
+      }
+      .home-tensor {
+        max-width: 100%;
+      }
+    }
+
+    /* === Tensor block that text wraps around === */
+   .home-tensor-block {
+  float: right;
+  width: 260px;
+  max-width: 40%;
+  margin: -5.25rem 0 0rem -.2rem;  /* negative top margin lifts the tensor */
+}
+
+
+    #tensor-plot {
+      width: 100%;
+      height: 260px;
+    }
+
+    .tensor-caption {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: -1.5rem;
+    }
+
+    .tensor-caption strong {
+      font-weight: 700;
+    }
+
+    /* On small screens, stop wrapping and stack instead */
+    @media (max-width: 700px) {
+      .home-tensor-block {
+        float: none;
+        margin: 1rem auto;
+        max-width: 320px;
+      }
+    }
+  </style>
+
   </style>
 
   <head>
@@ -54,33 +123,32 @@
     <link rel="canonical" href="{{ site.canonical }}"/>
     {% endif %}
 
-    <!-- <link rel="icon" media="(prefers-color-scheme:dark)" href="{{ site.favicon_dark }}" type="image/png" />
-    <link rel="icon" href="/assets/img/tensor.png?v=2" type="image/png" />
-    <script src="./assets/js/favicon-switcher.js" type="application/javascript"></script> -->
-    <link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin=anonymous>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
+          integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ="
+          crossorigin="anonymous">
 
     {% if site.font == "Sans Serif" %}
-    <link rel="stylesheet" href="./assets/css/font_sans_serif.css">
+      <link rel="stylesheet" href="./assets/css/font_sans_serif.css">
     {% else %}
-    <link rel="stylesheet" href="./assets/css/font.css">
+      <link rel="stylesheet" href="./assets/css/font.css">
     {% endif %}
     {% if site.auto_dark_mode %}
-    <link rel="stylesheet" href="./assets/css/style.css">
-    <link rel="stylesheet" href="./assets/css/publications.css">
+      <link rel="stylesheet" href="./assets/css/style.css">
+      <link rel="stylesheet" href="./assets/css/publications.css">
     {% else %}
-    <link rel="stylesheet" href="./assets/css/style-no-dark-mode.css">
-    <link rel="stylesheet" href="./assets/css/publications-no-dark-mode.css">
+      <link rel="stylesheet" href="./assets/css/style-no-dark-mode.css">
+      <link rel="stylesheet" href="./assets/css/publications-no-dark-mode.css">
     {% endif %}
 
   </head>
   <body>
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Main Navigation">
       <ul class="nav-list">
-        <li class="nav-item"><a href="/">Home</a></li>
-        <li class="nav-item"><a href="/gallery/">Gallery</a></li>
-        <li class="nav-item"><a href="/blog/">Blog</a></li>
+        <li class="nav-item"><a href="{{ '/' | relative_url }}">Home</a></li>
+        <li class="nav-item"><a href="{{ '/blog/' | relative_url }}">Blog</a></li>
       </ul>
-    </nav>    
+    </nav>
     <div class="wrapper">
       <header>
         {% if site.avatar %}
@@ -109,7 +177,7 @@
         {% if site.google_scholar %}
         <a style="margin: 0 5px 0 0" href="{{ site.google_scholar }}">
           <i class="ai ai-google-scholar" style="font-size:1.2rem"></i>
-        </a>  
+        </a>
         {% endif %}
 
         {% if site.cv_link %}
@@ -144,16 +212,394 @@
       <footer>
       </footer>
     </div>
-    <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
-    {% if site.google_analytics %}
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create', '{{ site.google_analytics }}', 'auto');
-      ga('send', 'pageview');
-    </script>
-    {% endif %}
-  </body>
-</html>
+<!-- Plotly + sparse 3-tensor voxels with Portland gradient -->
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var plotDiv = document.getElementById("tensor-plot");
+  if (!plotDiv) return; // only on pages that have the tensor container
+
+  var n = 16;              // tensor is n x n x n
+  var baseDensity = 0.08;  // base sparsity level
+  var shrinkFrac = 0.05;   // shrink voxels by 5% per dimension inside each cell
+  var pad = shrinkFrac / 2.0;
+
+  // -------------------------------------------------------
+  //  Random symmetric sparsity + richer patterns
+  // -------------------------------------------------------
+  var triples = [];
+  var minVal = Infinity;
+  var maxVal = -Infinity;
+
+  // center index as "origin" for several of the functions
+  var center = (n - 1) / 2.0;
+  var scale  = center > 0 ? center : 1.0;
+
+  // --- choose one of several gradient scalar fields ---
+  var gradientModeCount = 8;
+  var gradientMode = Math.floor(Math.random() * gradientModeCount);
+
+  function scalarField(i, j, k) {
+    var u = (i - center) / scale;
+    var v = (j - center) / scale;
+    var w = (k - center) / scale;
+    var r = Math.sqrt(u*u + v*v + w*w);
+    var s = (i + j + k) / (3.0 * (n - 1));   // along main diagonal in [0,1]
+
+    switch (gradientMode) {
+      case 0:
+        // radial: bright center, darker edge
+        return -r;
+      case 1:
+        // smooth trigonometric interference
+        return Math.sin(2*Math.PI*i/n)
+             + Math.cos(2*Math.PI*j/n)
+             + 0.7*Math.sin(2*Math.PI*k/n);
+      case 2:
+        // low-rank product structure
+        return u * v * w;
+      case 3:
+        // spherical shell
+        return -Math.abs(r - 0.55);
+      case 4:
+        // cone along the main diagonal
+        return -Math.abs(s - 0.4);
+      case 5:
+        // checkerboard parity modulated by radius
+        return (( (i + j + k) % 2 === 0 ) ? 1 : -1) * (0.6 - r);
+      case 6:
+        // swirl / helical waves
+        return Math.sin(3*Math.PI*u + 2*Math.PI*v)
+             + Math.cos(3*Math.PI*w - 1.5*Math.PI*u);
+      case 7:
+      default:
+        // two-cluster potential from random centers (fixed for this page load)
+        return scalarField._twoCluster(i, j, k);
+    }
+  }
+
+  // precompute two random cluster centers for mode 7
+  (function initTwoClusters(){
+    var c1 = [Math.random()*(n-1), Math.random()*(n-1), Math.random()*(n-1)];
+    var c2 = [Math.random()*(n-1), Math.random()*(n-1), Math.random()*(n-1)];
+    var norm = n;
+    scalarField._twoCluster = function(i, j, k) {
+      var d1 = Math.sqrt((i-c1[0])**2 + (j-c1[1])**2 + (k-c1[2])**2) / norm;
+      var d2 = Math.sqrt((i-c2[0])**2 + (j-c2[1])**2 + (k-c2[2])**2) / norm;
+      // higher near either cluster, lower far away
+      return -(Math.min(d1, d2));
+    };
+  })();
+
+  // --- choose one of several sparsity patterns ---
+  var patternModeCount = 5;
+  var patternMode = Math.floor(Math.random() * patternModeCount);
+
+  // random anchors for clustered sparsity pattern
+  var anchors = [];
+  for (var a = 0; a < 3; a++) {
+    anchors.push([
+      Math.floor(Math.random() * n),
+      Math.floor(Math.random() * n),
+      Math.floor(Math.random() * n)
+    ]);
+  }
+
+  var patternMode = Math.floor(Math.random() * 5);
+
+function sparsityWeight(i, j, k) {
+  switch (patternMode) {
+    case 0:
+      // Uniform random sparsity everywhere
+      return 1.0;
+
+    case 1: {
+      // Banded near the diagonal in the (i, j)-plane, independent of k
+      // Gives stripe-like structures when you look down the k axis
+      var dij = Math.abs(i - j);
+      var sigma = 2.0;
+      return Math.exp(-(dij * dij) / (2 * sigma * sigma));
+    }
+
+    case 2: {
+      // Layered slabs along k: two bands around k ~ n/4 and k ~ 3n/4
+      var k1 = Math.floor(n / 4);
+      var k2 = Math.floor(3 * n / 4);
+      var d1 = Math.abs(k - k1);
+      var d2 = Math.abs(k - k2);
+      var sigma = 1.8;
+      var w1 = Math.exp(-(d1 * d1) / (2 * sigma * sigma));
+      var w2 = Math.exp(-(d2 * d2) / (2 * sigma * sigma));
+      return 0.7 * (w1 + w2);
+    }
+
+    case 3: {
+      // Cross pattern: higher density near the central i and j planes,
+      // decaying away from them. This gives a nice 3D "plus" shape.
+      var c = (n - 1) / 2.0;
+      var di = Math.abs(i - c);
+      var dj = Math.abs(j - c);
+      var sigma = 2.0;
+      var wi = Math.exp(-(di * di) / (2 * sigma * sigma));
+      var wj = Math.exp(-(dj * dj) / (2 * sigma * sigma));
+      return 0.8 * (wi + wj) / 2.0;
+    }
+
+    case 4:
+    default: {
+      // Spherical shell: more voxels near a radius r0 from the center
+      var c = (n - 1) / 2.0;
+      var u = (i - c);
+      var v = (j - c);
+      var w = (k - c);
+      var r = Math.sqrt(u * u + v * v + w * w);
+      var r0 = 0.6 * c;
+      var sigma = 1.5;
+      return Math.exp(-((r - r0) * (r - r0)) / (2 * sigma * sigma));
+    }
+  }
+}
+
+  function addPermutations(i, j, k, vRaw) {
+    var seen = {};
+    var perms = [
+      [i, j, k],
+      [i, k, j],
+      [j, i, k],
+      [j, k, i],
+      [k, i, j],
+      [k, j, i]
+    ];
+    perms.forEach(function(p) {
+      var key = p[0] + "," + p[1] + "," + p[2];
+      if (!seen[key]) {
+        seen[key] = true;
+        triples.push({ x: p[0], y: p[1], z: p[2], v: vRaw });
+      }
+    });
+  }
+
+  // sample random symmetric pattern
+  for (var i = 0; i < n; i++) {
+    for (var j = i; j < n; j++) {
+      for (var k = j; k < n; k++) {
+        var weight = sparsityWeight(i, j, k);
+        var prob = baseDensity * weight;
+        if (prob > 0.9) prob = 0.9;   // clamp for safety
+        if (Math.random() < prob) {
+          var vRaw = scalarField(i, j, k);
+          if (vRaw < minVal) minVal = vRaw;
+          if (vRaw > maxVal) maxVal = vRaw;
+          addPermutations(i, j, k, vRaw);
+        }
+      }
+    }
+  }
+
+  if (triples.length === 0) {
+    triples.push({ x: Math.floor(n/2), y: Math.floor(n/2), z: Math.floor(n/2), v: 0 });
+    minVal = maxVal = 0;
+  }
+  if (maxVal <= minVal) {
+    maxVal = minVal + 1e-6;
+  }
+
+  // -------------------------------------------------------
+  //  Build voxel mesh: each logical cell shrunk by 5%
+  // -------------------------------------------------------
+  var X = [], Y = [], Z = [];
+  var I = [], J = [], K = [];
+  var intensity = [];
+
+  function addCube(cellI, cellJ, cellK, colorVal) {
+    var base = X.length;
+
+    var x0 = cellI + pad;
+    var x1 = cellI + 1 - pad;
+    var y0 = cellJ + pad;
+    var y1 = cellJ + 1 - pad;
+    var z0 = cellK + pad;
+    var z1 = cellK + 1 - pad;
+
+    var verts = [
+      [x0, y0, z0],
+      [x1, y0, z0],
+      [x1, y1, z0],
+      [x0, y1, z0],
+      [x0, y0, z1],
+      [x1, y0, z1],
+      [x1, y1, z1],
+      [x0, y1, z1]
+    ];
+
+    for (var t = 0; t < 8; t++) {
+      X.push(verts[t][0]);
+      Y.push(verts[t][1]);
+      Z.push(verts[t][2]);
+      intensity.push(colorVal);
+    }
+
+    var faces = [
+      [0, 1, 2], [0, 2, 3],
+      [4, 5, 6], [4, 6, 7],
+      [0, 1, 5], [0, 5, 4],
+      [3, 2, 6], [3, 6, 7],
+      [0, 4, 7], [0, 7, 3],
+      [1, 2, 6], [1, 6, 5]
+    ];
+
+    faces.forEach(function (f) {
+      I.push(base + f[0]);
+      J.push(base + f[1]);
+      K.push(base + f[2]);
+    });
+  }
+
+  triples.forEach(function (p) {
+    var normalized = (p.v - minVal) / (maxVal - minVal); // ∈ [0,1]
+    addCube(p.x, p.y, p.z, normalized);
+  });
+
+  var traceVoxels = {
+    type: "mesh3d",
+    x: X,
+    y: Y,
+    z: Z,
+    i: I,
+    j: J,
+    k: K,
+    intensity: intensity,
+    colorscale: "Portland",
+    cmin: 0,
+    cmax: 1,
+    opacity: 1.0,
+    flatshading: true,
+    lighting: {
+      ambient: 0.85,
+      diffuse: 0.35,
+      specular: 0.15,
+      roughness: 0.95
+    },
+    lightposition: { x: 1.5, y: 1.2, z: 2.4 },
+    showscale: false,
+    name: "voxels"
+  };
+
+  // -------------------------------------------------------
+  //  Bounding box exactly [0,n]^3
+  // -------------------------------------------------------
+  var BX = [], BY = [], BZ = [];
+  function bseg(p0, p1) {
+    BX.push(p0[0], p1[0], null);
+    BY.push(p0[1], p1[1], null);
+    BZ.push(p0[2], p1[2], null);
+  }
+
+  var minC = 0;
+  var maxC = n;
+
+  var corners = [
+    [minC, minC, minC],
+    [maxC, minC, minC],
+    [maxC, maxC, minC],
+    [minC, maxC, minC],
+    [minC, minC, maxC],
+    [maxC, minC, maxC],
+    [maxC, maxC, maxC],
+    [minC, maxC, maxC]
+  ];
+  var edges = [
+    [0,1],[1,2],[2,3],[3,0],
+    [4,5],[5,6],[6,7],[7,4],
+    [0,4],[1,5],[2,6],[3,7]
+  ];
+  edges.forEach(function(e){ bseg(corners[e[0]], corners[e[1]]); });
+
+  var traceBox = {
+    type: "scatter3d",
+    x: BX,
+    y: BY,
+    z: BZ,
+    mode: "lines",
+    line: {
+      color: "rgba(0,0,0,0.6)",
+      width: 4
+    },
+    hoverinfo: "skip",
+    showlegend: false,
+    name: "bbox"
+  };
+
+  // axes: no ticks, no labels, no titles
+  var axisStyle = {
+    range: [minC, maxC],
+    showbackground: false,
+    showgrid: false,
+    showticklabels: false,
+    ticks: "",
+    zeroline: false,
+    showline: false,
+    title: { text: "" }
+  };
+
+  var layout = {
+    margin: { l: 0, r: 0, t: 0, b: 0 },
+    scene: {
+      xaxis: axisStyle,
+      yaxis: axisStyle,
+      zaxis: axisStyle,
+      aspectmode: "cube",
+      bgcolor: "rgba(0,0,0,0)"
+    },
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)"
+  };
+
+  Plotly.newPlot(plotDiv, [traceVoxels, traceBox],
+                 layout, { displayModeBar: false });
+
+  // -------------------------------------------------------
+  //  Gentle camera auto-rotate with user override
+  // -------------------------------------------------------
+  var baseEye = { x: 1.8, y: 1.6, z: 1.2 };
+  var radius  = Math.sqrt(baseEye.x*baseEye.x + baseEye.y*baseEye.y);
+  var height  = baseEye.z;
+  var angle   = Math.atan2(baseEye.y, baseEye.x);
+
+  var autoRotate           = true;
+  var programmaticRelayout = false;
+  var step   = 0.01;
+  var period = 80;
+
+  function tick() {
+    if (!autoRotate) return;
+    angle += step;
+    var eye = {
+      x: radius * Math.cos(angle),
+      y: radius * Math.sin(angle),
+      z: height
+    };
+    programmaticRelayout = true;
+    Plotly.relayout(plotDiv, { "scene.camera.eye": eye })
+      .then(function () {
+        programmaticRelayout = false;
+      });
+  }
+  var timer = setInterval(tick, period);
+
+  plotDiv.on("plotly_relayout", function (ev) {
+    if (programmaticRelayout) return;
+
+    if (ev["scene.camera.eye"]) {
+      autoRotate = false;
+      var e = ev["scene.camera.eye"];
+      baseEye = { x: e.x, y: e.y, z: e.z };
+      radius  = Math.sqrt(baseEye.x*baseEye.x + baseEye.y*baseEye.y);
+      height  = baseEye.z;
+      angle   = Math.atan2(baseEye.y, baseEye.x);
+
+      setTimeout(function () { autoRotate = true; }, 2000);
+    }
+  });
+});
+</script>

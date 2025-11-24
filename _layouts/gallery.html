@@ -87,13 +87,12 @@ title: Gallery
 
 <body>
   <!-- Shared top navbar -->
-  <nav class="navbar">
+  <nav class="navbar" role="navigation" aria-label="Main Navigation">
     <ul class="nav-list">
-      <li class="nav-item"><a href="/">Home</a></li>
-      <li class="nav-item"><a href="/gallery/">Gallery</a></li>
-      <li class="nav-item"><a href="/blog/">Blog</a></li>
+      <li class="nav-item"><a href="{{ '/' | relative_url }}">Home</a></li>
+      <li class="nav-item"><a href="{{ '/blog/' | relative_url }}">Blog</a></li>
     </ul>
-  </nav>  
+  </nav>
 
   <div class="gallery-wrapper">
     <!-- TOC sidebar -->

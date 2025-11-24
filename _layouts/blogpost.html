@@ -1,0 +1,130 @@
+---
+layout: default
+extra_css:
+  - sidebar.css
+  - post.css
+---
+<style>
+    /* === Markdown images inside posts === */
+    .post-content img {
+      display: block;
+      max-width: min(92%, 980px);
+      height: auto;
+      margin: 1.5rem auto;
+      border-radius: 12px;
+      border: 2px solid var(--color-primary, #463935);
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+  
+    /* Optional width utilities you can apply via kramdown attribute lists */
+    .post-content img.w-50 { max-width: 50% !important; }
+    .post-content img.w-65 { max-width: 65% !important; }
+    .post-content img.w-80 { max-width: 80% !important; }
+    .post-content img.w-100 { max-width: 100% !important; }
+  
+    /* Float helpers (auto-stack on small screens) */
+    .post-content img.float-left  { float: left;  margin: 0.5rem 1.25rem 1rem 0;  max-width: 45%; }
+    .post-content img.float-right { float: right; margin: 0.5rem 0 1rem 1.25rem; max-width: 45%; }
+    @media (max-width: 900px) {
+      .post-content img.float-left,
+      .post-content img.float-right { float: none; margin: 1rem auto; max-width: min(92%, 700px); }
+    }
+  
+    /* === Figure + caption (when you want a visible caption) === */
+    .post-content figure.md-figure {
+      margin: 1.75rem auto;
+      max-width: min(92%, 980px);
+      text-align: center;
+    }
+    .post-content figure.md-figure img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 2px solid var(--color-primary, #463935);
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    .post-content figure.md-figure figcaption {
+      margin-top: 0.6rem;
+      font-size: 0.95rem;
+      color: #666;
+      line-height: 1.4;
+    }
+    .post-content figure.md-figure figcaption em {
+      color: var(--color-primary, #463935);
+      font-style: normal;
+      font-weight: 600;
+      margin-right: 0.3rem;
+    }
+    /* Clear floats so text below doesn't wrap around floated images */
+    .post-content::after { content: ""; display: table; clear: both; }
+  </style>
+  
+<div class="single-post blog-container">
+  <aside class="blog-sidebar">
+    <h3>Recent Posts</h3>
+    <ul class="recent-posts">
+      {% if site.blog %}
+        {% assign posts_collection = site.blog %}
+      {% else %}
+        {% assign posts_collection = site.posts %}
+      {% endif %}
+      {% assign recent_posts = posts_collection | sort: "date" | reverse %}
+      {% for post in recent_posts limit:2 %}
+        <li>
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          <span class="recent-date">({{ post.date | date: "%b %d, %Y" }})</span>
+        </li>
+      {% endfor %}
+    </ul>
+
+    <h3>Categories</h3>
+    <ul class="categories-list">
+      {% assign all_categories = posts_collection | map: "categories" | join: "," | split: "," | uniq %}
+      {% for cat in all_categories %}
+        {% unless cat == "" %}
+          {% assign count = posts_collection | where_exp: "p", "p.categories contains cat" | size %}
+          {% assign cat_slug = cat | slugify %}
+          <li>
+            <a href="{{ '/categories/' | append: cat_slug | append: '/' | relative_url }}">{{ cat }}</a>
+            <span class="category-count">({{ count }})</span>
+          </li>
+        {% endunless %}
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <main class="blog-main">
+    <div class="blog-post-container">
+      <p><a class="back-link" href="{{ '/blog/' | relative_url }}">&larr; Back to Blog</a></p>
+
+      <h1 class="post-title">{{ page.title }}</h1>
+      <!-- horizontal divider directly under the title -->
+      <hr class="section-separator">
+
+      {% if page.bio or page.excerpt %}
+        <p class="post-subtitle">{{ page.bio | default: page.excerpt }}</p>
+      {% endif %}
+      {% if page.date %}
+        <p class="post-date">{{ page.date | date: "%B %d, %Y" }}</p>
+      {% endif %}
+
+      <!-- Make MathJax process this block -->
+      <article class="post-content mathjax-process">
+        {{ content }}
+      </article>
+      <hr class="section-separator">
+
+      {% if page.categories %}
+        <div class="post-categories-feed">
+          <strong>Categories:</strong>
+          {% for cat in page.categories %}
+            {% assign cat_slug = cat | slugify %}
+            <a href="{{ '/categories/' | append: cat_slug | append: '/' | relative_url }}" class="category-link">{{ cat }}</a>{% unless forloop.last %}, {% endunless %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <p class="post-date">Last updated: {{ page.last_modified_at | default: page.date | date: "%B %d, %Y" }}</p>
+    </div>
+  </main>
+</div>

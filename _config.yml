@@ -22,7 +22,7 @@ linkedin: https://www.linkedin.com/in/chris-cama%C3%B1o/
 # Images (e.g., your profile picture and your website's favicon) 
 # "favicon" and "favicon_dark" are used for the light and dark modes, respectively. 
 avatar: ./assets/img/biopic1.png
-favicon: ./assets/img/tensor.png
+favicon: ./assets/img/favicon.svg
 # favicon_dark: ./assets/img/favicon-dark.png
 
 # Footnote

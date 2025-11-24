@@ -2,16 +2,15 @@
 ---
 @import "minimal-light";
 
-/* ========== Color Variables ========== */
+
 :root {
-  --color-primary: #463935;    // Rich dark brown
+  --color-primary: #463935;       // Rich dark brown
   --color-accent:  #fdf6e3;      // Cream background (updated)
   --color-hover:   #3e2f2c;      // Darker brown for hover
   --color-text:    #222;         // Normal text color
   --color-bg:      #fdf6e3;      // Background color
   --color-link:    var(--color-primary);
 }
-
 /* ========== Post Styling ========== */
 .blog-post {
   display: flex;
@@ -69,46 +68,6 @@
   margin: 40px 0;
 }
 
-/* ========== Navbar & Navigation ========== */
-/* ========== Navbar & Navigation ========== */
-.navbar,
-.navbar.scrolled,
-.navbar.is-fixed-top,
-.navbar.is-sticky {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  background-color: var(--color-primary) !important;
-  box-shadow: none !important;
-  transition: none !important;
-  transform: none !important;
-  z-index: 10000 !important;  /* Ensures the navbar is above other content */
-}
-
-.nav-list {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-item {
-  float: left;
-}
-
-.nav-item a {
-  display: block;
-  font-size: 1.2rem !important;
-  color: white !important;
-  text-align: center;
-  padding: 16px 20px;
-  text-decoration: none;
-}
-
-.nav-item a:hover {
-  background-color: var(--color-bg) !important;
-  color: var(--color-primary) !important;
-}
 
 /* ========== Global Styles & Imports ========== */
 @import url("https://bootswatch.com/flatly/bootstrap.min.css");
@@ -171,7 +130,7 @@ header {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-top: 40px;
+  margin-top: 10px;
 }
 
 a.image.avatar {
@@ -355,4 +314,60 @@ hr {
   background-color: var(--color-primary);
   width: 100%;
   margin: 2rem auto;
+}
+/* ========== Navbar ========== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--color-primary);
+  z-index: 1000;
+}
+
+.nav-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.nav-item a {
+  display: block;
+  font-size: 1.2rem;
+  color: white !important;
+  text-align: center;
+  padding: 16px 20px;
+  text-decoration: none;
+}
+
+.nav-item a:hover {
+  background-color: var(--color-bg);
+  color: var(--color-primary) !important;
+}
+/* Constrain all page content */
+.blog-container {
+  display: flex;
+  align-items: flex-start;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 5%;   /* only outer buffers (5% left + 5% right) */
+}
+
+.blog-sidebar {
+  flex: 0 0 20%;   /* 20% of the inner width */
+  position: sticky;
+  top: 80px;
+  background: #fff;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  font-size: 1rem;
+  line-height: 1.4;
+  border-right: 2px solid #ddd;
+}
+
+.blog-main {
+  flex: 0 0 75%;   /* 75% of the inner width */
+  text-align: left;
+  box-sizing: border-box;
 }

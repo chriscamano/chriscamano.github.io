@@ -3,21 +3,27 @@ layout: homepage
 title: About Me
 ---
 
-I’m a second-year PhD student in the [Applied and Computational Mathematics department](https://www.cms.caltech.edu/academics/grad/grad_acm) at Caltech, advised by Professor Joel Tropp. My research focuses on the intersection of randomized numerical linear algebra (rNLA) and large-scale data science, with an emphasis on high-dimensional computation. 
+<div class="home-tensor-block">
+  <div id="tensor-plot"></div>
+  <p class="tensor-caption"><strong>A sparse, symmetric random 3-tensor</strong></p>
+</div>
 
-I am currently funded through the [National Science Foundation Graduate Research Fellowship](https://www.nsfgrfp.org) and the      [Kortschak Scholars Fellowship](https://www.cms.caltech.edu/research/kortschak-scholars).
+I’m a second-year PhD student in the [Applied and Computational Mathematics department](https://www.cms.caltech.edu/academics/grad/grad_acm) at Caltech, advised by Professor [Joel Tropp](https://tropp.caltech.edu). My research focuses on the intersection of randomized numerical linear algebra (rNLA) and large-scale data science, with an emphasis on *random tensors*.
+
+I am currently funded through the [National Science Foundation Graduate Research Fellowship](https://www.nsfgrfp.org), and the [Kortschak Scholars Fellowship](https://www.cms.caltech.edu/research/kortschak-scholars).
 
 ## Research Interests
 
 - <span style="font-size:1.05em; font-weight:bold;">Randomized Numerical Linear Algebra</span>: matrix sketching, fast linear solvers, randomized eigensolvers, algorithm acceleration.
 - <span style="font-size:1.05em; font-weight:bold;">Tensor Networks and Quantum Mechanical Simulation</span>: MPO-MPS contraction, randomized methods for tensor networks, efficient Hamiltonian time evolution.
-- <span style="font-size:1.05   em; font-weight:bold;">Approximate Gaussian Processes</span>: sub-cubic gaussian process models, inducing point approximations, conjugate gradient methods for kernel inversion.
+- <span style="font-size:1.05em; font-weight:bold;">Approximate Gaussian Processes</span>: sub-cubic gaussian process models, inducing point approximations, conjugate gradient methods for kernel inversion.
 <!-- - **Bayesian Inference**: Approximate Gaussian processes, structured priors and uncertainty quantification in modern machine learning models. -->
 
 {% include_relative _includes/publications.md %}
 
 <h2 id="publications" style="margin: 2px 0px -15px;padding-top:1em;">News </h2>
 <hr style="border: none; height: 3px; background-color: #463935; margin: 1em 0;">
+- **[Oct. 2025]** Attended the [Simon's Institute workshop on Linear Systems and Eigenvalue Problems](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems), presenting a poster on [sparse and tensor sketching](https://arxiv.org/abs/2508.21189).
 - **[Aug. 2025]** Attended the [Institute of Pure and Applied Mathematics (IPAM) RNLA workshop](https://www.ipam.ucla.edu/programs/special-events-and-conferences/research-collaboration-workshop-randomized-numerical-linear-algebra-rnla/) on randomized Krylov methods.
 - **[Apr. 2025]** Invited to speak at [Southern California Applied Math Symposium](https://www.math.uci.edu/node/38364) on randomized tensor networks.
 - **[Apr. 2025]** Invited to speak at [UCSD Mathematics of Information, Data, and Signals Seminar](https://sites.google.com/ucsd.edu/ucsd-minds/home) on randomized tensor networks.

@@ -1,0 +1,243 @@
+/* ================================
+   === Blog Index (Feed) ===
+   ================================ */
+
+/* Container */
+.blog-container {
+  display: flex;
+  align-items: flex-start;
+  box-sizing: border-box;
+  position: relative;
+  padding-left: 2.5%;
+  padding-right: 5%;
+  gap: 3rem;
+  background-color: #faf3e3;  /* slightly warmer, a bit more deliberate */
+  max-width: 1200px;          /* cap line length of the whole layout */
+  margin: 0 auto;             /* center under the navbar */
+}
+
+.blog-sidebar {
+  background: #ffffff;
+  padding: 1.75rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+/* Main content area */
+.blog-main {
+  flex: 1;
+  margin-left: 0;
+  margin-right: 5%;
+  max-width: 70%;
+  text-align: left;
+}
+
+.blog-intro {
+  text-align: center;
+  margin: -3rem 0 3rem;
+}
+
+.blog-intro .blog-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--color-primary, #463935);
+}
+
+.blog-intro .blog-description {
+  font-size: 1.2rem;
+  color: #555;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Section separator */
+.section-separator {
+  border: none;
+  height: 3px;
+  background-color: var(--color-primary, #463935);
+  margin: 1em 0;
+  width: 100%;
+}
+
+/* Post card wrapper */
+.post-wrapper {
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+/* .blog-post {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin: 2.5rem 0;
+  padding: 1.5rem;
+  border: 3px solid var(--color-primary, #463935);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+} */
+ 
+.blog-post {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin: 2.5rem 0;
+  padding: 1.5rem;
+  border: 2px solid rgba(70, 57, 53, 0.5); /* softer line than full solid */
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+/* Post image */
+.blog-post .post-image {
+  flex: 0 0 40%;
+  padding-right: 2%;
+}
+
+.blog-post .post-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid var(--color-primary, #463935);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* Post text */
+.blog-post .post-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.blog-post .post-text h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--color-primary, #463935);
+}
+
+.blog-post .post-text hr {
+  border: none;
+  border-top: 2px solid var(--color-primary, #463935);
+  margin: 0.3rem 0 1rem;
+  width: 100%;
+}
+
+.blog-post .post-text p {
+  margin: 0 0 1rem;
+  line-height: 1.6;
+  font-size: 1.05rem;
+  color: #333;
+}
+
+.blog-post .post-text a {
+  margin-top: auto;
+  font-weight: bold;
+  color: #007acc;
+  text-decoration: none;
+}
+
+.blog-post .post-text a:hover {
+  text-decoration: underline;
+  color: #005999;
+}
+
+/* Metadata (feed) */
+.post-date-feed {
+  position: static;
+  display: block;
+  font-size: 0.9rem;
+  color: #555;
+  margin: 0.4rem 0 1rem;
+  font-style: italic;
+}
+/* Hero banner wrapper – uses main column width */
+.blog-opener {
+  margin-bottom: 2.5rem;
+}
+
+/* Background image region */
+.blog-hero {
+  position: relative;
+  max-width: 100%;              /* no wider than .blog-main */
+  margin: 2rem auto 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background-image: url("/assets/img/banner.jpeg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Dark overlay for legible text – lighter now */
+.blog-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    rgba(0, 0, 0, 0.25),  /* was 0.45 */
+    rgba(0, 0, 0, 0.45)   /* was 0.65 */
+  );
+}
+/* Text inside the banner */
+.blog-hero-inner {
+  position: relative;
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+/* Title row – remove typewriter here so it only applies to the code span */
+.blog-opener-title {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin: 0 0 0.5rem;
+  /* no font-family here, let it inherit the normal heading font */
+}
+
+.blog-title-code {
+  font-family: "Ubuntu Mono", "Courier New", monospace;  /* typewriter only here */
+  font-size: 3.2rem;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.35);         /* low-opacity black highlight */
+  padding: 0.2em 0.75em;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.blog-title-math {
+  font-size: 3.2rem;
+  color: #ffffff;
+  /* no font-family here so MathJax uses its own math font */
+}
+
+
+
+/* Subtitle on top of the image */
+.blog-opener-subtitle {
+  margin: 0.35rem 0 0;
+  font-size: 1.05rem;
+  color: #f3f3f3;
+  font-style: italic;
+}
+
+/* Keep the hr aligned with the main column beneath the banner */
+.section-separator {
+  border: none;
+  height: 3px;
+  background-color: var(--color-primary, #463935);
+  margin: 0.5rem 0 1.5rem;
+  width: 100%;
+}
+
+.blog-sidebar a:hover {
+  color: var(--color-hover);
+  text-decoration: none; /* no underline on hover */
+}
+

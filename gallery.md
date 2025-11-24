@@ -2,6 +2,7 @@
 layout: gallery
 title: Gallery
 permalink: /gallery/
+published: false
 ---
 <p>
   Welcome to the Gallery page. Here, you'll find a curated collection of plots and visualizations from my past research papers, experiments, and side projects.
@@ -12,3 +13,4 @@ permalink: /gallery/
 </p>
 
 <hr>
+<!-- This page has been converted into a blog post: see the post "Gallery" ({{ '/2025/11/23/gallery.html' | relative_url }}). -->

@@ -4,6 +4,7 @@ recent:
     conference_short: "arxiv"
     pdf: "https://arxiv.org/abs/2508.21189"
     code: "https://github.com/chriscamano/OSI-and-Structured-Random-Matrices"
+    poster: "/assets/files/OSI_poster.pdf"
     image: "./assets/img/Sparse_final.png"
     notes:  
   - title: "Debiasing Polynomial and Fourier Regression (2025)"
