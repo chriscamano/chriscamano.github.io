@@ -129,12 +129,3 @@
     opacity: 0.9;
   }
 }
-.blog-sidebar a {
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
-.blog-sidebar a:hover {
-  color: var(--color-hover);
-  text-decoration: none; /* no underline on hover */
-}

@@ -23,6 +23,7 @@ I am currently funded through the [National Science Foundation Graduate Research
 
 <h2 id="publications" style="margin: 2px 0px -15px;padding-top:1em;">News </h2>
 <hr style="border: none; height: 3px; background-color: #463935; margin: 1em 0;">
+- **[Jan. 2026]** Attended the [SIAM Symposium on Simplicity in Algorithms (SOSA 2026)](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems), to give a talk on [debiasing polynomial regression with random matrix theory](https://arxiv.org/abs/2508.05920)
 - **[Oct. 2025]** Attended the [Simon's Institute workshop on Linear Systems and Eigenvalue Problems](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems), presenting a poster on [sparse and tensor sketching](https://arxiv.org/abs/2508.21189).
 - **[Aug. 2025]** Attended the [Institute of Pure and Applied Mathematics (IPAM) RNLA workshop](https://www.ipam.ucla.edu/programs/special-events-and-conferences/research-collaboration-workshop-randomized-numerical-linear-algebra-rnla/) on randomized Krylov methods.
 - **[Apr. 2025]** Invited to speak at [Southern California Applied Math Symposium](https://www.math.uci.edu/node/38364) on randomized tensor networks.
