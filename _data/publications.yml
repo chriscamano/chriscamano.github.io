@@ -10,7 +10,7 @@ recent:
 
   - title: "Debiasing Polynomial and Fourier Regression (2025)"
     authors: "Chris Camaño, Raphael A. Meyer, Kevin Shu"
-    conference_short: "arxiv"
+    conference_short: "SOSA"
     pdf: "https://arxiv.org/abs/2508.05920"
     code: "https://github.com/chriscamano/Debiased-Polynomial-Regression"
     slides: "/assets/files/debiasedpoly.pptx"
@@ -19,7 +19,7 @@ recent:
 
   - title: "Successive randomized compression: A randomized algorithm for the compressed MPO-MPS product (2025)"
     authors: "Chris Camaño, Ethan N. Epperly, Joel A. Tropp"
-    conference_short: "arxiv"
+    conference_short: "Quantum"
     pdf: "https://arxiv.org/abs/2504.06475"
     code: "https://github.com/chriscamano/RandomMPOMPS"
     image: "./assets/img/TDVP2.png"
