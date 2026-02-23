@@ -73,6 +73,19 @@ patches = {
         end
       PATCH
     ]
+  ],
+  "lib/bibtex/names.rb" => [
+    [
+      /\[:convert!,\s*:rename_if,\s*:rename_unless,\s*:extend_initials\]\.each do \|method_id\|\s*\n\s*define_method\(method_id\) do \|\*arguments\|\s*\n\s*tokens\.each \{ \|t\| t\.send\(method_id, \*arguments\) \}\s*\n\s*self\s*\n\s*end\s*\n\s*end/m,
+      <<~'PATCH'
+        [:convert!, :rename_if, :rename_unless, :extend_initials].each do |method_id|
+          define_method(method_id) do |*arguments|
+            tokens.each { |t| t.send(method_id, *arguments) if t.respond_to?(method_id) }
+            self
+          end
+        end
+      PATCH
+    ]
   ]
 }
 
@@ -88,11 +101,12 @@ unsafe_patterns = {
   "data.each(&Proc.new)" => /data\.each\(&Proc\.new\)/,
   "q('@entry').each(&Proc.new)" => /q\('@entry'\)\.each\(&Proc\.new\)/,
   "fields.each(&Proc.new)" => /fields\.each\(&Proc\.new\)/,
-  "dup.convert!(*filters, &Proc.new)" => /dup\.convert!\(\*filters,\s*&Proc\.new\)/m
+  "dup.convert!(*filters, &Proc.new)" => /dup\.convert!\(\*filters,\s*&Proc\.new\)/m,
+  "tokens.each { |t| t.send(method_id, *arguments) }" => /tokens\.each \{ \|t\| t\.send\(method_id, \*arguments\) \}/
 }
 
 remaining = []
-%w[lib/bibtex/bibliography.rb lib/bibtex/entry.rb].each do |relative_path|
+%w[lib/bibtex/bibliography.rb lib/bibtex/entry.rb lib/bibtex/names.rb].each do |relative_path|
   path = File.join(root, relative_path)
   body = File.read(path)
   unsafe_patterns.each do |label, regex|

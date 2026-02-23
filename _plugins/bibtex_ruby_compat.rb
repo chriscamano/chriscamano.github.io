@@ -68,3 +68,12 @@ if defined?(BibTeX::Entry)
     end
   end
 end
+
+if defined?(BibTeX::Names)
+  class BibTeX::Names
+    def convert!(*filters)
+      tokens.each { |t| t.convert!(*filters) if t.respond_to?(:convert!) }
+      self
+    end
+  end
+end
