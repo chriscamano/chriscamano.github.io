@@ -4,11 +4,11 @@
 # Patch bibtex-ruby 4.4.x for Ruby 3 compatibility.
 # The upstream gem uses Proc.new without explicit block capture in a few methods.
 
-def resolve_bibtex_root
-  output = `bundle show bibtex-ruby 2>&1`
+def resolve_gem_root(gem_name)
+  output = `bundle show #{gem_name} 2>&1`
   candidates = output.lines.map(&:strip).reverse
-  root = candidates.find { |line| line.include?("bibtex-ruby") && File.directory?(line) }
-  abort("Could not resolve bibtex-ruby path.\nOutput:\n#{output}") unless root
+  root = candidates.find { |line| line.include?(gem_name) && File.directory?(line) }
+  abort("Could not resolve #{gem_name} path.\nOutput:\n#{output}") unless root
   root
 end
 
@@ -21,7 +21,8 @@ def patch_file(path, replacements)
   true
 end
 
-root = resolve_bibtex_root
+bibtex_root = resolve_gem_root("bibtex-ruby")
+scholar_root = resolve_gem_root("jekyll-scholar")
 
 patches = {
   "lib/bibtex/bibliography.rb" => [
@@ -76,6 +77,28 @@ patches = {
   ],
   "lib/bibtex/names.rb" => [
     [
+      /def_delegators :@tokens, :each, :sort/,
+      <<~'PATCH'
+        def_delegators :@tokens, :sort
+
+        def each
+          return enum_for(:each) unless block_given?
+
+          @tokens.each do |token|
+            name =
+              if token.respond_to?(:each_pair)
+                token
+              else
+                Name.parse(token.to_s) || Name.new(last: token.to_s)
+              end
+            yield(name)
+          end
+
+          self
+        end
+      PATCH
+    ],
+    [
       /def value\(options = \{\}\)\s*\n\s*@tokens\.map \{ \|n\| n\.to_s\(options\) \}\.join\(' and '\)\s*\n\s*end/m,
       <<~'PATCH'
         def value(options = {})
@@ -113,8 +136,37 @@ patches = {
 
 changed_paths = []
 patches.each do |relative_path, replacements|
-  path = File.join(root, relative_path)
+  path = File.join(bibtex_root, relative_path)
   changed_paths << path if patch_file(path, replacements)
+end
+
+scholar_path = File.join(scholar_root, "lib/jekyll/scholar/utilities.rb")
+scholar_src = File.read(scholar_path)
+scholar_before = scholar_src.dup
+
+scholar_src.gsub!(
+  /value\.each\.with_index do \|name, idx\|\s*\n\s*parts = \{\}\s*\n\s*name\.each_pair do \|k, v\|\s*\n\s*e\["#\{key\}_#\{idx\}_#\{k\}"\] = v\.to_s\s*\n\s*parts\[k\.to_s\] = v\.to_s\s*\n\s*end\s*\n\s*arr << parts\s*\n\s*end/m,
+  <<~'PATCH'
+    value.each.with_index do |name, idx|
+      parts = {}
+      pairs =
+        if name.respond_to?(:each_pair)
+          name
+        else
+          BibTeX::Name.parse(name.to_s) || BibTeX::Name.new(last: name.to_s)
+        end
+      pairs.each_pair do |k, v|
+        e["#{key}_#{idx}_#{k}"] = v.to_s
+        parts[k.to_s] = v.to_s
+      end
+      arr << parts
+    end
+  PATCH
+)
+
+if scholar_src != scholar_before
+  File.write(scholar_path, scholar_src)
+  changed_paths << scholar_path
 end
 
 puts(changed_paths.empty? ? "No bibtex-ruby patch needed" : "Patched:\n- #{changed_paths.join("\n- ")}")
@@ -124,6 +176,7 @@ unsafe_patterns = {
   "q('@entry').each(&Proc.new)" => /q\('@entry'\)\.each\(&Proc\.new\)/,
   "fields.each(&Proc.new)" => /fields\.each\(&Proc\.new\)/,
   "dup.convert!(*filters, &Proc.new)" => /dup\.convert!\(\*filters,\s*&Proc\.new\)/m,
+  "def_delegators :@tokens, :each, :sort" => /def_delegators :@tokens, :each, :sort/,
   "tokens.each { |t| t.send(method_id, *arguments) }" => /tokens\.each \{ \|t\| t\.send\(method_id, \*arguments\) \}/,
   "map { |n| n.to_citeproc(options) }" => /map \{ \|n\| n\.to_citeproc\(options\) \}/,
   "@tokens.map { |n| n.to_s(options) }.join(' and ')" => /@tokens\.map \{ \|n\| n\.to_s\(options\) \}\.join\(' and '\)/
@@ -131,11 +184,14 @@ unsafe_patterns = {
 
 remaining = []
 %w[lib/bibtex/bibliography.rb lib/bibtex/entry.rb lib/bibtex/names.rb].each do |relative_path|
-  path = File.join(root, relative_path)
+  path = File.join(bibtex_root, relative_path)
   body = File.read(path)
   unsafe_patterns.each do |label, regex|
     remaining << "#{relative_path}: #{label}" if body.match?(regex)
   end
 end
+
+scholar_body = File.read(scholar_path)
+remaining << "jekyll-scholar/utilities.rb: name.each_pair do |k, v|" if scholar_body.match?(/name\.each_pair do \|k, v\|/)
 
 abort("bibtex-ruby compatibility patch did not apply cleanly:\n#{remaining.join("\n")}") unless remaining.empty?

@@ -71,15 +71,31 @@ end
 
 if defined?(BibTeX::Names)
   class BibTeX::Names
+    def each(&block)
+      return enum_for(:each) unless block
+
+      @tokens.each do |token|
+        name =
+          if token.respond_to?(:each_pair)
+            token
+          else
+            BibTeX::Name.parse(token.to_s) || BibTeX::Name.new(last: token.to_s)
+          end
+        block.call(name)
+      end
+
+      self
+    end
+
     def value(options = {})
-      @tokens.map do |n|
+      each.map do |n|
         node = n.respond_to?(:to_citeproc) ? n : BibTeX::Name.parse(n.to_s)
         node ? node.to_s(options) : n.to_s
       end.join(" and ")
     end
 
     def to_citeproc(options = {})
-      map do |n|
+      each.map do |n|
         node = n.respond_to?(:to_citeproc) ? n : BibTeX::Name.parse(n.to_s)
         node.to_citeproc(options) if node.respond_to?(:to_citeproc)
       end.compact
