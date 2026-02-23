@@ -1,5 +1,5 @@
 current directory: /Users/pren/Research/chriscamano.github.io/vendor/bundle/ruby/2.6.0/gems/commonmarker-0.23.11/ext/commonmarker
-/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/bin/ruby -I /System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0 -r ./siteconf20250406-87155-fr66h3.rb extconf.rb
+/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/bin/ruby -I /System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0 -r ./siteconf20260204-16066-5qolvq.rb extconf.rb
 creating Makefile
 
 current directory: /Users/pren/Research/chriscamano.github.io/vendor/bundle/ruby/2.6.0/gems/commonmarker-0.23.11/ext/commonmarker
@@ -1727,4 +1727,4 @@ ld: warning: search path '/AppleInternal/Library/BuildRoots/d187755d-b9a3-11ef-8
 
 current directory: /Users/pren/Research/chriscamano.github.io/vendor/bundle/ruby/2.6.0/gems/commonmarker-0.23.11/ext/commonmarker
 make "DESTDIR=" install
-/usr/bin/install -c -m 0755 commonmarker.bundle ./.gem.20250406-87155-1lcmj5f/commonmarker
+/usr/bin/install -c -m 0755 commonmarker.bundle ./.gem.20260204-16066-7nap9t/commonmarker

@@ -43,6 +43,8 @@ sass:
 # Google Analytics ID
 # Please remove this if you don't use Google Analytics
 google_analytics: UA-111540567-4
+google_analytics_id: G-LESRVNYQED
+views_api_base: https://chriscamano-github-io-git-main-chriscamanos-projects.vercel.app
 
 collections:
   gallery:
@@ -52,6 +54,14 @@ collections:
 # Use this project as a remote theme for GitHub Pages
 # See the guide here: https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/adding-a-theme-to-your-github-pages-site-using-jekyll
 remote_theme: yaoyao-liu/minimal-light
+# _config.yml
+banner: /assets/images/banner.png
+plugins:
+  - jekyll-scholar
+scholar:
+  source: assets/bib
+  bibliography: refs.bib
+  style: ieee
 
 # The following files will be removed from the generated website.
 exclude:

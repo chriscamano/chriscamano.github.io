@@ -1,0 +1,35 @@
+---
+---
+<span class="post-ref-entry">
+  {% if entry.author %}
+    <span class="post-ref-authors">{{ entry.author }}</span>
+  {% endif %}
+  {% if entry.title %}
+    <span class="post-ref-title">, “{{ entry.title }}”</span>
+  {% endif %}
+  <span class="post-ref-tail">
+    {% if entry.journal %}
+      , <i>{{ entry.journal }}</i>
+    {% elsif entry.booktitle %}
+      , <i>{{ entry.booktitle }}</i>
+    {% elsif entry.publisher %}
+      , {{ entry.publisher }}
+    {% endif %}
+
+    {% if entry.volume %}, vol. {{ entry.volume }}{% endif %}
+    {% if entry.number %}, no. {{ entry.number }}{% endif %}
+    {% if entry.pages %}, pp. {{ entry.pages }}{% endif %}
+    {% if entry.year %}, {{ entry.year }}{% endif %}
+
+    {% if entry.doi %}
+      {% assign doi_href = entry.doi %}
+      {% unless doi_href contains 'http' %}
+        {% assign doi_href = 'https://doi.org/' | append: entry.doi %}
+      {% endunless %}
+      , doi: <a href="{{ doi_href }}">{{ entry.doi }}</a>
+    {% elsif entry.url %}
+      , <a href="{{ entry.url }}">{{ entry.url }}</a>
+    {% endif %}
+    .
+  </span>
+</span>

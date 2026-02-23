@@ -12,6 +12,14 @@ window.MathJax.tex.macros = Object.assign(window.MathJax.tex.macros || {}, {
   onevec: "{\\mathbb{1}}",
   indicator: "{\\mathbb{1}}",
 
+  /* === Safe fallback macros for colored experiment notation === */
+  Acolor: ["{#1}", 1],
+  Bcolor: ["{#1}", 1],
+  Ccolor: ["{#1}", 1],
+  al: "{\\alpha}",
+  be: "{\\beta}",
+  ga: "{\\gamma}",
+
   /* === Bold vectors === */
   va: "{\\boldsymbol{a}}",
   vb: "{\\boldsymbol{b}}",
@@ -214,4 +222,3 @@ window.MathJax.tex.macros = Object.assign(window.MathJax.tex.macros || {}, {
   trp:  "{\\mathsf{TRP}}"
 
 });
-

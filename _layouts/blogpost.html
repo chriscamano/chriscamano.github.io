@@ -3,64 +3,15 @@ layout: default
 extra_css:
   - sidebar.css
   - post.css
+  - blogpost.css
 ---
-<style>
-    /* === Markdown images inside posts === */
-    .post-content img {
-      display: block;
-      max-width: min(92%, 980px);
-      height: auto;
-      margin: 1.5rem auto;
-      border-radius: 12px;
-      border: 2px solid var(--color-primary, #463935);
-      box-shadow: 0 2px 8px rgba(0,0,0,.08);
-    }
-  
-    /* Optional width utilities you can apply via kramdown attribute lists */
-    .post-content img.w-50 { max-width: 50% !important; }
-    .post-content img.w-65 { max-width: 65% !important; }
-    .post-content img.w-80 { max-width: 80% !important; }
-    .post-content img.w-100 { max-width: 100% !important; }
-  
-    /* Float helpers (auto-stack on small screens) */
-    .post-content img.float-left  { float: left;  margin: 0.5rem 1.25rem 1rem 0;  max-width: 45%; }
-    .post-content img.float-right { float: right; margin: 0.5rem 0 1rem 1.25rem; max-width: 45%; }
-    @media (max-width: 900px) {
-      .post-content img.float-left,
-      .post-content img.float-right { float: none; margin: 1rem auto; max-width: min(92%, 700px); }
-    }
-  
-    /* === Figure + caption (when you want a visible caption) === */
-    .post-content figure.md-figure {
-      margin: 1.75rem auto;
-      max-width: min(92%, 980px);
-      text-align: center;
-    }
-    .post-content figure.md-figure img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 12px;
-      border: 2px solid var(--color-primary, #463935);
-      box-shadow: 0 2px 8px rgba(0,0,0,.08);
-    }
-    .post-content figure.md-figure figcaption {
-      margin-top: 0.6rem;
-      font-size: 0.95rem;
-      color: #666;
-      line-height: 1.4;
-    }
-    .post-content figure.md-figure figcaption em {
-      color: var(--color-primary, #463935);
-      font-style: normal;
-      font-weight: 600;
-      margin-right: 0.3rem;
-    }
-    /* Clear floats so text below doesn't wrap around floated images */
-    .post-content::after { content: ""; display: table; clear: both; }
-  </style>
-  
+
 <div class="single-post blog-container">
   <aside class="blog-sidebar">
+    <p>
+      <a class="back-link" href="{{ '/blog/' | relative_url }}">&larr; Back to Main Blog</a>
+    </p>
+
     <h3>Recent Posts</h3>
     <ul class="recent-posts">
       {% if site.blog %}
@@ -72,80 +23,219 @@ extra_css:
       {% for post in recent_posts limit:2 %}
         <li>
           <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-          <span class="recent-date">({{ post.date | date: "%b %d, %Y" }})</span>
         </li>
       {% endfor %}
     </ul>
 
-    <h3>Categories</h3>
-    <ul class="categories-list">
-      {% assign all_categories = posts_collection | map: "categories" | join: "," | split: "," | uniq %}
-      {% for cat in all_categories %}
-        {% unless cat == "" %}
-          {% assign count = posts_collection | where_exp: "p", "p.categories contains cat" | size %}
-          {% assign cat_slug = cat | slugify %}
-          <li>
-            <a href="{{ '/categories/' | append: cat_slug | append: '/' | relative_url }}">{{ cat }}</a>
-            <span class="category-count">({{ count }})</span>
-          </li>
-        {% endunless %}
-      {% endfor %}
-    </ul>
+    <div class="sidebar-directory">
+      <h3>In This Post</h3>
+      <nav class="post-directory" aria-label="Post directory"></nav>
+    </div>
   </aside>
 
   <main class="blog-main">
     <div class="blog-post-container">
-      <p><a class="back-link" href="{{ '/blog/' | relative_url }}">&larr; Back to Blog</a></p>
+      <div class="post-opener">
+        <div class="post-hero">
+          <div class="post-hero-inner mathjax-process">
+            <h1 class="post-hero-title" aria-label="Blog mark">
+              <span class="post-title-code">\otimes</span>
+              <span class="post-title-math">$ \otimes $</span>
+            </h1>
+            <p class="post-hero-subtitle">
+              a blog about (mostly) tensors
+            </p>
+          </div>
+        </div>
+      </div>
 
-      <h1 class="post-title">{{ page.title }}</h1>
-      <!-- horizontal divider directly under the title -->
+      <h1 class="post-title-small">{{ page.title }}</h1>
+
+      {% if page.date %}
+        <p class="post-date">
+          {{ page.date | date: "%B %d, %Y" }}
+          <span class="post-views" aria-live="polite">· <span class="post-views-count">—</span> views</span>
+        </p>
+      {% endif %}
+
       <hr class="section-separator">
 
-      {% if page.bio or page.excerpt %}
-        <p class="post-subtitle">{{ page.bio | default: page.excerpt }}</p>
-      {% endif %}
-      {% if page.date %}
-        <p class="post-date">{{ page.date | date: "%B %d, %Y" }}</p>
+      {% if page.bio %}
+        <p class="post-subtitle">{{ page.bio }}</p>
       {% endif %}
 
-      <!-- Make MathJax process this block -->
       <article class="post-content mathjax-process">
         {{ content }}
       </article>
-      <hr class="section-separator">
+
+      <details class="post-bibliography">
+        <summary>References</summary>
+
+        <hr style="border: none; height: 2px; background-color: #463935; margin: 0.75em 0;">
+
+        <div class="post-content" style="padding-top: 0.25rem;">
+          {% bibliography --cited --template post_reference %}
+        </div>
+      </details>
+      <script>
+        (function () {
+          function openReferencesForHash() {
+            var hash = window.location.hash;
+            if (!hash) return;
+            var target = document.querySelector(hash);
+            if (!target) return;
+            var details = target.closest('details');
+            if (details && !details.open) {
+              details.open = true;
+            }
+          }
+
+          function buildPostDirectory() {
+            var nav = document.querySelector('.post-directory');
+            if (!nav) return;
+
+            var article = document.querySelector('article.post-content');
+            if (!article) return;
+
+            var sectionDetails = Array.prototype.filter.call(article.children, function (el) {
+              return el.tagName === 'DETAILS' && el.classList.contains('post-section');
+            });
+
+            if (!sectionDetails.length) {
+              nav.innerHTML = '<p class="directory-empty">No sections yet.</p>';
+              return;
+            }
+
+            var list = document.createElement('ul');
+            list.className = 'directory-list';
+            var seenTargets = new Set();
+
+            function ensureId(el, labelText) {
+              if (!el.id) {
+                var source = (labelText || el.textContent || '').trim();
+                el.id = source
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, '-')
+                  .replace(/(^-|-$)/g, '');
+                if (!el.id) {
+                  el.id = 'section';
+                }
+              }
+              return el.id;
+            }
+
+            function getSummary(el, className) {
+              for (var i = 0; i < el.children.length; i++) {
+                var child = el.children[i];
+                if (child.tagName === 'SUMMARY' && child.classList.contains(className)) {
+                  return child;
+                }
+              }
+              return el.querySelector('summary.' + className);
+            }
+
+            sectionDetails.forEach(function (sectionEl) {
+              var sectionSummary = getSummary(sectionEl, 'post-section-summary');
+              if (!sectionSummary) return;
+
+              var sectionBody = null;
+              for (var i = 0; i < sectionEl.children.length; i++) {
+                if (sectionEl.children[i].tagName !== 'SUMMARY') {
+                  sectionBody = sectionEl.children[i];
+                  break;
+                }
+              }
+
+              var sectionTarget = sectionSummary.closest('details') || sectionSummary;
+              var sectionId = ensureId(sectionTarget, sectionSummary.textContent);
+
+              var sectionItem = document.createElement('li');
+              sectionItem.className = 'directory-item-section';
+              var sectionLink = document.createElement('a');
+              sectionLink.href = '#' + sectionId;
+              sectionLink.textContent = sectionSummary.textContent.trim();
+              sectionItem.appendChild(sectionLink);
+              if (!seenTargets.has(sectionId)) {
+                list.appendChild(sectionItem);
+                seenTargets.add(sectionId);
+              }
+
+              // Add direct child subsections/child-sections in DOM order.
+              if (sectionBody) {
+                var childDetails = sectionBody.querySelectorAll('details.post-subsection, details.post-section');
+                Array.prototype.forEach.call(childDetails, function (childEl) {
+                  var parentSection = childEl.parentElement && childEl.parentElement.closest('details.post-section');
+                  if (parentSection !== sectionEl) return;
+
+                  var childSummary = null;
+                  if (childEl.classList.contains('post-subsection')) {
+                    childSummary = getSummary(childEl, 'post-subsection-summary');
+                  } else if (childEl.classList.contains('post-section')) {
+                    childSummary = getSummary(childEl, 'post-section-summary');
+                  }
+                  if (!childSummary) return;
+
+                  var childId = ensureId(childEl, childSummary.textContent);
+                  var childItem = document.createElement('li');
+                  childItem.className = 'directory-item-subsection';
+                  var childLink = document.createElement('a');
+                  childLink.href = '#' + childId;
+                  childLink.textContent = childSummary.textContent.trim();
+                  childItem.appendChild(childLink);
+                  if (!seenTargets.has(childId)) {
+                    list.appendChild(childItem);
+                    seenTargets.add(childId);
+                  }
+                });
+              }
+            });
+
+            nav.innerHTML = '';
+            nav.appendChild(list);
+          }
+
+          document.addEventListener('DOMContentLoaded', openReferencesForHash);
+          document.addEventListener('DOMContentLoaded', buildPostDirectory);
+          window.addEventListener('hashchange', openReferencesForHash);
+        })();
+      </script>
+      <script src="{{ '/assets/js/tensor-examples.js' | relative_url }}" defer></script>
 
       {% if page.categories %}
         <div class="post-categories-feed">
           <strong>Categories:</strong>
           {% for cat in page.categories %}
             {% assign cat_slug = cat | slugify %}
-            <a href="{{ '/categories/' | append: cat_slug | append: '/' | relative_url }}" class="category-link">{{ cat }}</a>{% unless forloop.last %}, {% endunless %}
+            <a href="{{ '/blog/' | append: '?category=' | append: cat_slug | relative_url }}" class="category-link">{{ cat }}</a>{% unless forloop.last %}, {% endunless %}
           {% endfor %}
         </div>
       {% endif %}
 
-      <p class="post-date">Last updated: {{ page.last_modified_at | default: page.date | date: "%B %d, %Y" }}</p>
+      <p class="post-date">
+        Last updated: {{ page.last_modified_at | default: page.date | date: "%B %d, %Y" }}
+      </p>
 
       {% if page.comments != false %}
       <section class="post-comments">
         <h2>Comments</h2>
-        <div id="giscus_thread"></div>
-
-        <script src="https://giscus.app/client.js"
-                data-repo="YOUR_GITHUB_USERNAME/YOUR_REPO"
-                data-repo-id="YOUR_REPO_ID"
-                data-category="Blog Comments"
-                data-category-id="YOUR_CATEGORY_ID"
-                data-mapping="pathname"
-                data-strict="0"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="bottom"
-                data-theme="light"
-                data-lang="en"
-                crossorigin="anonymous"
-                async>
-        </script>
+        <form id="comment-form" class="comment-form">
+          <div class="comment-field">
+            <label for="comment-name">Name</label>
+            <input id="comment-name" name="name" type="text" required />
+          </div>
+          <div class="comment-field">
+            <label for="comment-email">Email</label>
+            <input id="comment-email" name="email" type="email" required />
+          </div>
+          <div class="comment-field">
+            <label for="comment-body">Comment</label>
+            <textarea id="comment-body" name="comment" rows="4" required></textarea>
+          </div>
+          <p class="comment-consent">By submitting, you consent to your comment and email being stored and displayed. Emails are not shown publicly.</p>
+          <button type="submit" class="comment-submit">Post Comment</button>
+          <div class="comment-status" aria-live="polite"></div>
+        </form>
+        <div id="comment-list" class="comment-list"></div>
       </section>
       {% endif %}
 

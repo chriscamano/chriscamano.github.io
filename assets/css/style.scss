@@ -11,6 +11,210 @@
   --color-bg:      #fdf6e3;      // Background color
   --color-link:    var(--color-primary);
 }
+
+/* Image lightbox (shared across layouts) */
+.image-zoom-anchor {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.post-figure .image-zoom-anchor,
+.post-content figure .image-zoom-anchor {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.post-figure .image-zoom-anchor > img,
+.post-content figure .image-zoom-anchor > img {
+  margin: 0;
+}
+
+.image-zoom-anchor > img {
+  display: block;
+}
+
+.image-zoom-btn {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.58);
+  color: #fff;
+  cursor: pointer;
+  z-index: 3;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.image-zoom-btn:hover,
+.image-zoom-btn:focus {
+  background: rgba(0, 0, 0, 0.78);
+  transform: scale(1.04);
+  outline: none;
+}
+
+.image-zoom-btn svg {
+  width: 0.92rem;
+  height: 0.92rem;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(0, 0, 0, 0.84);
+  z-index: 5000;
+}
+
+.image-lightbox.is-open {
+  display: flex;
+}
+
+.image-lightbox img {
+  max-width: min(97vw, 1800px);
+  max-height: 94vh;
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.5);
+  background: #fff;
+}
+
+.image-lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 1.45rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+body.image-lightbox-open {
+  overflow: hidden;
+}
+
+/* Hide raw TeX until MathJax finishes typesetting */
+.mathjax-process {
+  visibility: hidden;
+}
+
+.mathjax-ready .mathjax-process {
+  visibility: visible;
+}
+
+.mathjax-loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(253, 246, 227, 0.92);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.mathjax-loader-inner {
+  text-align: center;
+  min-width: 240px;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(70, 57, 53, 0.25);
+  border-radius: 12px;
+  background: rgba(253, 246, 227, 0.95);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.mathjax-loader-title {
+  font-weight: 700;
+  color: #463935;
+  font-size: 1.05rem;
+  animation: mathjax-pulse 1.6s ease-in-out infinite;
+}
+
+.mathjax-loader-subtitle {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: rgba(70, 57, 53, 0.75);
+  height: 1.35rem;
+  overflow: hidden;
+}
+
+.mathjax-loader-rotator {
+  display: inline-block;
+  line-height: 1.35rem;
+  animation: mathjax-rotate-text 8s ease-in-out infinite;
+}
+
+.mathjax-loader-rotator span {
+  display: block;
+  height: 1.35rem;
+}
+
+.mathjax-loader-bar {
+  position: relative;
+  height: 6px;
+  margin-top: 0.75rem;
+  border-radius: 999px;
+  background: rgba(70, 57, 53, 0.12);
+  overflow: hidden;
+}
+
+.mathjax-loader-bar-fill {
+  position: absolute;
+  inset: 0;
+  width: 35%;
+  background: linear-gradient(90deg, #463935, #7d6a62, #463935);
+  animation: mathjax-bar 1.5s ease-in-out infinite;
+}
+
+.mathjax-ready .mathjax-loader {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@keyframes mathjax-bar {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(80%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes mathjax-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+@keyframes mathjax-rotate-text {
+  0% { transform: translateY(0); }
+  23% { transform: translateY(0); }
+  25% { transform: translateY(-1.35rem); }
+  48% { transform: translateY(-1.35rem); }
+  50% { transform: translateY(-2.7rem); }
+  73% { transform: translateY(-2.7rem); }
+  75% { transform: translateY(-4.05rem); }
+  98% { transform: translateY(-4.05rem); }
+  100% { transform: translateY(0); }
+}
 /* ========== Post Styling ========== */
 .blog-post {
   display: flex;
@@ -300,7 +504,7 @@ body {
   line-height: 1.6;
 }
 :root {
-  --base-font-size: 17px;
+  --base-font-size: 18px;
   --base-font-family: 'Crimson Pro', serif;
 }
 

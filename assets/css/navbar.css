@@ -1,6 +1,6 @@
 /* === Base & Scroll Behavior (global) === */
 :root {
-  --base-font-size: 17px;
+  --base-font-size: 18px;
   --base-font-family: 'Crimson Pro', serif;
   --color-primary: #463935;
   --color-hover: #555;
@@ -42,6 +42,11 @@ nav.navbar .nav-list {
   margin: 0;
   padding: 0;
   display: flex;
+  align-items: center;
+}
+
+nav.navbar .nav-item.nav-brand {
+  flex: 0 0 auto;
 }
 
 /* Lock link sizing to px so it’s the same everywhere */
@@ -57,9 +62,47 @@ nav.navbar .nav-item a {
   text-decoration: none;
 }
 
+nav.navbar .nav-brand a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 25px !important;
+  min-width: 2.8rem;
+  font-size: 2.15rem !important;
+  line-height: 1;
+  color: #fff !important;
+  text-decoration: none;
+}
+
+nav.navbar .nav-brand .nav-brand-symbol {
+  display: block;
+  width: 1em;
+  height: 1em;
+  color: #fff !important;
+  line-height: 1;
+  vertical-align: middle;
+  overflow: visible;
+}
+
+nav.navbar .nav-brand .nav-brand-symbol mjx-container {
+  margin: 0 !important;
+  line-height: 1;
+  color: inherit !important;
+}
+
 /* Hover state */
 nav.navbar .nav-item a:hover {
   color: var(--color-hover) !important;
   background-color: var(--color-bg);
   text-decoration: none !important;
+}
+
+nav.navbar .nav-item.nav-brand a:hover {
+  color: var(--color-hover) !important;
+  background-color: var(--color-bg) !important;
+  text-decoration: none !important;
+}
+
+nav.navbar .nav-item.nav-brand a:hover .nav-brand-symbol {
+  color: var(--color-hover) !important;
 }

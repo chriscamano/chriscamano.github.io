@@ -14,9 +14,9 @@ I am currently funded through the [National Science Foundation Graduate Research
 
 ## Research Interests
 
-- <span style="font-size:1.05em; font-weight:bold;">Randomized Numerical Linear Algebra</span>: matrix sketching, fast linear solvers, randomized eigensolvers, algorithm acceleration.
-- <span style="font-size:1.05em; font-weight:bold;">Tensor Networks and Quantum Mechanical Simulation</span>: MPO-MPS contraction, randomized methods for tensor networks, efficient Hamiltonian time evolution.
-- <span style="font-size:1.05em; font-weight:bold;">Approximate Gaussian Processes</span>: sub-cubic gaussian process models, inducing point approximations, conjugate gradient methods for kernel inversion.
+- <span style="font-size:1.05em; font-weight:bold;">Randomized Numerical Linear Algebra</span>: randomized sketching, low-rank matrix approximation, randomized eigensolvers, and accelerated linear algebra algorithms.
+- <span style="font-size:1.05em; font-weight:bold;">Tensor Networks and Quantum Simulation</span>: MPO/MPS contraction algorithms, randomized tensor-network methods, and efficient hamiltonian time evolution/ground state preperation.
+- <span style="font-size:1.05em; font-weight:bold;">Approximate Gaussian Processes</span>: sub-cubic Gaussian process models, inducing-point approximations, and scalable conjugate-gradient solvers for kernel inversion.
 <!-- - **Bayesian Inference**: Approximate Gaussian processes, structured priors and uncertainty quantification in modern machine learning models. -->
 
 {% include_relative _includes/publications.md %}

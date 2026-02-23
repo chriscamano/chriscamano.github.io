@@ -77,6 +77,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
         integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous">
 
+  {% assign needs_mathjax = page.layout == "blogpost" or page.layout == "blog_category" or page.layout == "gallery" or page.mathjax == true %}
+  {% if needs_mathjax %}
   <!-- MathJax configuration -->
   <script>
     window.MathJax = {
@@ -95,6 +97,9 @@
         ignoreHtmlClass: 'tex2jax_ignore',
         skipHtmlTags: ['script','noscript','style','textarea','pre','code']
       },
+      startup: {
+        typeset: true
+      },
       loader: { load: ['[tex]/noerrors','[tex]/noundefined'] },
       svg: { fontCache: 'global' }
     };
@@ -106,16 +111,56 @@
   <!-- MathJax v3 core -->
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/input/tex/extensions/bm.js"></script>
+  {% endif %}
+
+  {% if site.google_analytics_id %}
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics_id }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ site.google_analytics_id }}', {
+      send_page_view: true
+    });
+  </script>
+  {% endif %}
 
 </head>
 
 <body>
-  <a href="#main-content" class="sr-only sr-only-focusable">Skip to content</a>
-
+  {% if page.layout == "blogpost" %}
+  <div class="mathjax-loader" role="status" aria-live="polite">
+    <div class="mathjax-loader-inner">
+      <div class="mathjax-loader-title">Building tensors…</div>
+      <div class="mathjax-loader-subtitle">
+        <span class="mathjax-loader-rotator">
+          <span>Typesetting the math</span>
+          <span>Drawing the $\otimes$</span>
+          <span>Placing snarky comments</span>
+          <span>Overengineering visual examples</span>
+        </span>
+      </div>
+      <div class="mathjax-loader-bar">
+        <span class="mathjax-loader-bar-fill"></span>
+      </div>
+    </div>
+  </div>
+  {% endif %}
   <nav class="navbar" role="navigation" aria-label="Main Navigation">
     <ul class="nav-list">
+      <li class="nav-item nav-brand">
+        <a href="https://en.wikipedia.org/wiki/Kronecker_product" aria-label="Kronecker product">
+          <svg class="nav-brand-symbol" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+            <circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" stroke-width="4"></circle>
+            <line x1="22" y1="22" x2="42" y2="42" stroke="currentColor" stroke-width="4" stroke-linecap="round"></line>
+            <line x1="42" y1="22" x2="22" y2="42" stroke="currentColor" stroke-width="4" stroke-linecap="round"></line>
+          </svg>
+        </a>
+      </li>
       <li class="nav-item"><a href="{{ '/' | relative_url }}">Home</a></li>
       <li class="nav-item"><a href="{{ '/blog/' | relative_url }}">Blog</a></li>
+      <li class="nav-item"><a href="{{ '/bounded/' | relative_url }}">Bounded</a></li>
     </ul>
   </nav>
 
@@ -123,6 +168,7 @@
     {{ content }}
   </main>
 
+  {% if needs_mathjax %}
   <!-- Ensure MathJax re-renders after DOM insertion -->
   <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -132,20 +178,34 @@
   });
   </script>
 
+  <!-- Hide TeX until MathJax completes typesetting (with fallback) -->
+  <script>
+    (function() {
+      const reveal = () => document.documentElement.classList.add("mathjax-ready");
+      if (window.MathJax && MathJax.startup && MathJax.startup.promise) {
+        MathJax.startup.promise.then(reveal).catch(reveal);
+      } else {
+        setTimeout(reveal, 4000);
+      }
+    })();
+  </script>
+  {% endif %}
+
   <script src="{{ '/assets/js/scale.fix.js' | relative_url }}" defer></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      document.querySelectorAll(".highlighter-rouge").forEach(block => {
-        if (block.querySelector(".copy-btn")) return;
+      document.querySelectorAll("pre > code.highlighter-rouge").forEach(code => {
+        const block = code.parentElement;
+        if (!block || block.querySelector(".copy-btn")) return;
 
         const button = document.createElement("button");
         button.className = "copy-btn";
         button.textContent = "Copy";
 
         button.addEventListener("click", async () => {
-          const code = block.innerText.trim();
+          const codeText = code.innerText.trim();
           try {
-            await navigator.clipboard.writeText(code);
+            await navigator.clipboard.writeText(codeText);
             button.classList.add("copied");
             setTimeout(() => button.classList.remove("copied"), 1500);
           } catch {
@@ -157,6 +217,102 @@
       });
     });
   </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll("main img").forEach(img => {
+        if (!img.hasAttribute("loading")) img.setAttribute("loading", "lazy");
+        if (!img.hasAttribute("decoding")) img.setAttribute("decoding", "async");
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const el = document.querySelector(".post-views-count");
+      if (!el) return;
+      const path = window.location.pathname;
+      const apiBase = "{{ site.views_api_base | default: '' }}";
+      const endpoint = apiBase ? `${apiBase}/api/views` : "/api/views";
+      fetch(`${endpoint}?path=${encodeURIComponent(path)}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (typeof data.views === "number") {
+            el.textContent = data.views.toLocaleString();
+          } else {
+            el.textContent = "—";
+          }
+        })
+        .catch(() => {
+          el.textContent = "—";
+        });
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const listEl = document.getElementById("comment-list");
+      const formEl = document.getElementById("comment-form");
+      const statusEl = document.querySelector(".comment-status");
+      if (!listEl || !formEl) return;
+
+      const apiBase = "{{ site.views_api_base | default: '' }}";
+      const endpoint = apiBase ? `${apiBase}/api/comments` : "/api/comments";
+      const path = window.location.pathname;
+
+      function renderComments(comments) {
+        if (!comments.length) {
+          listEl.innerHTML = "<p class='comment-empty'>No comments yet.</p>";
+          return;
+        }
+        listEl.innerHTML = comments.map(c => `
+          <div class="comment-item">
+            <div class="comment-meta">
+              <span class="comment-author">${c.name}</span>
+              <span class="comment-date">${new Date(c.created_at).toLocaleDateString()}</span>
+            </div>
+            <div class="comment-body">${c.comment}</div>
+          </div>
+        `).join("");
+      }
+
+      fetch(`${endpoint}?path=${encodeURIComponent(path)}`)
+        .then(res => res.json())
+        .then(data => renderComments(data.comments || []))
+        .catch(() => {
+          listEl.innerHTML = "<p class='comment-empty'>Unable to load comments.</p>";
+        });
+
+      formEl.addEventListener("submit", (e) => {
+        e.preventDefault();
+        statusEl.textContent = "Posting...";
+        const formData = new FormData(formEl);
+        const payload = {
+          path,
+          name: String(formData.get("name") || "").trim(),
+          email: String(formData.get("email") || "").trim(),
+          comment: String(formData.get("comment") || "").trim()
+        };
+
+        fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.error) throw new Error(data.error);
+            statusEl.textContent = "Posted!";
+            formEl.reset();
+            renderComments(data.comments || []);
+          })
+          .catch(() => {
+            statusEl.textContent = "Error posting comment.";
+          });
+      });
+    });
+  </script>
+  <script src="{{ '/assets/js/image-lightbox.js' | relative_url }}" defer></script>
 
 </body>
 </html>

@@ -9,6 +9,8 @@
   padding-left: 2.5%;  /* same as blog.css */
   padding-right: 5%;   /* same as blog.css */
   gap: 3rem;           /* same as blog.css */
+  max-width: 1200px;   /* match blog index container width */
+  margin: 0 auto;      /* center to align with blog index */
   font-size: 1rem;
   line-height: 1.6;
 }

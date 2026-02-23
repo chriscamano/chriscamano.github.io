@@ -1,0 +1,1014 @@
+---
+layout: blogpost
+title: "Seeing Is Believing #1: Thinking in Penrose Diagrams"
+date: 2026-02-22
+image: /assets/sib/2026-02-04-my-first-post/thumbnail.png
+excerpt: "How Penrose diagrams simplify tensor contractions and expose their computational cost."
+categories: [Seeing is believing]
+---
+<!-- > Starting drawing boat made of tensors swimming through the sea of symbols -->
+
+<details class="post-section" open>
+<summary class="post-section-summary">Observation 1: The Tensor Renaissance Is Upon Us</summary>
+
+<div markdown="1">
+
+Within the last two years, there has been a dramatic surge of research in randomized numerical linear algebra focused on designing efficient algorithms for working with *tensors* rather than just matrices.
+
+As a researcher in this area, I have felt this shift directly in the volume of relevant weekly [arXiv](https://arxiv.org/search/?query=tensor+network&searchtype=all&source=header) posts related to tensors. I wanted to see whether that intuition could be quantified.
+
+Google recently released [Google Trends](https://trends.google.com/trends/), which is a nifty tool for tracking how search activity for a topic changes over time. To quantify the rise in tensor-related interest, I collected monthly relative search-volume data (case-insensitive) for the query keywords *Tensor network*, *Tensor decomposition*, *Tensor Train*, *Matrix Product State*, and *Random tensor* over the past ten years. I then fit an RBF-kernel Gaussian process and tuned its hyperparameters with an L-BFGS optimizer to regress the data. The results speak for themselves:
+<figure class="post-figure post-figure-large">
+  <div class="post-figure-frame frame-tight" style="border: none; padding: 0; box-shadow: none;">
+    <img class="frame-media lightbox-enabled" style="border: 2px solid #000; border-radius: 0; box-sizing: border-box;" src="{{ '/assets/sib/2026-02-04-my-first-post/tstats.png' | relative_url }}" alt="Placeholder framed image." />
+  </div>
+<figcaption markdown="1" style="text-align: left; font-size: 0.84rem; max-width: 100%; margin: 0.55rem 0 0;">
+  $\textbf{Demonstration: Tensor networks are hotter than ever}$.  Google search activity for common tensor‑network keywords (2016–2026). The posterior mean of a Gaussian‑process and ±1 standard‑deviation confidence intervals are shown for each dataset. The Y axis "Relative Intersest" quantifies the ratio of total search activity in a given month relative to the total search history information in Google's collective database.
+</figcaption>
+</figure>
+
+This shift toward tensor-structured linear algebra computation was anticipated in a punchy 1999 research article, *"The Ubiquitous Kronecker Product"* {% cite LOAN200085 %}, in which Charles Van Loan (of *Matrix Computations* {% cite golub2013matrix %} fame) argues that algorithms organized around tensor structure would pave the path forward for the next (now current) generation of scientific computing. As active research topics like quantum information and machine learning continue to bleed into the applied mathematics purview, it seems Van Loan's prediction is finally coming true.
+
+</div>
+</details>
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+
+<details class="post-section" open>
+<summary class="post-section-summary">Observation 2: Explicit Tensor Syntax... Kind of Sucks</summary>
+
+<div markdown="1">
+
+While it is fantastic that more and more people are becoming interested in tensors, one recurring response I hear from applied mathematicians is that tensor papers are often hard to read and sometimes outright confusing. I share this feeling, and I believe the main contributing factor is the lack of a standardized tensor syntax.
+
+To get a sense of how widespread this issue is, I asked the following question to some of my friends in the randomized linear algebra community.
+<div class="action-box" markdown="1" style="text-align: center;">
+ **What do you think about the syntax people use for writing tensors?**
+</div>
+
+These were the responses I received:
+
+<div class="quote-entry">
+  <div class="quote-marker mathjax-process">\( \otimes \)</div>
+  <div class="quote-title"><strong><a href="https://ram900.com/">Raphael Meyer</a>, Postdoctoral Researcher, UC Berkeley:</strong></div>
+  <blockquote>
+    <p>"The syntax used in the tensor literature is dense and often hard to intuit, especially when super- and subscripts get out of control, but I also recognize it's typically the result of folks trying to figure out the best notation for their particular paper."</p>
+  </blockquote>
+</div>
+
+<div class="quote-entry">
+  <div class="quote-marker mathjax-process">\( \otimes \)</div>
+  <div class="quote-title"><strong><a href="https://www.ethanepperly.com/">Ethan Epperly</a>, Miller Research Fellow, UC Berkeley:</strong></div>
+  <blockquote>
+    <p>"I've always found notation to be a huge impediment when working with tensors. Learning about tensor diagram notation was a revelation: in an instant, what had been difficult-to-parse collections of symbols suddenly became legible."</p>
+  </blockquote>
+</div>
+
+<div class="quote-entry">
+  <div class="quote-marker mathjax-process">\( \otimes \)</div>
+  <div class="quote-title"><strong><a href="https://sites.google.com/ucsd.edu/rwebber/">Rob Webber</a>, Assistant Professor, UC San Diego:</strong></div>
+  <blockquote>
+    <p>"All math is hard and requires effort; writing out tensors looks like it requires a lot of effort."</p>
+  </blockquote>
+</div>
+
+<div class="quote-entry">
+  <div class="quote-marker mathjax-process">\( \otimes \)</div>
+  <div class="quote-title"><strong>Cecilia Chen, PhD student, UC Berkeley:</strong></div>
+  <blockquote>
+    <p>"When I look at tensors, I feel like I need a second pair of glasses."</p>
+  </blockquote>
+</div>
+
+<div class="quote-entry">
+  <div class="quote-marker mathjax-process">\( \otimes \)</div>
+  <div class="quote-title"><strong><a href="https://research.chen.pw/">Tyler Chen</a>, JPMorganChase:</strong></div>
+  <blockquote>
+    <p>"I always find tensor notation overwhelming, but maybe it's more complicated because tensors are more complicated than matrices, and even matrix notation can be a lot."</p>
+  </blockquote>
+</div>
+
+Each of these individuals is a *fantastic* researcher in numerical linear algebra. Even so, there is clearly a substantial barrier to entry for working with tensors.
+
+<details class="post-subsection" open>
+<summary class="post-subsection-summary">Why Are Tensors Hard to Describe?</summary>
+<div markdown="1">
+
+
+In my opinion, tensors become challenging for many people largely because we tend to try reason about them the same way we reason about matrices.
+As soon as we fix a basis in high dimensions and try to write out tensors component-wise, there are simply too many degrees of freedom to track conveniently at once and its very easy to get lost and make errors. The result of trying are often long belabored expressions with an unhealthy number of subscripts and superscripts, sometimes consuming a good fraction of the English alphabet, the Greek alphabet, or, on a bad day, both.
+
+To keep the remainder of this post focused, the tensors we are going to talk about will belong to finite-dimensional real vector spaces with base dimension $d$. In this setting, a tensor is simply an element of a tensor product of such spaces. 
+
+For instance, a vector is a first-order tensor $\vv \in \bbR^d$, a matrix is a second-order tensor $\mA \in \bbR^d \otimes \bbR^d$, and more generally an order-$n$ tensor is an element $\tT \in \Rdtensor{n}$.
+Fix the standard basis $(\ve_i)_{i=1}^d$ of $\bbR^d$. Then any order-$n$ tensor admits the basis expansion
+
+$$
+\tT
+=
+\sum_{i_1=1}^d\cdots \sum_{i_n=1}^d
+\tT(i_1\cdots i_n)\,
+\bigKron{n}\ve_{i_r},
+$$
+
+so that $\tT$ is specified by $d^n$ real coefficients $\tT(i_1\cdots i_n)$. 
+</div>
+</details>
+
+This blog post is the first entry of a series called *Seeing Is Believing*, so it's only fair that I show you what this actually looks like:
+<details class="tensor-example tensor-example-basis example-block tensor-example-basis-wide-right" open>
+  <summary class="example-title">Example: Tensor basis expansion</summary>
+  <div class="TDintro">
+In this example, we consider the basis decomposition of a tensor $\tT\in \bbR^{2\times 2 \times 2}$. As with vectors and matrices, we write $\tT$ as a linear combination of scaled basis elements.
+
+Here the basis elements have tensor structure: $\ve_i\otimes \ve_j\otimes \ve_k$, each with a single 1 at position $(i,j,k)$ and zeros elsewhere.
+
+$$
+\tT
+=
+\sum_{i=1}^{2}\sum_{j=1}^{2}\sum_{k=1}^{2}
+\tT(i,j,k)\,
+(\ve_i\otimes \ve_j\otimes \ve_k).
+$$
+A visualization of tensor basis decomposition is given below. 
+
+  </div>
+  <div class="tensor-example-top">
+    <div class="tensor-example-main">
+      <div id="tensor-2x2x2-plot" class="tensor-plot" aria-label="2x2x2 tensor visualization"></div>
+    </div>
+    <div class="tensor-example-text">
+      <div class="action-box tensor-entry-box">
+        <p>Entries:</p>
+        <ul class="tensor-entry-list">
+          <li><span class="tensor-entry-swatch" style="--tensor-color:#2c7bb6;"></span>$\tT(1,1,1)=-2$</li>
+          <li><span class="tensor-entry-swatch" style="--tensor-color:#00a6ca;"></span>$\tT(1,1,2)=-1$</li>
+          <li><span class="tensor-entry-swatch" style="--tensor-color:#00ccbc;"></span>$\tT(1,2,1)=-\tfrac{1}{2}$</li>
+          <li><span class="tensor-entry-swatch" style="--tensor-color:#90eb9d;"></span>$\tT(1,2,2)=\tfrac{1}{2}$</li>
+          <li><span class="tensor-entry-swatch" style="--tensor-color:#f9d057;"></span>$\tT(2,1,1)=1$</li>
+          <li><span class="tensor-entry-swatch" style="--tensor-color:#f29e2e;"></span>$\tT(2,1,2)=2$</li>
+          <li><span class="tensor-entry-swatch" style="--tensor-color:#e76818;"></span>$\tT(2,2,1)=3$</li>
+          <li><span class="tensor-entry-swatch" style="--tensor-color:#d7191c;"></span>$\tT(2,2,2)=4$</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-box tensor-sum-box">
+    <div class="tensor-sum-row">
+      <span class="tensor-sum-symbol">$ \tT = $</span>
+      <span class="tensor-sum-item">
+        <span class="tensor-coeff inline" style="--tensor-color:#2c7bb6;">-2</span>
+        <span class="tensor-sum-cube">
+          <span id="tensor-sum-111" class="tensor-plot tensor-plot-inline" aria-label="Basis tensor e1e1e1"></span>
+          <span class="tensor-sum-label">$\ve_1\otimes\ve_1\otimes\ve_1$</span>
+        </span>
+      </span>
+      <span class="tensor-sum-operator">+</span>
+      <span class="tensor-sum-item">
+        <span class="tensor-coeff inline" style="--tensor-color:#00a6ca;">-1</span>
+        <span class="tensor-sum-cube">
+          <span id="tensor-sum-112" class="tensor-plot tensor-plot-inline" aria-label="Basis tensor e1e1e2"></span>
+          <span class="tensor-sum-label">$\ve_1\otimes\ve_1\otimes\ve_2$</span>
+        </span>
+      </span>
+      <span class="tensor-sum-operator">+</span>
+      <span class="tensor-sum-item">
+        <span class="tensor-coeff inline" style="--tensor-color:#00ccbc;">-1/2</span>
+        <span class="tensor-sum-cube">
+          <span id="tensor-sum-121" class="tensor-plot tensor-plot-inline" aria-label="Basis tensor e1e2e1"></span>
+          <span class="tensor-sum-label">$\ve_1\otimes\ve_2\otimes\ve_1$</span>
+        </span>
+      </span>
+      <span class="tensor-sum-operator">+</span>
+      <span class="tensor-sum-item">
+        <span class="tensor-coeff inline" style="--tensor-color:#90eb9d;">1/2</span>
+        <span class="tensor-sum-cube">
+          <span id="tensor-sum-122" class="tensor-plot tensor-plot-inline" aria-label="Basis tensor e1e2e2"></span>
+          <span class="tensor-sum-label">$\ve_1\otimes\ve_2\otimes\ve_2$</span>
+        </span>
+      </span>
+    </div>
+
+    <div class="tensor-sum-row">
+      <span class="tensor-sum-symbol">$ {} $</span>
+      <span class="tensor-sum-item">
+        <span class="tensor-coeff inline" style="--tensor-color:#f9d057;">1</span>
+        <span class="tensor-sum-cube">
+          <span id="tensor-sum-211" class="tensor-plot tensor-plot-inline" aria-label="Basis tensor e2e1e1"></span>
+          <span class="tensor-sum-label">$\ve_2\otimes\ve_1\otimes\ve_1$</span>
+        </span>
+      </span>
+      <span class="tensor-sum-operator">+</span>
+      <span class="tensor-sum-item">
+        <span class="tensor-coeff inline" style="--tensor-color:#f29e2e;">2</span>
+        <span class="tensor-sum-cube">
+          <span id="tensor-sum-212" class="tensor-plot tensor-plot-inline" aria-label="Basis tensor e2e1e2"></span>
+          <span class="tensor-sum-label">$\ve_2\otimes\ve_1\otimes\ve_2$</span>
+        </span>
+      </span>
+      <span class="tensor-sum-operator">+</span>
+      <span class="tensor-sum-item">
+        <span class="tensor-coeff inline" style="--tensor-color:#e76818;">3</span>
+        <span class="tensor-sum-cube">
+          <span id="tensor-sum-221" class="tensor-plot tensor-plot-inline" aria-label="Basis tensor e2e2e1"></span>
+          <span class="tensor-sum-label">$\ve_2\otimes\ve_2\otimes\ve_1$</span>
+        </span>
+      </span>
+      <span class="tensor-sum-operator">+</span>
+      <span class="tensor-sum-item">
+        <span class="tensor-coeff inline" style="--tensor-color:#d7191c;">4</span>
+        <span class="tensor-sum-cube">
+          <span id="tensor-sum-222" class="tensor-plot tensor-plot-inline" aria-label="Basis tensor e2e2e2"></span>
+          <span class="tensor-sum-label">$\ve_2\otimes\ve_2\otimes\ve_2$</span>
+        </span>
+      </span>
+    </div>
+  </div>
+</details>
+
+<script>
+  window.__tensorExamples = window.__tensorExamples || [];
+  window.__tensorExamples.push({
+    id: "tensor-2x2x2-plot",
+    type: "full",
+    values: {
+      "1,1,1": -2,
+      "1,1,2": -1,
+      "1,2,1": -0.5,
+      "1,2,2": 0.5,
+      "2,1,1": 1,
+      "2,1,2": 2,
+      "2,2,1": 3,
+      "2,2,2": 4
+    },
+    colors: {
+      "1,1,1": "#2c7bb6",
+      "1,1,2": "#00a6ca",
+      "1,2,1": "#00ccbc",
+      "1,2,2": "#90eb9d",
+      "2,1,1": "#f9d057",
+      "2,1,2": "#f29e2e",
+      "2,2,1": "#e76818",
+      "2,2,2": "#d7191c"
+    }
+  });
+  window.__tensorExamples.push({ id: "tensor-sum-111", type: "basis", position: "1,1,1", color: "#2c7bb6", size: "inline" });
+  window.__tensorExamples.push({ id: "tensor-sum-112", type: "basis", position: "1,1,2", color: "#00a6ca", size: "inline" });
+  window.__tensorExamples.push({ id: "tensor-sum-121", type: "basis", position: "1,2,1", color: "#00ccbc", size: "inline" });
+  window.__tensorExamples.push({ id: "tensor-sum-122", type: "basis", position: "1,2,2", color: "#90eb9d", size: "inline" });
+  window.__tensorExamples.push({ id: "tensor-sum-211", type: "basis", position: "2,1,1", color: "#f9d057", size: "inline" });
+  window.__tensorExamples.push({ id: "tensor-sum-212", type: "basis", position: "2,1,2", color: "#f29e2e", size: "inline" });
+  window.__tensorExamples.push({ id: "tensor-sum-221", type: "basis", position: "2,2,1", color: "#e76818", size: "inline" });
+  window.__tensorExamples.push({ id: "tensor-sum-222", type: "basis", position: "2,2,2", color: "#d7191c", size: "inline" });
+</script>
+
+Writing out the basis expansion of a single tensor is really not *that* bad. It even gives us an excuse to use $\texttt{\bigotimes}$, which is always fun. The real issues start to appear when we reason about operations *between* tensors, such as the (tensor) Kronecker product. Given an order-$n$ tensor $\tX\in \Rdtensor{n}$ and an order-$m$ tensor $\tY \in \Rdtensor{m}$, even writing down what this operator does requires at least $m+n+5$ unique variables.
+
+$$
+\tX\otimes\tY
+=
+\sum_{i_1=1}^d\cdots \sum_{i_n=1}^d
+\sum_{j_1=1}^d\cdots \sum_{j_m=1}^d
+\tX(i_1\cdots i_n)\,\tY(j_1\cdots j_m)\,
+\Bigl(\bigKron{n}\ve_{i_r}\Bigr)\otimes\Bigl(\bigotimes_{s=1}^m\vf_{j_s}\Bigr).
+$$
+
+Here's a provocative visualization of what the tensor Kronecker product is actually doing. Recall that when the tensors are just matrices $\mA \in \bbR^{m \times n}$ and $\mB \in \bbR^{p \times q}$, their Kronecker product is the block matrix  
+
+$$
+\mA \otimes \mB
+= \begin{bmatrix}
+a_{11}\mB & \cdots & a_{1n}\mB \\
+\vdots    & \ddots & \vdots    \\
+a_{m1}\mB & \cdots & a_{mn}\mB
+\end{bmatrix}
+\in \bbF^{mp \times nq}.
+$$
+
+The tensor Kronecker product follows the same principle: entries of one tensor scale full copies of the other. We return to a full definition of this operation later ([Jump to the definition](#def-tensor-kronecker-product)) for now though, we can take a peek at what this looks like: 
+<details class="tensor-example example-block" open>
+  <summary class="example-title">Example: The tensor Kronecker product </summary>
+  <div class="action-box">
+    <p class="kron3d-note">Each entry of $\tX$ scales the entire tensor $\tY$; the result is stacked into a larger $4\times 4\times 6$ tensor.</p>
+    <div class="kron3d-example">
+      <div class="kron3d-card">
+        <div class="kron3d-title">$\tX \in \bbR^{2\times 2\times 2}$</div>
+        <div id="tensor-kron-x" class="tensor-plot kron3d-plot" aria-label="Tensor X"></div>
+      </div>
+      <div class="kron3d-symbol">$\otimes$</div>
+      <div class="kron3d-card">
+        <div class="kron3d-title">$\tY \in \bbR^{2\times 2\times 3}$</div>
+        <div id="tensor-kron-y" class="tensor-plot kron3d-plot" aria-label="Tensor Y"></div>
+      </div>
+      <div class="kron3d-symbol">=</div>
+      <div class="kron3d-card">
+        <div class="kron3d-title">
+          <span class="kron3d-title-line">$\tX\otimes\tY \in \bbR^{2(2)\times 2(2)\times 2(3)}$</span>
+          <span class="kron3d-title-line">$\cong \bbR^{4\times 4\times 6}$</span>
+        </div>
+        <div id="tensor-kron-xy" class="tensor-plot kron3d-plot kron3d-plot-large" aria-label="Kronecker product tensor"></div>
+      </div>
+    </div>
+    <!-- <div class="kron3d-note">Each block of $\tX$ scales the entire tensor $\tY$; the result stacks into a larger 3‑tensor.</div> -->
+  </div>
+</details>
+
+<script>
+  (function () {
+    const X = {
+      dims: [2, 2, 2],
+      values: [1, 2, 3, 4, 5, 6, 7, 8]
+    };
+    const Y = {
+      dims: [2, 2, 3],
+      values: [-1, 0, 1, 2, -2, 0, 3, 1, 2, -1, 0, 4]
+    };
+
+    function idx(i, j, k, nx, ny) {
+      return i + nx * (j + ny * k);
+    }
+
+    function kron3(a, b) {
+      const [ax, ay, az] = a.dims;
+      const [bx, by, bz] = b.dims;
+      const outDims = [ax * bx, ay * by, az * bz];
+      const out = new Array(outDims[0] * outDims[1] * outDims[2]).fill(0);
+
+      for (let i = 0; i < ax; i++) {
+        for (let j = 0; j < ay; j++) {
+          for (let k = 0; k < az; k++) {
+            const xv = a.values[idx(i, j, k, ax, ay)];
+            for (let p = 0; p < bx; p++) {
+              for (let q = 0; q < by; q++) {
+                for (let r = 0; r < bz; r++) {
+                  const yv = b.values[idx(p, q, r, bx, by)];
+                  const oi = i * bx + p;
+                  const oj = j * by + q;
+                  const ok = k * bz + r;
+                  out[idx(oi, oj, ok, outDims[0], outDims[1])] = xv * yv;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      return { dims: outDims, values: out };
+    }
+
+    const XY = kron3(X, Y);
+
+    window.__tensorExamples = window.__tensorExamples || [];
+    window.__tensorExamples.push({
+      id: "tensor-kron-x",
+      type: "tensor3",
+      dims: X.dims,
+      values: X.values,
+      shrink: 0.18,
+      colorscale: [[0, "#fde5e5"], [1, "#d7191c"]],
+      baseEye: { x: 4.0, y: 3.4, z: 2.45 }
+    });
+    window.__tensorExamples.push({
+      id: "tensor-kron-y",
+      type: "tensor3",
+      dims: Y.dims,
+      values: Y.values,
+      shrink: 0.18,
+      colorscale: [[0, "#e6f0ff"], [1, "#2c7bb6"]],
+      baseEye: { x: 4.4, y: 2.9, z: 2.1 }
+    });
+    window.__tensorExamples.push({
+      id: "tensor-kron-xy",
+      type: "tensor3",
+      dims: XY.dims,
+      values: XY.values,
+      shrink: 0.26,
+      colorscale: [[0, "#efe6ff"], [1, "#6a51a3"]],
+      baseEye: { x: 9.6, y: 4.9, z: 3.8 }
+    });
+  })();
+</script>
+
+"Index blow-up" is so pervasive that many texts about tensors open with some form of cautionary remark informing the reader that there are rough waters ahead.
+
+> "In tensor calculations the maze of indices often makes one lose sight of the very great differences between various types of quantities which can be represented by tensors." 
+> 
+> --- Harley Flanders, Differential Forms with Applications to the Physical Sciences {%cite flanders1963differential %}, 1989, Foreword p. 5
+
+It's a sad state of affairs when each time a reader sits down with this type of mathematics that a preceding <a class="goosebumps-link" href="https://youtu.be/P2YDWc7ttvY?si=qFWzFa2UiYhrLIhJ&t=49">Goosebumps style</a> warning is necessary.
+
+To make matters worse, at the frontier of tensor and tensor-network research, even writing down fully rigorous proofs (for example, approximation guarantees) can become very hard to parse without a second monitor and some emotional support coffee.
+
+<figure class="post-figure">
+  <div class="post-figure-frame frame-tight">
+    <img class="frame-media lightbox-enabled" src="{{ '/assets/sib/2026-02-04-my-first-post/tgore.png' | relative_url }}" alt="Placeholder framed image." />
+  </div>
+<figcaption class="figcaption-left" markdown="1">
+$\textbf{Demonstration: Flanders' maze}$. Some examples of Flanders' *"mazes of indices"*. (Taken with permission as representative examples of tensors being cumbersome to analyze from the talented postdoctoral tensor researcher [Alberto Bucci](https://sites.google.com/view/albertobucci/about-me) {% cite bucci2024randomized %}) 
+</figcaption>
+</figure>
+
+</div>
+</details>
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+
+<details class="post-section" open>
+<summary class="post-section-summary">Penrose Diagrams</summary>
+
+<div markdown="1">
+<figure class="penrose-inline-figure">
+  <img class="penrose-inline" src="{{ '/assets/sib/2026-02-04-my-first-post/penrose.png' | relative_url }}" alt="Sir Roger Penrose." />
+  <figcaption>Sir Roger Penrose ~1970s</figcaption>
+</figure>
+
+Really, this blog post is an unabashed love letter to a (partial) solution to the syntactic challenges of working with tensors called *Penrose Diagrams*.
+
+Like many of us, after a sufficient investment of time, Nobel Laureate Sir Roger Penrose eventually became exhausted with explicit tensor syntax. *Unlike* many of us, he then proceeded to create an entirely new way of thinking about tensors. His motivation (and frustration) is best captured in his prefacing comments before introducing his diagram notation for the first time in the 1971 paper *Applications of Negative Dimensional Tensors* {% cite penrose1971applications %}.
+
+> "...Even in the case of ordinary finite dimensional systems we can retain the full flexibility and simplicity of the tensor index notation while eliminating the undesirable basis dependence of the usual notation. 
+> 
+> However the above is still subject to the other criticism which is sometimes levelled at such index notations, namely the fact that with many indices, expressions may become cumbersome and all-important index connections are easily misread. 
+>
+**I shall therefore introduce a diagrammatic notation for tensors which in most instances allows connections between indices to be discerned at a glance.** (mic drop)"
+>
+> --- Sir Roger Penrose, *Applications of Negative Dimensional Tensors*, 1971, pg 224
+
+<figure class="post-figure post-figure-no-frame">
+  <img class="post-figure-media lightbox-enabled" style="max-width: 82%; margin: 0 auto; border-radius: 0;" src="{{ '/assets/sib/2026-02-04-my-first-post/penrose2.png' | relative_url }}" alt="Early Penrose tensor diagrams." />
+  <figcaption style="text-align: center;">Some of Penrose's first documented tensor diagrams from the original paper. These diagrams were certainly drawn by hand and just copied into the printed manuscript</figcaption>
+</figure>
+
+I tried reaching out to Sir Roger Penrose to ask him personally about his thoughts on tensor networks, but received the following response:
+
+> $\texttt{This is an automated message}$.
+>
+> Roger Penrose no longer reads this mailbox.
+> 
+> ... Roger is over 90 years old and has much reduced capacity to engage with the wide range of people that still wish to communicate with him.
+>
+> If you have not heard back within 3 months you are unlikely to do so.
+
+That was about two months ago, so it's unlikely we'll find out anytime soon (if ever ☹).
+<!-- Over the last 15 years Penrose notation has slowly leaked back into the mainstream {% cite ahle2024tensorcookbook %}, finding various applications in Quantum computing and applied mathematics. -->
+
+In the remainder of this blog post, I will make the claim that not only are Penrose diagrams the fastest way to reason about tensor contraction, but they are also the best tool for designing *tensor network algorithms*, since they can reveal the computational complexity of a given method by inspection.
+
+Penrose diagrams are fairly easy to explain but a little more challenging to fully understand. We will start by investing some energy in understanding the two basic tensor operations (the Kronecker product and partial trace) so that tensor contraction can be defined as a one-liner. For additional excellent refreshers on tensor diagrams, see {% cite Ballard25 --label section --locator 3.83 %}, {% cite BR17 --label section --locator 2 %} or {% cite ahle2024tensorcookbook %},{% cite taylor24 %} which are each beautiful passes on this topic. 
+
+<details class="post-subsection" open>
+<summary class="post-subsection-summary">Just Draw Circles</summary>
+
+<div markdown="1">
+
+ Visually, Penrose diagrams are extremely simple. All tensors are drawn as an arbitrary shape, often a circle, with an edge or leg emanating outward for each mode of the tensor. For example, this is how to draw a order 1,2, and three tensor. 
+
+<figure class="post-figure post-figure-no-frame">
+  <img class="post-figure-media" style="max-width: 78%; margin: 0 auto;" src="{{ '/assets/sib/2026-02-04-my-first-post/1.png' | relative_url }}" alt="Tensor diagram A1." />
+</figure>
+
+<!-- An order-$n$ tensor $\mT\in (\bbR^d)^\otimes$ has $n$ legs sticking out of it.  -->
+The length and orientation of each leg is also arbitrary, and is generally drawn in whatever way makes it easier to understand what's going on. Depending on the setting, the shape of a node may be changed from a circle to some other shape to reflect additional structure or set it apart from other tensors.
+
+</div>
+</details>
+
+<details class="post-subsection" open>
+<summary class="post-subsection-summary">The Investment: Representing Tensor Contraction</summary>
+
+<div markdown="1">
+
+So far, we have mostly just drawn circles and lines. We start to collect dividends once we use this notation to represent *contractions*.
+
+<div class="action-box" style="text-align: center;">
+The main purpose of Penrose diagrams is to reduce the time required to reason about tensor contraction.
+</div>
+In a Penrose diagram to contract two tensors along a shared mode, you simply connect the corresponding legs with a line. For example, here are a few softballs from familiar linear algebra settings.
+
+<figure class="post-figure post-figure-no-frame">
+  <img class="post-figure-media" src="{{ '/assets/sib/2026-02-04-my-first-post/7.png' | relative_url }}" alt="Penrose diagram of a tensor contraction." />
+</figure>
+
+We can extend this idea to include contractions among much larger sets of tensors as well. In the following example, we consider contracting a $3\times 4$ grid of $12$ different tensors together to see how much effort we are saving.
+<details class="tensor-example example-block example-block-wide-right" open>
+  <summary class="example-title">Where we are headed: Penrose notation vs. traditional syntax</summary>
+<div class="network-8-layout">
+  <div class="network-8-panel network-8-panel-left">
+    <div class="network-8-title">Traditional syntax</div>
+    <hr style="margin: 0.25rem 0 0.7rem; border: 0; border-top: 0.5px solid rgba(70,57,53,0.22);" />
+    <div class="network-8-math mathjax-process">
+Let $V \simeq \bbR^{d}$ and $H \simeq \bbR^{\chi}$, with bases $\{\ve_a\}_{a=1}^{d}, \{\vf_a\}_{a=1}^{d}\subset V$ and $\{\vg_{\alpha}\}_{\alpha=1}^{\chi}, \{\vh_{\alpha}\}_{\alpha=1}^{\chi}\subset H$.
+Define indicies
+$$
+\begin{aligned}
+t_i,u_i,s_i&\in\{1,\dots,d\},\\
+\alpha_i,\beta_i,\gamma_i&\in\{1,\dots,\chi\}.
+\end{aligned}
+$$
+$$
+\alpha_0=\alpha_4=\beta_0=\beta_4=\gamma_0=\gamma_4=1.
+$$
+For each site $i\in\{1,2,3,4\}$, define the following tensors:
+$$
+A_i
+=
+\sum_{t_i=1}^{d}\sum_{u_i=1}^{d}\sum_{\alpha_{i-1}=1}^{\chi}\sum_{\alpha_i=1}^{\chi}
+A_i(t_i,u_i,\alpha_{i-1},\alpha_i)\,
+\bigl(\ve_{t_i}\otimes \vf_{u_i}\otimes \vg_{\alpha_i}\otimes \vh_{\alpha_{i-1}}\bigr).
+$$
+$$
+B_i
+=
+\sum_{u_i=1}^{d}\sum_{s_i=1}^{d}\sum_{\beta_{i-1}=1}^{\chi}\sum_{\beta_i=1}^{\chi}
+B_i(u_i,s_i,\beta_{i-1},\beta_i)\,
+\bigl(\ve_{u_i}\otimes \vf_{s_i}\otimes \vg_{\beta_i}\otimes \vh_{\beta_{i-1}}\bigr).
+$$
+$$
+C_i
+=
+\sum_{s_i=1}^{d}\sum_{\gamma_{i-1}=1}^{\chi}\sum_{\gamma_i=1}^{\chi}
+C_i(s_i,\gamma_{i-1},\gamma_i)\,
+\bigl(\ve_{s_i}\otimes \vg_{\gamma_i}\otimes \vh_{\gamma_{i-1}}\bigr).
+$$
+
+    </div>
+  </div>
+  <div class="network-8-panel network-8-panel-right">
+    <div class="network-8-title">Penrose Notation</div>
+    <hr style="margin: 0.25rem 0 0.7rem; border: 0; border-top: 0.5px solid rgba(70,57,53,0.22);" />
+    <div class="network-8-image-wrap">
+      <img class="network-8-image" src="{{ '/assets/sib/2026-02-04-my-first-post/8.png' | relative_url }}" alt="Penrose diagram for a four-site layered contraction network." />
+    </div>
+  </div>
+</div>
+<div class="network-8-result mathjax-process">
+The resulting tensor $\tT\in V^{\otimes 4}$ obtained by contracting all of these 12 of these tensors is
+
+$$
+\tT
+=
+\sum_{t_1,t_2,t_3,t_4=1}^{d}
+\tT(t_1,t_2,t_3,t_4)\,
+\bigl(\ve_{t_1}\otimes \ve_{t_2}\otimes \ve_{t_3}\otimes \ve_{t_4}\bigr),
+$$
+
+with coefficients
+$$
+\begin{aligned}
+\tT(t_1,t_2,t_3,t_4)
+&=
+\sum_{u_1,u_2,u_3,u_4=1}^{d}
+\sum_{s_1,s_2,s_3,s_4=1}^{d}
+\sum_{\alpha_1,\alpha_2,\alpha_3=1}^{\chi}
+\sum_{\beta_1,\beta_2,\beta_3=1}^{\chi}
+\sum_{\gamma_1,\gamma_2,\gamma_3=1}^{\chi}
+\\
+&\quad
+A_1(t_1,u_1,1,\alpha_1)\,
+A_2(t_2,u_2,\alpha_1,\alpha_2)\,
+A_3(t_3,u_3,\alpha_2,\alpha_3)\,
+A_4(t_4,u_4,\alpha_3,1)
+\\
+&\quad
+B_1(u_1,s_1,1,\beta_1)\,
+B_2(u_2,s_2,\beta_1,\beta_2)\,
+B_3(u_3,s_3,\beta_2,\beta_3)\,
+B_4(u_4,s_4,\beta_3,1)
+\\
+&\quad
+C_1(s_1,1,\gamma_1)\,
+C_2(s_2,\gamma_1,\gamma_2)\,
+C_3(s_3,\gamma_2,\gamma_3)\,
+C_4(s_4,\gamma_3,1).
+\end{aligned}
+$$
+</div>
+
+Which of these would you rather write on a piece of paper 100 times? 
+</details>
+
+At this point, unless you have worked with Penrose diagrams before, the connection between the left and right columns in the example above is probably not yet obvious. Even so, this small example already shows how Penrose notation compresses information and keeps attention on the outcome of a large contraction rather than getting lost in Flander's maze of indices.
+
+What's actually going on here? To understand tensor contraction, we need a way of *adding modes* and *removing modes*. Removing a shared mode during contraction should feel fairly intuitive: if two tensors share an index and we contract *over* it, that index should somehow be "deleted".
+
+To make this idea rigorous, we first need to understand how to place all modes from two tensors into a single ambient space.
+<div class="definition-block" id="def-tensor-kronecker-product">
+<div class="definition-title">Definition (Tensor Kronecker Product)</div>
+
+Let $\tX \in \Rtspace{n}$ be an order-$n$ tensor and let $\tY \in \bbR^{e_1 \times \cdots \times e_m}$ be an order-$m$ tensor. The Kronecker product of $\tX$ and $\tY$ is the order-$(n+m)$ tensor
+$$
+\tX \otimes \tY \in \bbR^{d_1 \times \cdots \times d_n \times e_1 \times \cdots \times e_m},
+\qquad
+(\tX \otimes \tY)(\vi,\vj) := \tX(\vi)\,\tY(\vj).
+$$
+
+</div>
+
+The notation $\tX(\vi)\,\tY(\vj)$ is shorthand here for $\tX(i_1\cdots i_n)\,\tY(j_1\cdots j_m)$. The tensor Kronecker product multiplies two tensors and retains all of their modes. In Penrose notation, the Kronecker product is represented by just placing two tensors next to one another.
+
+<figure class="post-figure post-figure-no-frame">
+  <img class="post-figure-media" style="max-width: 76%; margin: 0 auto;" src="{{ '/assets/sib/2026-02-04-my-first-post/21.png' | relative_url }}" alt="Tensor Kronecker product in Penrose notation." />
+</figure>
+
+When we instead want to remove modes, the operator of choice is the partial trace. 
+
+For matrices, the trace operator collapses an entire square matrix to a single scalar. Similarly, if two modes of a given tensor are the same, we can sum over their diagonal, leaving behind a scalar in their wake. Writing down this operation is a bit painful. As consolation, we will see in a moment that in Penrose diagrams this can be represented by drawing a single line.
+
+<div class="definition-block">
+  <div class="definition-title">Definition (Partial Trace of a Tensor)</div>
+
+  Let $\tX \in \bbR^{d_1\times \cdots \times d_n}$, and choose indices $1\le \alpha<\beta\le n$ with $d_\alpha=d_\beta$.
+  The partial trace over modes $\alpha$ and $\beta$ is obtained by setting those two indices equal and summing over their common value:
+  $$
+  \operatorname{tr}_{\alpha,\,\beta}(\tX)(\vi_{<\alpha},\vi_{(\alpha,\beta)},\vi_{>\beta})
+  :=
+  \sum_{r=1}^{d_\alpha}
+  \tX(\vi_{<\alpha},r,\vi_{(\alpha,\beta)},r,\vi_{>\beta}).
+  $$
+
+  Here the output index tuple keeps every index except the $\alpha$th and $\beta$th:
+  $$
+  (\vi_{<\alpha},\vi_{(\alpha,\beta)},\vi_{>\beta})
+  =(i_1,\dots,i_{\alpha-1},\,i_{\alpha+1},\dots,i_{\beta-1},\,i_{\beta+1},\dots,i_n).
+  $$
+
+</div>
+
+<div class="action-box" markdown="1">
+TLDR: The partial trace replaces two mode indices that each range over $d_\alpha$ values with a single summation, producing a tensor with **two** fewer modes.
+</div>
+
+In Penrose notation, the partial trace is represented by drawing a connected line between two modes on the same tensor. Consider tracing over modes 2 and 4 of an order-4 tensor $\tX \in \bbR^{d_1\times d_2\times d_3\times d_4}$ with $d_2=d_4$.
+
+<figure class="post-figure post-figure-no-frame">
+  <p class="inline-figure-expression" style="grid-template-columns: auto 1fr auto 1fr auto 1fr; gap: 0.5rem;">
+    <span class="inline-figure-symbol">\( \operatorname{tr}_{2,4} \)</span>
+    <img class="inline-figure-img" src="{{ '/assets/sib/2026-02-04-my-first-post/4.png' | relative_url }}" alt="Input tensor diagram." />
+    <span class="inline-figure-symbol">\(=\)</span>
+    <img class="inline-figure-img" style="width: 88% !important; justify-self: center;" src="{{ '/assets/sib/2026-02-04-my-first-post/5.png' | relative_url }}" alt="Intermediate tensor diagram." />
+    <span class="inline-figure-symbol">\(=\)</span>
+    <img class="inline-figure-img" src="{{ '/assets/sib/2026-02-04-my-first-post/6.png' | relative_url }}" alt="Result tensor diagram." />
+  </p>
+</figure>
+Let's also see what's happening structurally when we take a partial trace. 
+
+My favorite part about this operator is that the classical notion of summing the diagonal of a matrix is preserved in the geometry of a given tensor.
+
+<details class="tensor-example example-block" open>
+  <summary class="example-title">Example: Partial Trace on a 3×4×3 Tensor</summary>
+  <div class="partial-trace-intro">
+    <p>
+      Let $\tX \in \bbR^{3\times 4\times 3}$. The partial trace over modes $1$ and $3$ sums the diagonal fibers
+      $\tX(r, :, r)$ for $r=1,2,3$, producing a single vector in $\bbR^4$.
+    </p>
+    <div class="action-box">
+    Instantiating the definition for $\tX \in \bbR^{3\times 4\times 3}$ (with $\alpha=1$, $\beta=3$) gives
+    $$
+    \operatorname{tr}_{1,3}(\tX)(j)
+    =
+    \sum_{r=1}^{3}\tX(r,j,r),
+    \qquad j\in[4].
+    $$
+    Here $\vi_{<\alpha}$ and $\vi_{>\beta}$ are empty, while $\vi_{(\alpha,\beta)}=(j)$. In the visualization, each diagonal fiber $\tX(r,:,r)$ is a $1\times 4$ vector, and their sum is a single vector. This is exactly what we should expect, since we removed two modes from an order-3 tensor.
+  </div>
+  </div>
+  <div class="partial-trace-layout">
+    <div class="partial-trace-plot-wrap">
+      <div id="tensor-partial-full" class="tensor-plot partial-trace-plot" aria-label="3x4x3 tensor"></div>
+      <div class="partial-trace-caption">Full 3×4×3 tensor</div>
+    </div>
+    <div class="partial-trace-plot-wrap">
+      <div id="tensor-partial-fibers" class="tensor-plot partial-trace-plot" aria-label="Diagonal fibers only"></div>
+      <div class="partial-trace-caption">Isolated diagonal fibers $\tX(r,:,r)$</div>
+    </div>
+  </div>
+  <div class="partial-trace-equation">
+    <span class="partial-trace-op partial-trace-op-lead">\( \operatorname{tr}_{1,3}(\tX)= \)</span>
+    <div class="partial-trace-fiber">
+      <div id="tensor-partial-f1" class="tensor-plot partial-trace-fiber-plot" aria-label="Fiber r=1"></div>
+      <div class="partial-trace-label">Fiber $r=1$</div>
+    </div>
+    <div class="partial-trace-op">+</div>
+    <div class="partial-trace-fiber">
+      <div id="tensor-partial-f2" class="tensor-plot partial-trace-fiber-plot" aria-label="Fiber r=2"></div>
+      <div class="partial-trace-label">Fiber $r=2$</div>
+    </div>
+    <div class="partial-trace-op">+</div>
+    <div class="partial-trace-fiber">
+      <div id="tensor-partial-f3" class="tensor-plot partial-trace-fiber-plot" aria-label="Fiber r=3"></div>
+      <div class="partial-trace-label">Fiber $r=3$</div>
+    </div>
+    <div class="partial-trace-op">=</div>
+    <div class="partial-trace-fiber">
+      <div id="tensor-partial-sum" class="tensor-plot partial-trace-fiber-plot" aria-label="Trace result"></div>
+      <div class="partial-trace-label">Partial trace result</div>
+    </div>
+  </div>
+  
+</details>
+
+<script>
+  (function () {
+    function idx(i, j, k, nx, ny) {
+      return i + nx * (j + ny * k);
+    }
+
+    const dims = [3, 4, 3];
+    const nx = dims[0], ny = dims[1], nz = dims[2];
+    const fullVals = new Array(nx * ny * nz).fill(0.02);
+    const fiberVals = new Array(nx * ny * nz).fill(0);
+
+    const f1 = new Array(ny).fill(0);
+    const f2 = new Array(ny).fill(0);
+    const f3 = new Array(ny).fill(0);
+    const sum = new Array(ny).fill(0);
+
+    const sliceRanges = [
+      [0.0, 0.33], // teal
+      [0.34, 0.66], // violet
+      [0.67, 1.0]  // amber
+    ];
+
+    for (let k = 0; k < nz; k++) {
+      const [lo, hi] = sliceRanges[k];
+      for (let i = 0; i < nx; i++) {
+        for (let j = 0; j < ny; j++) {
+          // Avoid exact 0/1 endpoints so diagonal cubes are never fully transparent.
+          const t = (j + 1) / (ny + 1);
+          const base = lo + t * (hi - lo);
+          fullVals[idx(i, j, k, nx, ny)] = base;
+          if (i === k) {
+            if (k === 0) f1[j] = base;
+            if (k === 1) f2[j] = base;
+            if (k === 2) f3[j] = base;
+          }
+        }
+      }
+    }
+
+    for (let j = 0; j < ny; j++) {
+      sum[j] = f1[j] + f2[j] + f3[j];
+      fiberVals[idx(0, j, 0, nx, ny)] = f1[j];
+      fiberVals[idx(1, j, 1, nx, ny)] = f2[j];
+      fiberVals[idx(2, j, 2, nx, ny)] = f3[j];
+    }
+
+    window.__tensorExamples = window.__tensorExamples || [];
+    window.__tensorExamples.push({
+      id: "tensor-partial-full",
+      type: "tensor3",
+      dims,
+      values: fullVals,
+      shrink: 0.3,
+      colorscale: [
+        [0.0, "#e4f6f3"],
+        [0.33, "#2a9d8f"],
+        [0.34, "#efe8fb"],
+        [0.66, "#6c5ce7"],
+        [0.67, "#fff1df"],
+        [1.0, "#f4a261"]
+      ],
+      baseEye: { x: 5.6, y: 4.4, z: 3.3 }
+    });
+    window.__tensorExamples.push({
+      id: "tensor-partial-fibers",
+      type: "tensor3",
+      dims,
+      values: fiberVals,
+      shrink: 0.26,
+      colorscale: [
+        [0.0, "#e4f6f3"],
+        [0.33, "#2a9d8f"],
+        [0.34, "#efe8fb"],
+        [0.66, "#6c5ce7"],
+        [0.67, "#fff1df"],
+        [1.0, "#f4a261"]
+      ],
+      zeroTransparent: true,
+      baseEye: { x: 5.6, y: 4.4, z: 3.3 }
+    });
+    window.__tensorExamples.push({
+      id: "tensor-partial-f1",
+      type: "tensor3",
+      dims: [1, 4, 1],
+      values: f1,
+      shrink: 0.32,
+      colorscale: [[0, "#e4f6f3"], [1, "#2a9d8f"]],
+      baseEye: { x: 8.4, y: 6.2, z: 4.8 }
+    });
+    window.__tensorExamples.push({
+      id: "tensor-partial-f2",
+      type: "tensor3",
+      dims: [1, 4, 1],
+      values: f2,
+      shrink: 0.32,
+      colorscale: [[0, "#f2e9ff"], [1, "#4b2bbd"]],
+      baseEye: { x: 8.4, y: 6.2, z: 4.8 }
+    });
+    window.__tensorExamples.push({
+      id: "tensor-partial-f3",
+      type: "tensor3",
+      dims: [1, 4, 1],
+      values: f3,
+      shrink: 0.32,
+      colorscale: [[0, "#fff1df"], [1, "#f4a261"]],
+      baseEye: { x: 8.4, y: 6.2, z: 4.8 }
+    });
+    window.__tensorExamples.push({
+      id: "tensor-partial-sum",
+      type: "tensor3",
+      dims: [1, 4, 1],
+      values: sum,
+      shrink: 0.32,
+      colorscale: [[0, "#f2efe7"], [1, "#7d6a62"]],
+      baseEye: { x: 8.4, y: 6.2, z: 4.8 }
+    });
+  })();
+</script>
+
+
+With these two new operations in hand we are now prepared to define tensor contraction as the Kronecker product followed by a partial trace over the identified pair of modes.
+
+<div class="definition-block">
+<div class="definition-title">Definition (Tensor Contraction)</div>
+
+Let $\tX \in \Rtspace{n}$ and $\tY \in \bbR^{e_1 \times \cdots \times e_m}$ share a mode size $d_\alpha=e_\beta$. The contraction of $\tX$ and $\tY$ along these modes, denoted $\tX \cp{\alpha}{\beta} \tY$, is the order-$(n+m-2)$ tensor obtained by taking a partial trace of their Kronecker product over the identified pair
+$$
+\tX \cp{\alpha}{\beta} \tY := \operatorname{tr}_{\alpha,\,n+\beta}\bigl(\tX \otimes \tY\bigr).
+$$
+</div>
+<details class="tensor-example example-block" open>
+  <summary class="example-title">Example: Using the Contracted Product Operator</summary>
+  <p>
+  Below is an example of the contraction of a tensor $\tA_1\in \bbR^{n\times n\times m\times d}$ with another order-4 tensor $\tA_2\in \bbR^{m\times n\times p\times d}$ along their shared mode $m$, highlighted in red for convenience. 
+  
+  Also shown is a choice of indexing convention for each tensor. In general, any ordering works as long as it is fixed throughout the analysis, though I typically use <em>clockwise</em> order starting at 9 o'clock (perhaps to the dismay of my friend <a href="https://people.epfl.ch/guifre.sancheziserra?lang=en">Guifré Sánchez</a>).
+  </p>
+
+  <figure class="post-figure post-figure-no-frame">
+    <img class="post-figure-media" style="max-width: 82%; margin: 0 auto;" src="{{ '/assets/sib/2026-02-04-my-first-post/19.png' | relative_url }}" alt="Example multi-mode contraction diagram." />
+  </figure>
+
+  <p>
+  We can also define contractions over multiple modes simultaneously by writing tuples in the superscript and subscript of the contracted product operator. 
+  </p>
+
+  <figure class="post-figure post-figure-no-frame">
+    <img class="post-figure-media" style="max-width: 88%; margin: 0 auto;" src="{{ '/assets/sib/2026-02-04-my-first-post/20.png' | relative_url }}" alt="Tuple-based multi-mode contraction notation." />
+  </figure>
+</details>
+
+<p>
+Defining tensor contraction this way is mathematically elegant, but it may not be immediately obvious how to recover simple contractions such as matrix multiplication.
+Below we show this example and detail how matrix multiplication can be derived as a simple sequence of Penrose diagrams following our definitions above.
+</p>
+<details class="tensor-example example-block mm-proof-example-wide" open>
+  <summary class="example-title">Example: Matrix multiplication as tensor contraction</summary>
+  <div>
+    <div class="action-box">
+      <p><strong>Proposition:</strong></p>
+      <p>
+      Let $\mA\in \bbR^{n\times m}$ and $\mB\in \bbR^{m\times p}$ be arbitrary real-valued matrices. The matrix product $\mA\mB$ can be written as $\mA\cp{2}{1}\mB$ and is represented by the following Penrose diagram.
+      </p>
+      <p class="inline-figure-expression" style="grid-template-columns: 1fr auto 1fr; gap: 0.5rem;">
+        <img class="inline-figure-img mm-proof-img" src="{{ '/assets/sib/2026-02-04-my-first-post/9.png' | relative_url }}" alt="Matrix multiplication as contraction, left form." />
+        <span class="inline-figure-symbol">=</span>
+        <img class="inline-figure-img mm-proof-img mm-proof-img-10" src="{{ '/assets/sib/2026-02-04-my-first-post/10.png' | relative_url }}" alt="Matrix multiplication as contraction, right form." />
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <p><strong>Proof.</strong></p>
+    <div class="mm-proof-layout">
+      <div class="mm-proof-math">
+        <div class="mm-proof-col-title">Traditional syntax</div>
+        <hr style="margin: 0.25rem 0 0.7rem; border: 0; border-top: 0.5px solid rgba(70,57,53,0.22);" />
+        For $\mA\in \bbR^{n\times m}$ and $\mB\in \bbR^{m\times p}$, write
+        $$
+        \begin{aligned}
+        \mA&=\sum_{i,j}\mA(i,j)\,(\ve_i\otimes \ve_j),\\
+        \mB&=\sum_{k,\ell}\mB(k,\ell)\,(\ve_k\otimes \ve_\ell).
+        \end{aligned}
+        $$
+        By the contraction definition,
+        $$
+        \begin{aligned}
+        \mA\cp{2}{1}\mB
+        &= \operatorname{tr}_{2,1}(\mA\otimes\mB) \\
+        &= \operatorname{tr}_{2,1}\!\left[\sum_{i,j,k,\ell}\mA(i,j)\,\mB(k,\ell)\,
+           \ve_i\otimes \ve_j\otimes \ve_k\otimes \ve_\ell\right] \\
+        &= \sum_{i,j,k,\ell}\mA(i,j)\,\mB(k,\ell)\,
+           \operatorname{tr}_{2,1}\!\left(\ve_i\otimes \ve_j\otimes \ve_k\otimes \ve_\ell\right).
+        \end{aligned}
+        $$
+        Using
+        $$
+        \begin{aligned}
+        \operatorname{tr}_{2,1}\!\left(\ve_i\otimes \ve_j\otimes \ve_k\otimes \ve_\ell\right)
+        &=\langle \ve_j,\ve_k\rangle\,\ve_i\otimes \ve_\ell \\
+        &=\delta_{jk}\,\ve_i\otimes \ve_\ell,
+        \end{aligned}
+        $$
+        we get
+        $$
+        \begin{aligned}
+        \mA\cp{2}{1}\mB
+        &= \sum_{i,j,\ell}\mA(i,j)\,\mB(j,\ell)\,\ve_i\otimes \ve_\ell \\
+        &= \sum_{i,\ell}\left(\sum_j\mA(i,j)\,\mB(j,\ell)\right)\ve_i\otimes \ve_\ell \\
+        &= \sum_{i,\ell}(\mA\mB)(i,\ell)\,\ve_i\otimes \ve_\ell
+        = \mA\mB.
+        \end{aligned}
+        $$
+      </div>
+      <div class="mm-proof-diagrams">
+        <div class="mm-proof-col-title">Penrose notation</div>
+        <hr style="margin: 0.25rem 0 0.7rem; border: 0; border-top: 0.5px solid rgba(70,57,53,0.22);" />
+        <div class="mm-proof-step">
+          <div class="mm-proof-step-title">$\mA$ and $\mB$ next to each other</div>
+          <img class="inline-figure-img mm-proof-img mm-proof-img-11" src="{{ '/assets/sib/2026-02-04-my-first-post/11.png' | relative_url }}" alt="A and B shown next to each other." />
+        </div>
+        <div class="mm-proof-step">
+          <div class="mm-proof-step-title">Tensor Kronecker product</div>
+          <img class="inline-figure-img mm-proof-img mm-proof-img-12" src="{{ '/assets/sib/2026-02-04-my-first-post/12.png' | relative_url }}" alt="Kronecker product diagram." />
+        </div>
+        <div class="mm-proof-step">
+          <div class="mm-proof-step-title">Partial trace</div>
+          <img class="inline-figure-img mm-proof-img mm-proof-img-13" src="{{ '/assets/sib/2026-02-04-my-first-post/13.png' | relative_url }}" alt="Partial trace application diagram." />
+        </div>
+        <div class="mm-proof-step">
+          <div class="mm-proof-step-title">Solution</div>
+          <img class="inline-figure-img mm-proof-img" src="{{ '/assets/sib/2026-02-04-my-first-post/14.png' | relative_url }}" alt="Final contraction result diagram." />
+        </div>
+      </div>
+    </div>
+  </div>
+</details>
+<details class="post-section" open>
+<summary class="post-section-summary">The Payoff: Computational Complexity At A Glance</summary>
+<div markdown="1">
+Now that we have defined Penrose diagrams and formalized what they communicate, I want to highlight one of my favorite consequences of this notation: it provides a direct way to reason about computational complexity when designing linear algebra algorithms. 
+
+I first learned this fact from [Ethan Epperly](https://www.ethanepperly.com/) some time around July 2023, and it has reshaped how I approach linear algebra and algorithm design. The main idea is the following.
+
+<div class="action-box" markdown="1" style="text-align: center;">
+The cost of a single tensor contraction is proportional to the product of the dimensions of **all** indices that appear in that contraction.
+</div>
+
+This fact is known in certain corners of the theoretical computer science community concerned with multilinear algebra <a class="citation" href="#austrin18">[pg. 4, 8]</a>, and is somewhat immediate once we recognize that contracting two tensors requires accessing all involved entries. Over the last few years, I have started to see it appear more frequently in papers on tensor network methods {% cite Ma_2024 --label figure --locator 7-9 %} an I antcipate this idea becoming increasingly standard for analyzing the runtime of tensor network algorithms.
+
+Let's apply this idea to some contractions we have already seen in this blog post. For each contraction we just write down a big O statement containing the product of all the modes involved. 
+
+<figure class="post-figure post-figure-no-frame">
+  <img class="post-figure-media" style="max-width: 82%; margin: 0 auto;" src="{{ '/assets/sib/2026-02-04-my-first-post/22.png' | relative_url }}" alt="Contraction cost examples." />
+</figure>
+
+As we can see, we can recover naive bounds for matrix multiplication and matrix-vector multiplication, and we can also quickly recover the cost of a fairly specific tensor contraction.
+
+Things become particularly interesting when we place assumptions on the typical size of the modes of a given tensor.
+Consider the cost of contracting together the following Penrose diagram.
+
+<figure class="post-figure post-figure-no-frame">
+  <img class="post-figure-media" style="max-width: 30%; margin: 0 auto;" src="{{ '/assets/sib/2026-02-04-my-first-post/25.png' | relative_url }}" alt="Penrose diagram for contraction-order comparison." />
+</figure>
+
+Depending on the order in which we contract the tensors, we generate different intermediate tensor sizes, which changes the total asymptotic time complexity of the contraction.
+For instance, here are two contraction sequences that arrive at the same result but have different time complexity.
+
+<figure class="post-figure post-figure-no-frame" style="max-width: min(98%, 980px);">
+  <img class="post-figure-media" style="max-width: 100%; margin: 0 auto;" src="{{ '/assets/sib/2026-02-04-my-first-post/26.png' | relative_url }}" alt="Two contraction sequences with different time complexity." />
+</figure>
+
+Depending on the relationship between the mode dimensions $d$, $D$, and $\chi$, one of these contraction sequences may be cheaper than another. 
+
+
+In general, identifying optimal tensor contraction sequences is NP-hard {% cite xu23 %}.Identifying general-purpose *approximate* tensor contraction sequences is an active research area (see, for example, {% cite gray21 %}). Luckily, in many small-scale examples like the one above, the search space is still tractable (and often fairly straightforward to think about), so near-optimal or optimal contraction paths can often be found *a priori* to develop fast algorithms.
+
+</div>
+</details>
+
+</div>
+</details>
+
+</div>
+</details>
+
+<details class="post-section" open>
+<summary class="post-section-summary">Closing Remarks</summary>
+<div markdown="1">
+
+I work in the field of [randomized linear algebra](https://www.stat.berkeley.edu/~mmahoney/misc/LL-S1-E3-Netflix.mp4), and my research is primarily focused on how randomization can be used for accelerating and developing new tensor network methods.
+
+Both of these fields gain leverage over exact methods by *compressing* information. Perhaps unsurprisingly, I enjoy Penrose notation for exactly the same reason. The ability to compress tensor operations down to circles and lines is dramatically liberating, and has allowed me to make progress on research problems at a greatly accelerated pace. 
+
+<img class="float-left w-50 lightbox-enabled" src="{{ '/assets/sib/2026-02-04-my-first-post/notes.jpg' | relative_url }}" alt="Handwritten asymptotic contraction analysis notes." />
+
+For example, the image on the left is an excerpt from one of my notebooks containing an asymptotic complexity analysis of the tensor contractions within the two-site Fitting (variational) algorithm for the compressed MPO-MPS product {% cite verstraete04 %}, which I conducted while working on Successive Randomized Compression (SRC) {% cite cam26 %}.
+
+This page may have taken about 10 minutes to draw, and it quickly delivered an estimate of how expensive this algorithm was. If I had instead attempted to write a formal analysis in traditional syntax, I am not sure that I would have been brave enough to finish.
+
+In summary, Penrose diagrams are an alternative syntax for thinking about tensor contraction, annd make it very easy to think about tensor algorithms and operations. 
+Hopefully the content of this blog post encourages you to try out Penrose diagrams in your own work, particularly if you are a research scientist studying these methods.
+
+</div>
+</details>
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
