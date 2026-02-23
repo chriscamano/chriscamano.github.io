@@ -68,7 +68,7 @@ extra_css:
         {{ content }}
       </article>
 
-      <details class="post-bibliography">
+      <details class="post-bibliography" open>
         <summary>References</summary>
 
         <hr style="border: none; height: 2px; background-color: #463935; margin: 0.75em 0;">
@@ -218,6 +218,9 @@ extra_css:
       {% if page.comments != false %}
       <section class="post-comments">
         <h2>Comments</h2>
+        <hr class="comment-section-rule">
+        <div id="comment-list" class="comment-list mathjax-process"></div>
+        <h3 class="comment-form-title">Leave a new comment</h3>
         <form id="comment-form" class="comment-form">
           <div class="comment-field">
             <label for="comment-name">Name</label>
@@ -230,12 +233,20 @@ extra_css:
           <div class="comment-field">
             <label for="comment-body">Comment</label>
             <textarea id="comment-body" name="comment" rows="4" required></textarea>
+            <p class="comment-help">Feel free to write in LaTeX.</p>
+            <button type="button" class="comment-preview-toggle" aria-expanded="false" aria-controls="comment-latex-preview">LaTeX preview</button>
+            <div id="comment-latex-preview" class="comment-latex-preview mathjax-process" hidden>
+              <div id="comment-latex-preview-content" class="comment-latex-preview-content"></div>
+            </div>
           </div>
+          <input id="comment-parent-id" name="parent_id" type="hidden" value="" />
           <p class="comment-consent">By submitting, you consent to your comment and email being stored and displayed. Emails are not shown publicly.</p>
-          <button type="submit" class="comment-submit">Post Comment</button>
+          <div class="comment-actions">
+            <button type="submit" class="comment-submit">Post Comment</button>
+            <button type="button" class="comment-cancel-reply" hidden>Cancel reply</button>
+          </div>
           <div class="comment-status" aria-live="polite"></div>
         </form>
-        <div id="comment-list" class="comment-list"></div>
       </section>
       {% endif %}
 

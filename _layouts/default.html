@@ -257,44 +257,337 @@
       const listEl = document.getElementById("comment-list");
       const formEl = document.getElementById("comment-form");
       const statusEl = document.querySelector(".comment-status");
+      const formTitleEl = document.querySelector(".comment-form-title");
+      const cancelReplyEl = document.querySelector(".comment-cancel-reply");
+      const bodyEl = document.getElementById("comment-body");
+      const previewToggleEl = document.querySelector(".comment-preview-toggle");
+      const previewPaneEl = document.getElementById("comment-latex-preview");
+      const previewContentEl = document.getElementById("comment-latex-preview-content");
+      const previewToggleText = previewToggleEl ? previewToggleEl.textContent : "LaTeX preview";
+      const defaultFormTitle = formTitleEl ? formTitleEl.textContent : "Leave a comment";
+      const REPLY_PREVIEW_COUNT = 2;
       if (!listEl || !formEl) return;
 
       const apiBase = "{{ site.views_api_base | default: '' }}";
       const endpoint = apiBase ? `${apiBase}/api/comments` : "/api/comments";
       const path = window.location.pathname;
+      const EMPTY_COMMENTS_TTL_MS = 15 * 60 * 1000;
 
-      function renderComments(comments) {
-        if (!comments.length) {
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, (ch) => {
+          if (ch === "&") return "&amp;";
+          if (ch === "<") return "&lt;";
+          if (ch === ">") return "&gt;";
+          if (ch === '"') return "&quot;";
+          return "&#39;";
+        });
+      }
+
+      function formatCommentDate(value) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "";
+        const datePart = new Intl.DateTimeFormat(undefined, {
+          month: "long",
+          day: "numeric",
+          year: "numeric"
+        }).format(date);
+        const timePart = new Intl.DateTimeFormat(undefined, {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true
+        }).format(date).toLowerCase();
+        return `${datePart} at ${timePart}`;
+      }
+
+      function emptyCommentsCacheKey() {
+        return `comments-empty:${path}`;
+      }
+
+      function markCommentsEmpty() {
+        try {
+          localStorage.setItem(emptyCommentsCacheKey(), String(Date.now()));
+        } catch {}
+      }
+
+      function clearCommentsEmptyMark() {
+        try {
+          localStorage.removeItem(emptyCommentsCacheKey());
+        } catch {}
+      }
+
+      function shouldSkipCommentsFetch() {
+        try {
+          const raw = localStorage.getItem(emptyCommentsCacheKey());
+          if (!raw) return false;
+          const at = Number(raw);
+          if (!Number.isFinite(at)) return false;
+          return (Date.now() - at) < EMPTY_COMMENTS_TTL_MS;
+        } catch {
+          return false;
+        }
+      }
+
+      function typesetComments() {
+        if (window.MathJax && typeof window.MathJax.typesetPromise === "function") {
+          window.MathJax.typesetPromise([listEl]).catch(() => {});
+        }
+      }
+
+      function typesetPreview() {
+        if (window.MathJax && typeof window.MathJax.typesetPromise === "function" && previewContentEl) {
+          window.MathJax.typesetPromise([previewContentEl]).catch(() => {});
+        }
+      }
+
+      function renderLatexPreview() {
+        if (!previewContentEl || !bodyEl) return;
+        const raw = bodyEl.value.trim();
+        if (!raw) {
+          previewContentEl.innerHTML = "<span style='color:rgba(70,57,53,0.62)'>Preview will appear here.</span>";
+          return;
+        }
+        previewContentEl.innerHTML = escapeHtml(raw).replace(/\n/g, "<br>");
+        typesetPreview();
+      }
+
+      function setPreviewOpen(isOpen) {
+        if (!previewToggleEl || !previewPaneEl) return;
+        previewPaneEl.hidden = !isOpen;
+        previewToggleEl.classList.toggle("is-active", isOpen);
+        previewToggleEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        previewToggleEl.textContent = isOpen ? "Hide LaTeX preview" : previewToggleText;
+        if (isOpen) renderLatexPreview();
+      }
+
+      function hashText(value) {
+        let hash = 0;
+        const text = String(value);
+        for (let i = 0; i < text.length; i += 1) {
+          hash = ((hash << 5) - hash) + text.charCodeAt(i);
+          hash |= 0;
+        }
+        return Math.abs(hash);
+      }
+
+      function normalizeComment(comment, index) {
+        const rawName = String(comment?.name || "Anonymous").trim() || "Anonymous";
+        const rawBody = String(comment?.comment || "");
+        const rawCreatedAt = String(comment?.created_at || "");
+        const rawId = String(comment?.id || "").trim();
+        const fallbackSeed = `${rawCreatedAt}|${rawName}|${rawBody}|${index}`;
+        const id = rawId || `legacy-${hashText(fallbackSeed)}`;
+        const parentId = String(comment?.parent_id || "").trim();
+
+        return {
+          id,
+          parent_id: parentId || null,
+          name: rawName,
+          comment: rawBody,
+          created_at: rawCreatedAt
+        };
+      }
+
+      function commentTimestamp(comment) {
+        const value = Date.parse(comment.created_at);
+        return Number.isNaN(value) ? 0 : value;
+      }
+
+      function setReplyTarget(parentId, targetName) {
+        const parentInputEl = document.getElementById("comment-parent-id");
+        if (parentInputEl) {
+          parentInputEl.value = parentId || "";
+        }
+
+        if (formTitleEl) {
+          formTitleEl.textContent = parentId
+            ? `${defaultFormTitle} (replying to ${targetName})`
+            : defaultFormTitle;
+        }
+
+        if (cancelReplyEl) {
+          cancelReplyEl.hidden = !parentId;
+        }
+
+        if (statusEl && parentId) {
+          statusEl.textContent = `Replying to ${targetName}`;
+        }
+      }
+
+      function renderCommentNode(comment, childrenByParent, depth = 0, ancestry = new Set()) {
+        if (ancestry.has(comment.id)) return "";
+
+        const nextAncestry = new Set(ancestry);
+        nextAncestry.add(comment.id);
+
+        const replies = childrenByParent.get(comment.id) || [];
+        const visibleReplies = replies.slice(0, REPLY_PREVIEW_COUNT);
+        const hiddenReplies = replies.slice(REPLY_PREVIEW_COUNT);
+        const safeName = escapeHtml(comment.name);
+        const safeComment = escapeHtml(comment.comment).replace(/\n/g, "<br>");
+        const timestamp = formatCommentDate(comment.created_at) || "Date unavailable";
+        const encodedName = encodeURIComponent(comment.name);
+        const encodedId = encodeURIComponent(comment.id);
+        const bubbleClass = depth > 0 ? "comment-item comment-item-reply" : "comment-item";
+
+        let html = `
+          <article class="${bubbleClass}">
+            <div class="comment-meta-stack">
+              <div class="comment-author-line">${safeName}</div>
+              <div class="comment-date-line">${timestamp}</div>
+            </div>
+            <div class="comment-body">${safeComment}</div>
+            <button
+              type="button"
+              class="comment-reply-btn"
+              data-parent-id="${encodedId}"
+              data-reply-name="${encodedName}"
+            >
+              Leave a comment
+            </button>
+        `;
+
+        if (replies.length) {
+          html += `<div class="comment-thread">`;
+          html += visibleReplies.map((reply) => renderCommentNode(reply, childrenByParent, depth + 1, nextAncestry)).join("");
+
+          if (hiddenReplies.length) {
+            const replyLabel = hiddenReplies.length === 1 ? "reply" : "replies";
+            html += `
+              <button
+                type="button"
+                class="comment-thread-toggle"
+                data-thread-target="${encodedId}"
+                data-hidden-count="${hiddenReplies.length}"
+                data-state="collapsed"
+              >
+                Show ${hiddenReplies.length} more ${replyLabel}
+              </button>
+              <div class="comment-thread-hidden" data-thread-hidden-for="${encodedId}" hidden>
+                ${hiddenReplies.map((reply) => renderCommentNode(reply, childrenByParent, depth + 1, nextAncestry)).join("")}
+              </div>
+            `;
+          }
+
+          html += `</div>`;
+        }
+
+        html += `</article>`;
+        return html;
+      }
+
+      function renderComments(rawComments) {
+        if (!rawComments.length) {
+          markCommentsEmpty();
           listEl.innerHTML = "<p class='comment-empty'>No comments yet.</p>";
           return;
         }
-        listEl.innerHTML = comments.map(c => `
-          <div class="comment-item">
-            <div class="comment-meta">
-              <span class="comment-author">${c.name}</span>
-              <span class="comment-date">${new Date(c.created_at).toLocaleDateString()}</span>
-            </div>
-            <div class="comment-body">${c.comment}</div>
-          </div>
-        `).join("");
+
+        clearCommentsEmptyMark();
+
+        const comments = rawComments
+          .map((comment, index) => normalizeComment(comment, index))
+          .sort((a, b) => commentTimestamp(a) - commentTimestamp(b));
+
+        const commentsById = new Map(comments.map((comment) => [comment.id, comment]));
+        const childrenByParent = new Map(comments.map((comment) => [comment.id, []]));
+        const rootComments = [];
+
+        comments.forEach((comment) => {
+          if (comment.parent_id && comment.parent_id !== comment.id && commentsById.has(comment.parent_id)) {
+            childrenByParent.get(comment.parent_id).push(comment);
+            return;
+          }
+          rootComments.push(comment);
+        });
+
+        const roots = rootComments.length ? rootComments : comments;
+        listEl.innerHTML = roots
+          .map((comment) => renderCommentNode(comment, childrenByParent))
+          .join("");
+        typesetComments();
       }
 
-      fetch(`${endpoint}?path=${encodeURIComponent(path)}`)
-        .then(res => res.json())
-        .then(data => renderComments(data.comments || []))
-        .catch(() => {
-          listEl.innerHTML = "<p class='comment-empty'>Unable to load comments.</p>";
+      listEl.addEventListener("click", (event) => {
+        const toggle = event.target.closest(".comment-thread-toggle");
+        if (toggle) {
+          const target = String(toggle.dataset.threadTarget || "");
+          const hiddenRepliesEl = listEl.querySelector(`[data-thread-hidden-for="${target}"]`);
+          if (!hiddenRepliesEl) return;
+
+          const hiddenCount = Number(toggle.dataset.hiddenCount || 0);
+          if (hiddenRepliesEl.hidden) {
+            hiddenRepliesEl.hidden = false;
+            toggle.dataset.state = "expanded";
+            toggle.textContent = "Show fewer replies";
+            typesetComments();
+          } else {
+            hiddenRepliesEl.hidden = true;
+            toggle.dataset.state = "collapsed";
+            toggle.textContent = `Show ${hiddenCount} more ${hiddenCount === 1 ? "reply" : "replies"}`;
+          }
+          return;
+        }
+
+        const button = event.target.closest(".comment-reply-btn");
+        if (!button) return;
+
+        const targetName = decodeURIComponent(button.dataset.replyName || "").trim();
+        const parentId = decodeURIComponent(button.dataset.parentId || "").trim();
+        if (!targetName || !parentId || !bodyEl) return;
+
+        setReplyTarget(parentId, targetName);
+        const prefix = `@${targetName}\n`;
+        if (!bodyEl.value.startsWith(prefix)) {
+          bodyEl.value = bodyEl.value.trim().length ? `${prefix}${bodyEl.value}` : prefix;
+        }
+        bodyEl.focus();
+        bodyEl.setSelectionRange(bodyEl.value.length, bodyEl.value.length);
+        formEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+
+      if (cancelReplyEl) {
+        cancelReplyEl.addEventListener("click", () => {
+          setReplyTarget("", "");
+          if (statusEl && statusEl.textContent.startsWith("Replying to ")) {
+            statusEl.textContent = "";
+          }
         });
+      }
+
+      if (previewToggleEl) {
+        previewToggleEl.addEventListener("click", () => {
+          setPreviewOpen(previewPaneEl ? previewPaneEl.hidden : true);
+        });
+      }
+
+      if (bodyEl) {
+        bodyEl.addEventListener("input", () => {
+          if (!previewPaneEl || previewPaneEl.hidden) return;
+          renderLatexPreview();
+        });
+      }
+
+      if (shouldSkipCommentsFetch()) {
+        listEl.innerHTML = "<p class='comment-empty'>No comments yet.</p>";
+      } else {
+        fetch(`${endpoint}?path=${encodeURIComponent(path)}`)
+          .then(res => res.json())
+          .then(data => renderComments(data.comments || []))
+          .catch(() => {
+            listEl.innerHTML = "<p class='comment-empty'>Unable to load comments.</p>";
+          });
+      }
 
       formEl.addEventListener("submit", (e) => {
         e.preventDefault();
-        statusEl.textContent = "Posting...";
+        if (statusEl) statusEl.textContent = "Posting...";
         const formData = new FormData(formEl);
         const payload = {
           path,
           name: String(formData.get("name") || "").trim(),
           email: String(formData.get("email") || "").trim(),
-          comment: String(formData.get("comment") || "").trim()
+          comment: String(formData.get("comment") || "").trim(),
+          parent_id: String(formData.get("parent_id") || "").trim() || null
         };
 
         fetch(endpoint, {
@@ -305,12 +598,15 @@
           .then(res => res.json())
           .then(data => {
             if (data.error) throw new Error(data.error);
-            statusEl.textContent = "Posted!";
+            if (statusEl) statusEl.textContent = "Posted!";
             formEl.reset();
+            setReplyTarget("", "");
+            setPreviewOpen(false);
+            clearCommentsEmptyMark();
             renderComments(data.comments || []);
           })
           .catch(() => {
-            statusEl.textContent = "Error posting comment.";
+            if (statusEl) statusEl.textContent = "Error posting comment.";
           });
       });
     });

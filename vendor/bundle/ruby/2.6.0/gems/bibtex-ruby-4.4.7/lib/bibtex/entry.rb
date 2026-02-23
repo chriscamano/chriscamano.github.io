@@ -157,14 +157,15 @@ module BibTeX
     # pair as parameters.
     #
     # If no block is given, an enumerator is returned instead.
-    def each
-      if block_given?
-        fields.each(&Proc.new)
-        self
-      else
-        to_enum
-      end
-    end
+    def each(&block)
+  if block
+    fields.each(&block)
+    self
+  else
+    to_enum(:each)
+  end
+end
+
 
     alias each_pair each
 
@@ -609,9 +610,10 @@ module BibTeX
     # the block returns true (the block will be called with each key-value pair).
     #
     # @see #convert!
-    def convert(*filters)
-      block_given? ? dup.convert!(*filters, &Proc.new) : dup.convert!(*filters)
-    end
+    def convert(*filters, &block)
+  block ? dup.convert!(*filters, &block) : dup.convert!(*filters)
+end
+
 
     # In-place variant of @see #convert
     def convert!(*filters)

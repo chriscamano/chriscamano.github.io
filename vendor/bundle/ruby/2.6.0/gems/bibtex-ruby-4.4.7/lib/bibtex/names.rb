@@ -24,7 +24,24 @@ module BibTeX
   class Names < Value
     include Enumerable
 
-    def_delegators :@tokens, :each, :sort
+    def_delegators :@tokens, :sort
+
+def each
+  return enum_for(:each) unless block_given?
+
+  @tokens.each do |token|
+    name =
+      if token.respond_to?(:each_pair)
+        token
+      else
+        Name.parse(token.to_s) || Name.new(last: token.to_s)
+      end
+    yield(name)
+  end
+
+  self
+end
+
 
     def self.parse(string)
       new(NameParser.new.parse(string))
@@ -49,8 +66,12 @@ module BibTeX
     end
 
     def value(options = {})
-      @tokens.map { |n| n.to_s(options) }.join(' and ')
-    end
+  @tokens.map do |n|
+    node = n.respond_to?(:to_citeproc) ? n : Name.parse(n.to_s)
+    node ? node.to_s(options) : n.to_s
+  end.join(' and ')
+end
+
 
     def to_s(options = {})
       return value unless options.has_key?(:quotes)
@@ -78,8 +99,12 @@ module BibTeX
     end
 
     def to_citeproc(options = {})
-      map { |n| n.to_citeproc(options) }
-    end
+  map do |n|
+    node = n.respond_to?(:to_citeproc) ? n : Name.parse(n.to_s)
+    node.to_citeproc(options) if node.respond_to?(:to_citeproc)
+  end.compact
+end
+
 
     def strip_braces
       gsub!(/\{|\}/,'')
@@ -101,11 +126,12 @@ module BibTeX
     alias push add
 
     [:convert!, :rename_if, :rename_unless, :extend_initials].each do |method_id|
-      define_method(method_id) do |*arguments|
-        tokens.each { |t| t.send(method_id, *arguments) }
-        self
-      end
-    end
+  define_method(method_id) do |*arguments|
+    tokens.each { |t| t.send(method_id, *arguments) if t.respond_to?(method_id) }
+    self
+  end
+end
+
 
     def <=>(other)
       other.respond_to?(:to_a) ? to_a <=> other.to_a  : super

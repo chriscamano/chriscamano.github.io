@@ -546,13 +546,20 @@ module Jekyll
           if value.is_a?(BibTeX::Names)
             e["#{key}_array"] = arr = []
             value.each.with_index do |name, idx|
-              parts = {}
-              name.each_pair do |k, v|
-                e["#{key}_#{idx}_#{k}"] = v.to_s
-                parts[k.to_s] = v.to_s
-              end
-              arr << parts
-            end
+  parts = {}
+  pairs =
+    if name.respond_to?(:each_pair)
+      name
+    else
+      BibTeX::Name.parse(name.to_s) || BibTeX::Name.new(last: name.to_s)
+    end
+  pairs.each_pair do |k, v|
+    e["#{key}_#{idx}_#{k}"] = v.to_s
+    parts[k.to_s] = v.to_s
+  end
+  arr << parts
+end
+
           end
         end
 

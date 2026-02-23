@@ -943,8 +943,12 @@ Below we show this example and detail how matrix multiplication can be derived a
     </div>
   </div>
 </details>
-<details class="post-section" open>
-<summary class="post-section-summary">The Payoff: Computational Complexity At A Glance</summary>
+ 
+</div>
+</details>
+
+<details class="post-subsection" open>
+<summary class="post-subsection-summary">The Payoff: Computational Complexity At A Glance</summary>
 <div markdown="1">
 Now that we have defined Penrose diagrams and formalized what they communicate, I want to highlight one of my favorite consequences of this notation: it provides a direct way to reason about computational complexity when designing linear algebra algorithms. 
 
@@ -982,9 +986,6 @@ Depending on the relationship between the mode dimensions $d$, $D$, and $\chi$, 
 
 
 In general, identifying optimal tensor contraction sequences is NP-hard {% cite xu23 %}.Identifying general-purpose *approximate* tensor contraction sequences is an active research area (see, for example, {% cite gray21 %}). Luckily, in many small-scale examples like the one above, the search space is still tractable (and often fairly straightforward to think about), so near-optimal or optimal contraction paths can often be found *a priori* to develop fast algorithms.
-
-</div>
-</details>
 
 </div>
 </details>

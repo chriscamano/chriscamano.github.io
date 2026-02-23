@@ -145,14 +145,15 @@ module BibTeX
     end
 
 
-    def each
-      if block_given?
-        data.each(&Proc.new)
-        self
-      else
-        to_enum
-      end
-    end
+    def each(&block)
+  if block
+    data.each(&block)
+    self
+  else
+    to_enum(:each)
+  end
+end
+
 
 
     def parse_names
@@ -499,13 +500,14 @@ module BibTeX
 
     alias q query
 
-    def each_entry
-      if block_given?
-        q('@entry').each(&Proc.new)
-      else
-        q('@entry').to_enum
-      end
-    end
+    def each_entry(&block)
+  if block
+    q('@entry').each(&block)
+  else
+    q('@entry').to_enum
+  end
+end
+
 
     def find_by_type(*types, &block)
       q(types.flatten.compact.map { |t| "@#{t}" }.join(', '), &block)
