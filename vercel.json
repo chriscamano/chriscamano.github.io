@@ -1,0 +1,5 @@
+{
+  "framework": null,
+  "buildCommand": "export LANG=C.UTF-8 LC_ALL=C.UTF-8 && bundle exec jekyll build",
+  "outputDirectory": "_site"
+}
