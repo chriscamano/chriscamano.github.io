@@ -532,6 +532,7 @@
         });
       }
 
+      var preloadPx = Math.round(Math.min(900, Math.max(320, (window.innerHeight || 800) * 0.75)));
       var observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           var div = entry.target;
@@ -548,7 +549,7 @@
         reconcileActivePlots();
       }, {
         root: null,
-        rootMargin: "0px",
+        rootMargin: preloadPx + "px 0px",
         threshold: 0.01
       });
 
