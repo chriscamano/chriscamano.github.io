@@ -71,6 +71,13 @@ end
 
 if defined?(BibTeX::Names)
   class BibTeX::Names
+    def to_citeproc(options = {})
+      map do |n|
+        node = n.respond_to?(:to_citeproc) ? n : BibTeX::Name.parse(n.to_s)
+        node.to_citeproc(options) if node.respond_to?(:to_citeproc)
+      end.compact
+    end
+
     def convert!(*filters)
       tokens.each { |t| t.convert!(*filters) if t.respond_to?(:convert!) }
       self

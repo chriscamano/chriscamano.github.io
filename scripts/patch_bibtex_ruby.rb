@@ -76,6 +76,17 @@ patches = {
   ],
   "lib/bibtex/names.rb" => [
     [
+      /def to_citeproc\(options = \{\}\)\s*\n\s*map \{ \|n\| n\.to_citeproc\(options\) \}\s*\n\s*end/m,
+      <<~'PATCH'
+        def to_citeproc(options = {})
+          map do |n|
+            node = n.respond_to?(:to_citeproc) ? n : Name.parse(n.to_s)
+            node.to_citeproc(options) if node.respond_to?(:to_citeproc)
+          end.compact
+        end
+      PATCH
+    ],
+    [
       /\[:convert!,\s*:rename_if,\s*:rename_unless,\s*:extend_initials\]\.each do \|method_id\|\s*\n\s*define_method\(method_id\) do \|\*arguments\|\s*\n\s*tokens\.each \{ \|t\| t\.send\(method_id, \*arguments\) \}\s*\n\s*self\s*\n\s*end\s*\n\s*end/m,
       <<~'PATCH'
         [:convert!, :rename_if, :rename_unless, :extend_initials].each do |method_id|
@@ -102,7 +113,8 @@ unsafe_patterns = {
   "q('@entry').each(&Proc.new)" => /q\('@entry'\)\.each\(&Proc\.new\)/,
   "fields.each(&Proc.new)" => /fields\.each\(&Proc\.new\)/,
   "dup.convert!(*filters, &Proc.new)" => /dup\.convert!\(\*filters,\s*&Proc\.new\)/m,
-  "tokens.each { |t| t.send(method_id, *arguments) }" => /tokens\.each \{ \|t\| t\.send\(method_id, \*arguments\) \}/
+  "tokens.each { |t| t.send(method_id, *arguments) }" => /tokens\.each \{ \|t\| t\.send\(method_id, \*arguments\) \}/,
+  "map { |n| n.to_citeproc(options) }" => /map \{ \|n\| n\.to_citeproc\(options\) \}/
 }
 
 remaining = []
