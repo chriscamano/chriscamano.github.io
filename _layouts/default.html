@@ -11,9 +11,7 @@
   {% if site.keywords %}
     <meta name="keywords" content="{{ site.keywords | escape }}">
   {% endif %}
-  {% if site.canonical %}
-    <link rel="canonical" href="{{ site.canonical | escape }}"/>
-  {% endif %}
+  <link rel="canonical" href="{{ page.url | absolute_url }}"/>
   <meta name="robots" content="index,follow">
 
   <!-- Open Graph / Twitter (basic) -->
