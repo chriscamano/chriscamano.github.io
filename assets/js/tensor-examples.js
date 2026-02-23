@@ -548,27 +548,253 @@
   function registerSyncedRotation(plotDiv, baseEye) {
     var rot = window.__tensorRotation || {
       plots: [],
-      angle: 0,
       step: 0.012,
+      glideMs: 1200,
+      programmatic: false,
       period: 90,
       timer: null
     };
 
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function wrapAngle(a) {
+      while (a > Math.PI) a -= 2 * Math.PI;
+      while (a < -Math.PI) a += 2 * Math.PI;
+      return a;
+    }
+
+    function getTracked(div) {
+      return rot.plots.find(function (p) { return p.div === div; });
+    }
+
     var radius = Math.sqrt(baseEye.x * baseEye.x + baseEye.y * baseEye.y);
     var height = baseEye.z;
-    rot.plots.push({ div: plotDiv, radius: radius, height: height });
+    var initAngle = Math.atan2(baseEye.y, baseEye.x);
+    var tracked = getTracked(plotDiv);
+
+    if (tracked) {
+      tracked.radius = radius;
+      tracked.height = height;
+      tracked.canonicalRadius = radius;
+      tracked.canonicalHeight = height;
+      tracked.canonicalEye = { x: baseEye.x, y: baseEye.y, z: baseEye.z };
+      tracked.canonicalUp = tracked.canonicalUp || { x: 0, y: 0, z: 1 };
+      tracked.canonicalCenter = tracked.canonicalCenter || { x: 0, y: 0, z: 0 };
+      tracked.up = tracked.up || { x: 0, y: 0, z: 1 };
+      tracked.center = tracked.center || { x: 0, y: 0, z: 0 };
+      tracked.angle = typeof tracked.angle === "number" ? tracked.angle : initAngle;
+      tracked.baseAngle = typeof tracked.baseAngle === "number" ? tracked.baseAngle : initAngle;
+      tracked.currentStep = typeof tracked.currentStep === "number" ? tracked.currentStep : rot.step;
+      tracked.interacting = false;
+      tracked.returning = false;
+      tracked.returnToken = tracked.returnToken || 0;
+    } else {
+      tracked = {
+        div: plotDiv,
+        radius: radius,
+        height: height,
+        canonicalRadius: radius,
+        canonicalHeight: height,
+        canonicalEye: { x: baseEye.x, y: baseEye.y, z: baseEye.z },
+        canonicalUp: { x: 0, y: 0, z: 1 },
+        canonicalCenter: { x: 0, y: 0, z: 0 },
+        up: { x: 0, y: 0, z: 1 },
+        center: { x: 0, y: 0, z: 0 },
+        angle: initAngle,
+        baseAngle: initAngle,
+        currentStep: rot.step,
+        interacting: false,
+        returning: false,
+        returnToken: 0
+      };
+      rot.plots.push(tracked);
+    }
+
     window.__tensorRotation = rot;
+
+    function syncFromPlotCamera(div) {
+      if (!div || !div._fullLayout || !div._fullLayout.scene || !div._fullLayout.scene.camera) return;
+      var cam = div._fullLayout.scene.camera;
+      var eye = cam.eye;
+      if (!eye) return;
+      var p = getTracked(div);
+      if (!p) return;
+      p.radius = Math.sqrt(eye.x * eye.x + eye.y * eye.y);
+      p.height = eye.z;
+      p.angle = Math.atan2(eye.y, eye.x);
+      if (cam.up) p.up = { x: cam.up.x, y: cam.up.y, z: cam.up.z };
+      if (cam.center) p.center = { x: cam.center.x, y: cam.center.y, z: cam.center.z };
+    }
+
+    function setInteractionActive(active, div) {
+      var p = getTracked(div);
+      if (!p) return;
+      p.interacting = active;
+      if (active) {
+        if (p.returning) {
+          p.returning = false;
+          p.returnToken += 1;
+        }
+        p.currentStep = 0;
+      } else {
+        syncFromPlotCamera(div);
+      }
+    }
+
+    function startCanonicalReturn(div) {
+      var p = getTracked(div);
+      if (!p || p.returning) return;
+
+      p.returning = true;
+      p.returnToken += 1;
+      var token = p.returnToken;
+      var frameCount = 0;
+
+      function stepReturn(ts) {
+        if (p.returnToken !== token) return;
+        frameCount += 1;
+
+        var canonicalUp = p.canonicalUp || { x: 0, y: 0, z: 1 };
+        var canonicalCenter = p.canonicalCenter || { x: 0, y: 0, z: 0 };
+
+        // Gentle chase to the moving baseline angle and canonical view geometry.
+        p.angle = p.angle + wrapAngle(p.baseAngle - p.angle) * 0.08;
+        p.radius = lerp(p.radius, p.canonicalRadius, 0.065);
+        p.height = lerp(p.height, p.canonicalHeight, 0.065);
+        p.up = {
+          x: lerp(p.up.x, canonicalUp.x, 0.085),
+          y: lerp(p.up.y, canonicalUp.y, 0.085),
+          z: lerp(p.up.z, canonicalUp.z, 0.085)
+        };
+        p.center = {
+          x: lerp(p.center.x, canonicalCenter.x, 0.085),
+          y: lerp(p.center.y, canonicalCenter.y, 0.085),
+          z: lerp(p.center.z, canonicalCenter.z, 0.085)
+        };
+
+        var camera = {
+          eye: {
+            x: p.radius * Math.cos(p.angle),
+            y: p.radius * Math.sin(p.angle),
+            z: p.height
+          },
+          up: p.up,
+          center: p.center
+        };
+
+        rot.programmatic = true;
+        Plotly.relayout(div, { "scene.camera": camera })
+          .catch(function () {})
+          .finally(function () {
+            rot.programmatic = false;
+          });
+
+        var done =
+          Math.abs(p.radius - p.canonicalRadius) < 0.01 &&
+          Math.abs(p.height - p.canonicalHeight) < 0.01 &&
+          Math.abs(wrapAngle(p.baseAngle - p.angle)) < 0.008 &&
+          Math.abs(p.center.x - canonicalCenter.x) < 0.005 &&
+          Math.abs(p.center.y - canonicalCenter.y) < 0.005 &&
+          Math.abs(p.center.z - canonicalCenter.z) < 0.005 &&
+          frameCount > 14;
+
+        if (done) {
+          p.returning = false;
+          p.currentStep = 0;
+          return;
+        }
+
+        requestAnimationFrame(stepReturn);
+      }
+
+      requestAnimationFrame(stepReturn);
+    }
+
+    if (!plotDiv.__tensorInteractionHooked) {
+      plotDiv.__tensorInteractionHooked = true;
+      plotDiv.__tensorPointerActive = false;
+
+      plotDiv.addEventListener("pointerdown", function (ev) {
+        if (plotDiv.__tensorPointerActive) return;
+        plotDiv.__tensorPointerActive = true;
+        setInteractionActive(true, plotDiv);
+      });
+
+      window.addEventListener("pointerup", function (ev) {
+        if (!plotDiv.__tensorPointerActive) return;
+        plotDiv.__tensorPointerActive = false;
+        requestAnimationFrame(function () {
+          setInteractionActive(false, plotDiv);
+          startCanonicalReturn(plotDiv);
+        });
+      });
+
+      window.addEventListener("pointercancel", function (ev) {
+        if (!plotDiv.__tensorPointerActive) return;
+        plotDiv.__tensorPointerActive = false;
+        setInteractionActive(false, plotDiv);
+        startCanonicalReturn(plotDiv);
+      });
+    }
+
+    if (!plotDiv.__tensorRelayoutHooked) {
+      plotDiv.__tensorRelayoutHooked = true;
+      function applyCameraEvent(ev) {
+        if (rot.programmatic || !ev) return;
+        var camEvent = ev["scene.camera"] || null;
+        var eye = ev["scene.camera.eye"] || (camEvent && camEvent.eye);
+        if (!eye) return;
+        var p = getTracked(plotDiv);
+        if (!p) return;
+        p.radius = Math.sqrt(eye.x * eye.x + eye.y * eye.y);
+        p.height = eye.z;
+        p.angle = Math.atan2(eye.y, eye.x);
+        var up = ev["scene.camera.up"] || (camEvent && camEvent.up);
+        if (up) p.up = { x: up.x, y: up.y, z: up.z };
+        var center = ev["scene.camera.center"] || (camEvent && camEvent.center);
+        if (center) p.center = { x: center.x, y: center.y, z: center.z };
+      }
+
+      plotDiv.on("plotly_relayouting", applyCameraEvent);
+      plotDiv.on("plotly_relayout", applyCameraEvent);
+    }
 
     if (!rot.timer) {
       rot.timer = setInterval(function () {
-        rot.angle += rot.step;
+        rot.programmatic = true;
+        var relayoutJobs = [];
+
         rot.plots.forEach(function (p) {
+          p.baseAngle = p.baseAngle + rot.step;
+          if (p.interacting || p.returning) return;
+
+          if (p.currentStep < rot.step) {
+            var accel = (rot.period / rot.glideMs) * rot.step;
+            p.currentStep = Math.min(rot.step, p.currentStep + accel);
+          }
+
+          var drift = wrapAngle(p.baseAngle - p.angle);
+          if (Math.abs(drift) > p.currentStep) {
+            p.angle += (drift > 0 ? p.currentStep : -p.currentStep);
+          } else {
+            p.angle = p.baseAngle;
+          }
+
           var eye = {
-            x: p.radius * Math.cos(rot.angle),
-            y: p.radius * Math.sin(rot.angle),
+            x: p.radius * Math.cos(p.angle),
+            y: p.radius * Math.sin(p.angle),
             z: p.height
           };
-          Plotly.relayout(p.div, { "scene.camera.eye": eye });
+          var camera = { eye: eye };
+          if (p.up) camera.up = p.up;
+          if (p.center) camera.center = p.center;
+          relayoutJobs.push(Plotly.relayout(p.div, { "scene.camera": camera }));
+        });
+
+        Promise.allSettled(relayoutJobs).finally(function () {
+          rot.programmatic = false;
         });
       }, rot.period);
     }

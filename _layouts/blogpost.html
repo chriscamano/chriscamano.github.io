@@ -7,6 +7,9 @@ extra_css:
 ---
 
 <div class="single-post blog-container">
+  <div class="post-read-progress" aria-hidden="true">
+    <span class="post-read-progress-fill"></span>
+  </div>
   <aside class="blog-sidebar">
     <p>
       <a class="back-link" href="{{ '/blog/' | relative_url }}">&larr; Back to Main Blog</a>
@@ -194,8 +197,54 @@ extra_css:
             nav.appendChild(list);
           }
 
+          function initPostReadProgress() {
+            var bar = document.querySelector('.post-read-progress-fill');
+            var container = document.querySelector('.blog-post-container');
+            if (!bar || !container) return;
+
+            var comments = document.querySelector('.post-comments');
+            var startY = 0;
+            var endY = 1;
+            var rafId = 0;
+
+            function computeBounds() {
+              startY = container.getBoundingClientRect().top + window.scrollY;
+              if (comments) {
+                endY = comments.getBoundingClientRect().top + window.scrollY;
+              } else {
+                endY = startY + 1;
+              }
+              if (endY <= startY + 1) endY = startY + 1;
+            }
+
+            function render() {
+              rafId = 0;
+              var y = window.scrollY;
+              var t = (y - startY) / (endY - startY);
+              if (t < 0) t = 0;
+              if (t > 1) t = 1;
+              bar.style.transform = 'scaleX(' + t.toFixed(4) + ')';
+            }
+
+            function scheduleRender() {
+              if (rafId) return;
+              rafId = window.requestAnimationFrame(render);
+            }
+
+            function handleResize() {
+              computeBounds();
+              scheduleRender();
+            }
+
+            computeBounds();
+            render();
+            window.addEventListener('scroll', scheduleRender, { passive: true });
+            window.addEventListener('resize', handleResize);
+          }
+
           document.addEventListener('DOMContentLoaded', openReferencesForHash);
           document.addEventListener('DOMContentLoaded', buildPostDirectory);
+          document.addEventListener('DOMContentLoaded', initPostReadProgress);
           window.addEventListener('hashchange', openReferencesForHash);
         })();
       </script>

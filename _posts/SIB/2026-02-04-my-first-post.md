@@ -853,7 +853,7 @@ $$
   </p>
 
   <figure class="post-figure post-figure-no-frame">
-    <img class="post-figure-media" style="max-width: 88%; margin: 0 auto;" src="{{ '/assets/sib/2026-02-04-my-first-post/20.png' | relative_url }}" alt="Tuple-based multi-mode contraction notation." />
+    <img class="post-figure-media" style="max-width: 81.4%; margin: 0 auto;" src="{{ '/assets/sib/2026-02-04-my-first-post/20.png' | relative_url }}" alt="Tuple-based multi-mode contraction notation." />
   </figure>
 </details>
 

@@ -4,7 +4,31 @@ title: About Me
 ---
 
 <div class="home-tensor-block">
-  <div id="tensor-plot"></div>
+  <div class="tensor-reroll-control">
+    <button id="tensor-reroll-btn" class="tensor-reroll-btn" type="button" aria-label="Reroll tensor sample">
+      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <g transform="translate(3 4) rotate(-11 20 20)">
+          <rect x="2" y="2" width="34" height="34" rx="7" ry="7" fill="#111"/>
+          <circle cx="10" cy="10" r="2.4" fill="#f5f5f5"/>
+          <circle cx="28" cy="10" r="2.4" fill="#f5f5f5"/>
+          <circle cx="19" cy="19" r="2.4" fill="#f5f5f5"/>
+          <circle cx="10" cy="28" r="2.4" fill="#f5f5f5"/>
+          <circle cx="28" cy="28" r="2.4" fill="#f5f5f5"/>
+        </g>
+        <g transform="translate(31 25) rotate(12 15 15)">
+          <rect x="1.5" y="1.5" width="30" height="30" rx="6.5" ry="6.5" fill="#111"/>
+          <circle cx="9" cy="9" r="2.3" fill="#f5f5f5"/>
+          <circle cx="16.5" cy="16.5" r="2.3" fill="#f5f5f5"/>
+          <circle cx="24" cy="24" r="2.3" fill="#f5f5f5"/>
+        </g>
+      </svg>
+    </button>
+    <span class="tensor-reroll-label">reroll</span>
+  </div>
+  <div class="tensor-plot-stack">
+    <div id="tensor-plot-back" class="tensor-plot-layer tensor-plot-back" aria-hidden="true"></div>
+    <div id="tensor-plot-front" class="tensor-plot-layer tensor-plot-front"></div>
+  </div>
   <p class="tensor-caption"><strong>A sparse, symmetric random 3-tensor</strong></p>
 </div>
 
@@ -30,7 +54,7 @@ I am currently funded through the [National Science Foundation Graduate Research
 - **[Aug. 2025]** Attended the [Institute of Pure and Applied Mathematics (IPAM) RNLA workshop](https://www.ipam.ucla.edu/programs/special-events-and-conferences/research-collaboration-workshop-randomized-numerical-linear-algebra-rnla/) on randomized Krylov methods.
 - **[Apr. 2025]** Invited to speak at [Southern California Applied Math Symposium](https://www.math.uci.edu/node/38364) on randomized tensor networks.
 - **[Apr. 2025]** Invited to speak at [UCSD Mathematics of Information, Data, and Signals Seminar](https://sites.google.com/ucsd.edu/ucsd-minds/home) on randomized tensor networks.
-- **[Feb. 2025]** Invited to speak at the [Argonne National Laboratory Toward Next-Generation Ecosystems for Scientific Computing workshop](https://events.cels.anl.gov/event/602/registrations/268/) on randomized tensor networks.
+
 
 <details>
 <summary style="cursor:pointer; font-weight:bold;font-size:1.25em;">Show older news</summary>
@@ -39,6 +63,7 @@ I am currently funded through the [National Science Foundation Graduate Research
 
 <div markdown="1">
 
+- **[Feb. 2025]** Invited to speak at the [Argonne National Laboratory Toward Next-Generation Ecosystems for Scientific Computing workshop](https://events.cels.anl.gov/event/602/registrations/268/) on randomized tensor networks.
 - **[March. 2024]** Awarded the NSF GRFP & Kortschak fellowships 🎉.  
 - **[Feb. 2024]** Accepted to the Caltech PhD program 🎉.  
 - **[Jan. 2024]** Invited to speak at the [Joint Math Meeting](https://jointmathematicsmeetings.org/jmm) 2024 on randomized tensor networks.  

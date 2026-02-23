@@ -8,6 +8,27 @@
   font-weight: 400;
 }
 
+.post-read-progress {
+  position: fixed;
+  top: 66px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(70, 57, 53, 0.08);
+  pointer-events: none;
+  z-index: 999;
+}
+
+.post-read-progress-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: rgba(70, 57, 53, 0.56);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 120ms linear;
+}
+
 .blog-post-container {
   --post-quote-side-margin: 2.5rem;
 }

@@ -5,10 +5,9 @@ affiliation: California Institute of Technology(Caltech)
 email: ccamano@caltech.edu
 
 
-# Search Engine Optimization (SEO)
-# The following information is used to improve the website traffic from search engines, e.g., Google.
-keywords: minimal light
-description: The Minimal Light is a simple and elegant jekyll theme for academic personal homepage.
+keywords: tensors, tensor methods, linear algebra, numerical methods, scientific computing
+description: a blog about (mostly) tensors
+social_preview_image: /assets/img/newten.svg
 url: https://chriscamano.com
 baseurl: ""
 canonical: https://chriscamano.com
@@ -28,8 +27,6 @@ avatar: ./assets/img/biopic1.png
 favicon: ./assets/img/newten.svg
 # favicon_dark: ./assets/img/favicon-dark.png
 
-# Footnote
-# You may use the option to disable the footnote, "Powered by Jekyll and Minimal Light theme."
 enable_footnote: False
 
 # Auto Dark Mode
