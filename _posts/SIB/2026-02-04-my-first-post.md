@@ -1,6 +1,6 @@
 ---
 layout: blogpost
-title: "SIB1"
+title: "Seeing Is Believing #1: Thinking in Penrose Diagrams"
 date: 2026-02-22
 image: /assets/sib/2026-02-04-my-first-post/thumbnail.png
 excerpt: "How Penrose diagrams simplify tensor contractions and expose their computational cost."
