@@ -77,7 +77,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
         integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous">
 
-  {% assign needs_mathjax = page.layout == "blogpost" or page.layout == "blog_category" or page.layout == "gallery" or page.mathjax == true %}
+  {% assign needs_mathjax = false %}
+  {% if page.layout == "blogpost" or page.layout == "blog_category" or page.layout == "gallery" or page.mathjax == true %}
+    {% assign needs_mathjax = true %}
+  {% endif %}
   {% if needs_mathjax %}
   <!-- MathJax configuration -->
   <script>
