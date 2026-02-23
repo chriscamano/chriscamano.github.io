@@ -45,3 +45,26 @@ if defined?(BibTeX::Bibliography)
     end
   end
 end
+
+if defined?(BibTeX::Entry)
+  class BibTeX::Entry
+    def each(&block)
+      if block
+        fields.each(&block)
+        self
+      else
+        to_enum(:each)
+      end
+    end
+
+    alias each_pair each
+
+    def convert(*filters, &block)
+      if block
+        dup.convert!(*filters, &block)
+      else
+        dup.convert!(*filters)
+      end
+    end
+  end
+end
