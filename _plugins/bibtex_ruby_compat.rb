@@ -71,6 +71,13 @@ end
 
 if defined?(BibTeX::Names)
   class BibTeX::Names
+    def value(options = {})
+      @tokens.map do |n|
+        node = n.respond_to?(:to_citeproc) ? n : BibTeX::Name.parse(n.to_s)
+        node ? node.to_s(options) : n.to_s
+      end.join(" and ")
+    end
+
     def to_citeproc(options = {})
       map do |n|
         node = n.respond_to?(:to_citeproc) ? n : BibTeX::Name.parse(n.to_s)

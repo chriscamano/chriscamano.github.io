@@ -76,6 +76,17 @@ patches = {
   ],
   "lib/bibtex/names.rb" => [
     [
+      /def value\(options = \{\}\)\s*\n\s*@tokens\.map \{ \|n\| n\.to_s\(options\) \}\.join\(' and '\)\s*\n\s*end/m,
+      <<~'PATCH'
+        def value(options = {})
+          @tokens.map do |n|
+            node = n.respond_to?(:to_citeproc) ? n : Name.parse(n.to_s)
+            node ? node.to_s(options) : n.to_s
+          end.join(' and ')
+        end
+      PATCH
+    ],
+    [
       /def to_citeproc\(options = \{\}\)\s*\n\s*map \{ \|n\| n\.to_citeproc\(options\) \}\s*\n\s*end/m,
       <<~'PATCH'
         def to_citeproc(options = {})
@@ -114,7 +125,8 @@ unsafe_patterns = {
   "fields.each(&Proc.new)" => /fields\.each\(&Proc\.new\)/,
   "dup.convert!(*filters, &Proc.new)" => /dup\.convert!\(\*filters,\s*&Proc\.new\)/m,
   "tokens.each { |t| t.send(method_id, *arguments) }" => /tokens\.each \{ \|t\| t\.send\(method_id, \*arguments\) \}/,
-  "map { |n| n.to_citeproc(options) }" => /map \{ \|n\| n\.to_citeproc\(options\) \}/
+  "map { |n| n.to_citeproc(options) }" => /map \{ \|n\| n\.to_citeproc\(options\) \}/,
+  "@tokens.map { |n| n.to_s(options) }.join(' and ')" => /@tokens\.map \{ \|n\| n\.to_s\(options\) \}\.join\(' and '\)/
 }
 
 remaining = []
