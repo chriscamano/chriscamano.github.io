@@ -60,6 +60,7 @@ nav.navbar .nav-item a {
   text-align: center;
   color: white !important;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 nav.navbar .nav-brand a {
@@ -105,4 +106,53 @@ nav.navbar .nav-item.nav-brand a:hover {
 
 nav.navbar .nav-item.nav-brand a:hover .nav-brand-symbol {
   color: var(--color-hover) !important;
+}
+
+@media (max-width: 900px) {
+  body {
+    padding-top: 52px;
+  }
+
+  nav.navbar {
+    border-bottom-width: 4px !important;
+  }
+
+  nav.navbar .nav-item a {
+    padding: 14px 14px !important;
+    font-size: 18px !important;
+    line-height: 1.15;
+  }
+
+  nav.navbar .nav-brand a {
+    padding: 14px 12px !important;
+    min-width: 2.1rem;
+    font-size: 1.55rem !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding-top: 48px;
+  }
+
+  nav.navbar .nav-list {
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  nav.navbar .nav-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  nav.navbar .nav-item a {
+    padding: 12px 11px !important;
+    font-size: 16px !important;
+  }
+
+  nav.navbar .nav-brand a {
+    padding: 12px 10px !important;
+    font-size: 1.35rem !important;
+  }
 }

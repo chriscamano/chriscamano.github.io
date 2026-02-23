@@ -203,6 +203,30 @@
       user-select: none;
     }
 
+    .latest-post-btn {
+      display: inline-block;
+      margin-top: 0.55rem;
+      padding: 0.42rem 0.72rem;
+      border-radius: 8px;
+      border: 1px solid rgba(18, 14, 13, 0.72);
+      background: #463935;
+      color: #fff !important;
+      text-decoration: none !important;
+      font-size: 0.9rem;
+      font-weight: 600;
+      line-height: 1.1;
+      transition: background-color 120ms ease, transform 120ms ease;
+    }
+
+    .latest-post-btn:hover,
+    .latest-post-btn:focus-visible {
+      background: #5a4943;
+      color: #fff !important;
+      transform: translateY(-1px);
+      outline: none;
+      text-decoration: none !important;
+    }
+
     /* On small screens, stop wrapping and stack instead */
     @media (max-width: 700px) {
       .home-tensor-block {
@@ -310,7 +334,6 @@
         {% endif %}
 
         <br>
-        <br>
         <div class="social-icons">
         {% if site.google_scholar %}
         <a style="margin: 0 5px 0 0" href="{{ site.google_scholar }}">
@@ -336,6 +359,15 @@
         </a>
         {% endif %}
         </div>
+        {% if site.blog %}
+          {% assign latest_posts_collection = site.blog %}
+        {% else %}
+          {% assign latest_posts_collection = site.posts %}
+        {% endif %}
+        {% assign latest_post = latest_posts_collection | sort: "date" | reverse | first %}
+        {% if latest_post %}
+        <a class="latest-post-btn" href="{{ latest_post.url | relative_url }}">latest blog post</a>
+        {% endif %}
         <br>
 
       </header>
