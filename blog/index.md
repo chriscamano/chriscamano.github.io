@@ -90,6 +90,9 @@ extra_css:
             <p class="post-date-feed">
               Published: {{ post.date | date: "%B %d, %Y" }}
             </p>
+            <p class="post-date-feed post-views-feed">
+              <span class="post-views-count-feed" data-post-path="{{ post.url | relative_url }}">—</span> views
+            </p>
 
             <p>{{ post.excerpt }}</p>
             <a href="{{ post.url | relative_url }}">Read more →</a>
@@ -119,26 +122,49 @@ extra_css:
   document.addEventListener("DOMContentLoaded", function () {
     var params = new URLSearchParams(window.location.search);
     var category = params.get("category");
-    if (!category) return;
+    if (category) {
+      var wrappers = document.querySelectorAll(".post-wrapper");
+      var visibleCount = 0;
 
-    var wrappers = document.querySelectorAll(".post-wrapper");
-    var visibleCount = 0;
+      wrappers.forEach(function (wrapper) {
+        var raw = wrapper.getAttribute("data-categories") || "";
+        var cats = raw ? raw.split(",") : [];
+        var show = cats.indexOf(category) !== -1;
+        wrapper.style.display = show ? "" : "none";
+        if (show) visibleCount += 1;
+      });
 
-    wrappers.forEach(function (wrapper) {
-      var raw = wrapper.getAttribute("data-categories") || "";
-      var cats = raw ? raw.split(",") : [];
-      var show = cats.indexOf(category) !== -1;
-      wrapper.style.display = show ? "" : "none";
-      if (show) visibleCount += 1;
+      var hero = document.querySelector(".blog-opener");
+      if (hero) {
+        var note = document.createElement("p");
+        note.style.margin = "0.25rem 0 1rem";
+        note.style.fontSize = "0.95rem";
+        note.innerHTML = "Filtered by category: <strong>" + category.replace(/-/g, " ") + "</strong> (" + visibleCount + " post" + (visibleCount === 1 ? "" : "s") + "). <a href=\"{{ '/blog/' | relative_url }}\">Show all</a>";
+        hero.insertAdjacentElement("afterend", note);
+      }
+    }
+
+    var apiBase = "{{ site.views_api_base | default: '' }}";
+    var endpoint = apiBase ? apiBase + "/api/views" : "/api/views";
+    var viewEls = document.querySelectorAll(".post-views-count-feed");
+    viewEls.forEach(function (el) {
+      var path = el.getAttribute("data-post-path");
+      if (!path) {
+        el.textContent = "—";
+        return;
+      }
+      fetch(endpoint + "?path=" + encodeURIComponent(path))
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (typeof data.views === "number") {
+            el.textContent = data.views.toLocaleString();
+          } else {
+            el.textContent = "—";
+          }
+        })
+        .catch(function () {
+          el.textContent = "—";
+        });
     });
-
-    var hero = document.querySelector(".blog-opener");
-    if (!hero) return;
-
-    var note = document.createElement("p");
-    note.style.margin = "0.25rem 0 1rem";
-    note.style.fontSize = "0.95rem";
-    note.innerHTML = "Filtered by category: <strong>" + category.replace(/-/g, " ") + "</strong> (" + visibleCount + " post" + (visibleCount === 1 ? "" : "s") + "). <a href=\"{{ '/blog/' | relative_url }}\">Show all</a>";
-    hero.insertAdjacentElement("afterend", note);
   });
 </script>

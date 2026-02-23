@@ -162,13 +162,20 @@
 }
 
 /* Metadata (feed) */
-.post-date-feed {
+.blog-post .post-text .post-date-feed {
   position: static;
   display: block;
   font-size: 0.9rem;
   color: #555;
-  margin: 0.4rem 0 1rem;
+  margin: 0.12rem 0 0.18rem;
+  line-height: 1.2;
   font-style: italic;
+}
+
+.blog-post .post-text .post-views-feed {
+  margin-top: 0;
+  margin-bottom: 0.42rem;
+  opacity: 0.6;
 }
 /* Hero banner wrapper – uses main column width */
 .blog-opener {

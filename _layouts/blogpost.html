@@ -199,6 +199,8 @@ extra_css:
 
           function initPostReadProgress() {
             var bar = document.querySelector('.post-read-progress-fill');
+            var progress = document.querySelector('.post-read-progress');
+            var nav = document.querySelector('nav.navbar');
             var container = document.querySelector('.blog-post-container');
             if (!bar || !container) return;
 
@@ -206,6 +208,14 @@ extra_css:
             var startY = 0;
             var endY = 1;
             var rafId = 0;
+
+            function syncProgressTop() {
+              if (!progress || !nav) return;
+              var navRect = nav.getBoundingClientRect();
+              var h = progress.offsetHeight || 0;
+              var top = Math.max(0, navRect.bottom - h);
+              progress.style.top = top.toFixed(0) + 'px';
+            }
 
             function computeBounds() {
               startY = container.getBoundingClientRect().top + window.scrollY;
@@ -232,10 +242,12 @@ extra_css:
             }
 
             function handleResize() {
+              syncProgressTop();
               computeBounds();
               scheduleRender();
             }
 
+            syncProgressTop();
             computeBounds();
             render();
             window.addEventListener('scroll', scheduleRender, { passive: true });

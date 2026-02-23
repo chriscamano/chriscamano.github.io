@@ -91,6 +91,35 @@
       z-index: 1;
     }
 
+    .tensor-plot-loading-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 140ms ease;
+      z-index: 4;
+    }
+
+    .tensor-plot-stack.is-loading .tensor-plot-loading-overlay {
+      opacity: 1;
+    }
+
+    .tensor-plot-loading-spinner {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid rgba(70, 57, 53, 0.2);
+      border-top-color: rgba(70, 57, 53, 0.72);
+      animation: home-tensor-spin 0.72s linear infinite;
+    }
+
+    @keyframes home-tensor-spin {
+      to { transform: rotate(360deg); }
+    }
+
     .tensor-plot-layer {
       position: absolute;
       top: 0;
@@ -325,12 +354,36 @@ document.addEventListener("DOMContentLoaded", function () {
   var frontPlotDiv = document.getElementById("tensor-plot-front");
   var backPlotDiv = document.getElementById("tensor-plot-back");
   var rerollBtn = document.getElementById("tensor-reroll-btn");
+  var plotStackEl = document.querySelector(".tensor-plot-stack");
   if (!frontPlotDiv || !backPlotDiv) return; // only on pages with tensor stack
   var readyPlots = new WeakMap();
   var rerollAnimating = false;
   var precomputedSample = null;
   var precomputeInFlight = null;
   var paletteIndex = 0;
+
+  function ensureTensorLoadingOverlay() {
+    if (!plotStackEl) return;
+    if (plotStackEl.__loadingOverlay) return;
+    var overlay = document.createElement("div");
+    overlay.className = "tensor-plot-loading-overlay";
+    var spinner = document.createElement("span");
+    spinner.className = "tensor-plot-loading-spinner";
+    spinner.setAttribute("aria-hidden", "true");
+    overlay.appendChild(spinner);
+    plotStackEl.appendChild(overlay);
+    plotStackEl.__loadingOverlay = overlay;
+  }
+
+  function setTensorLoading(isLoading) {
+    if (!plotStackEl) return;
+    ensureTensorLoadingOverlay();
+    if (isLoading) {
+      plotStackEl.classList.add("is-loading");
+    } else {
+      plotStackEl.classList.remove("is-loading");
+    }
+  }
 
   function buildRandomTensorSample() {
     var n = 16;              // tensor is n x n x n
@@ -793,15 +846,20 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   var initialSample = buildRandomTensorSample();
+  setTensorLoading(true);
   renderRandomTensorSample(frontPlotDiv, initialSample).then(function () {
+    setTensorLoading(false);
     ensureRelayoutHandler(frontPlotDiv);
     ensurePrecomputedSample();
+  }).catch(function () {
+    setTensorLoading(false);
   });
 
   if (rerollBtn) {
     rerollBtn.addEventListener("click", function () {
       if (rerollAnimating) return;
       rerollAnimating = true;
+      setTensorLoading(true);
 
       var activeEye = null;
       if (frontPlotDiv._fullLayout &&
@@ -871,10 +929,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 0);
 
         rerollAnimating = false;
+        setTensorLoading(false);
       }).catch(function () {
         frontPlotDiv.classList.remove("is-wiping");
         ensurePrecomputedSample();
         rerollAnimating = false;
+        setTensorLoading(false);
       });
     });
   }
@@ -887,11 +947,17 @@ document.addEventListener("DOMContentLoaded", function () {
   var height  = baseEye.z;
   var angle   = Math.atan2(baseEye.y, baseEye.x);
   var baseAngle = angle;
+  var canonicalRadius = radius;
+  var canonicalHeight = height;
   var cameraUp = { x: 0, y: 0, z: 1 };
   var cameraCenter = { x: 0, y: 0, z: 0 };
+  var canonicalUp = { x: 0, y: 0, z: 1 };
+  var canonicalCenter = { x: 0, y: 0, z: 0 };
 
   var autoRotate           = true;
   var userInteracting      = false;
+  var returningToPerspective = false;
+  var returnToken = 0;
   var programmaticRelayout = false;
   var baseStep = 0.01;
   var currentStep = baseStep;
@@ -904,9 +970,14 @@ document.addEventListener("DOMContentLoaded", function () {
     return a;
   }
 
+  function phaseDeltaNearest(target, current) {
+    return wrapAngle(target - current);
+  }
+
   function tick() {
     baseAngle += baseStep;
     if (!autoRotate || userInteracting) return;
+    if (returningToPerspective) return;
 
     // Ease angular speed back to baseline after user interaction.
     if (currentStep < baseStep) {
@@ -914,7 +985,7 @@ document.addEventListener("DOMContentLoaded", function () {
       currentStep = Math.min(baseStep, currentStep + accel);
     }
 
-    var drift = wrapAngle(baseAngle - angle);
+    var drift = phaseDeltaNearest(baseAngle, angle);
     if (Math.abs(drift) > currentStep) {
       angle += (drift > 0 ? currentStep : -currentStep);
     } else {
@@ -934,13 +1005,88 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   var timer = setInterval(tick, period);
 
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function startPerspectiveReturn() {
+    if (returningToPerspective) return;
+    returningToPerspective = true;
+    returnToken += 1;
+    var token = returnToken;
+    var frameCount = 0;
+
+    function stepReturn() {
+      if (token !== returnToken) return;
+      frameCount += 1;
+
+      var bounce = Math.exp(-0.11 * frameCount) * Math.sin(0.55 * frameCount) * 0.05;
+      var targetRadius = canonicalRadius * (1 + bounce);
+      var targetHeight = canonicalHeight * (1 + bounce * 0.28);
+
+      angle = angle + phaseDeltaNearest(baseAngle, angle) * 0.085;
+      radius = lerp(radius, targetRadius, 0.07);
+      height = lerp(height, targetHeight, 0.07);
+      cameraUp = {
+        x: lerp(cameraUp.x, canonicalUp.x, 0.085),
+        y: lerp(cameraUp.y, canonicalUp.y, 0.085),
+        z: lerp(cameraUp.z, canonicalUp.z, 0.085)
+      };
+      cameraCenter = {
+        x: lerp(cameraCenter.x, canonicalCenter.x, 0.085),
+        y: lerp(cameraCenter.y, canonicalCenter.y, 0.085),
+        z: lerp(cameraCenter.z, canonicalCenter.z, 0.085)
+      };
+
+      var camera = {
+        eye: {
+          x: radius * Math.cos(angle),
+          y: radius * Math.sin(angle),
+          z: height
+        },
+        up: cameraUp,
+        center: cameraCenter
+      };
+
+      programmaticRelayout = true;
+      Plotly.relayout(frontPlotDiv, { "scene.camera": camera })
+        .catch(function () {})
+        .finally(function () {
+          programmaticRelayout = false;
+        });
+
+      var done =
+        Math.abs(phaseDeltaNearest(baseAngle, angle)) < 0.01 &&
+        Math.abs(radius - canonicalRadius) < 0.012 &&
+        Math.abs(height - canonicalHeight) < 0.012 &&
+        Math.abs(cameraCenter.x - canonicalCenter.x) < 0.005 &&
+        Math.abs(cameraCenter.y - canonicalCenter.y) < 0.005 &&
+        Math.abs(cameraCenter.z - canonicalCenter.z) < 0.005 &&
+        frameCount > 14;
+
+      if (done) {
+        returningToPerspective = false;
+        currentStep = 0;
+        return;
+      }
+      requestAnimationFrame(stepReturn);
+    }
+
+    requestAnimationFrame(stepReturn);
+  }
+
   function setInteractionActive(active) {
     userInteracting = active;
     if (active) {
       autoRotate = false;
       currentStep = 0;
+      if (returningToPerspective) {
+        returningToPerspective = false;
+        returnToken += 1;
+      }
     } else {
       autoRotate = true;
+      startPerspectiveReturn();
     }
   }
 

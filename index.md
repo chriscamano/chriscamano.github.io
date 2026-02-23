@@ -23,7 +23,7 @@ title: About Me
         </g>
       </svg>
     </button>
-    <span class="tensor-reroll-label">reroll</span>
+    <span class="tensor-reroll-label">re-roll</span>
   </div>
   <div class="tensor-plot-stack">
     <div id="tensor-plot-back" class="tensor-plot-layer tensor-plot-back" aria-hidden="true"></div>
@@ -38,8 +38,8 @@ I am currently funded through the [National Science Foundation Graduate Research
 
 ## Research Interests
 
-- <span style="font-size:1.05em; font-weight:bold;">Randomized Numerical Linear Algebra</span>: randomized sketching, low-rank matrix approximation, randomized eigensolvers, and accelerated linear algebra algorithms.
-- <span style="font-size:1.05em; font-weight:bold;">Tensor Networks and Quantum Simulation</span>: MPO/MPS contraction algorithms, randomized tensor-network methods, and efficient hamiltonian time evolution/ground state preperation.
+- <span style="font-size:1.05em; font-weight:bold;">Randomized Numerical Linear Algebra</span>: Sketching, low-rank matrix approximation, randomized eigencomputation, and fast algorithms.
+- <span style="font-size:1.05em; font-weight:bold;">Tensor Networks and Quantum Simulation</span>: MPO/MPS contraction algorithms, randomized tensor-network methods, and efficient Hamiltonian time evolution/ground state preparation.
 - <span style="font-size:1.05em; font-weight:bold;">Approximate Gaussian Processes</span>: sub-cubic Gaussian process models, inducing-point approximations, and scalable conjugate-gradient solvers for kernel inversion.
 <!-- - **Bayesian Inference**: Approximate Gaussian processes, structured priors and uncertainty quantification in modern machine learning models. -->
 
