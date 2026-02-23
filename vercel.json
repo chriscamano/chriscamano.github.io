@@ -1,5 +1,5 @@
 {
   "framework": null,
-  "buildCommand": "export LANG=C.UTF-8 LC_ALL=C.UTF-8 && bundle exec jekyll build",
+  "buildCommand": "export LANG=C.UTF-8 LC_ALL=C.UTF-8 && bundle exec ruby scripts/patch_bibtex_ruby.rb && bundle exec jekyll build --trace",
   "outputDirectory": "_site"
 }
