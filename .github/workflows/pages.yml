@@ -106,19 +106,19 @@ jobs:
 
           puts(changed.empty? ? "No bibtex-ruby patch needed" : "Patched:\n- #{changed.join("\n- ")}")
 
-          unsafe = %w[
-            data.each(&Proc.new)
-            q('@entry').each(&Proc.new)
-            fields.each(&Proc.new)
-            dup.convert!(*filters, &Proc.new)
-          ]
+          unsafe_patterns = {
+            "data.each(&Proc.new)" => /data\.each\(&Proc\.new\)/,
+            "q('@entry').each(&Proc.new)" => /q\('@entry'\)\.each\(&Proc\.new\)/,
+            "fields.each(&Proc.new)" => /fields\.each\(&Proc\.new\)/,
+            "dup.convert!(*filters, &Proc.new)" => /dup\.convert!\(\*filters,\s*&Proc\.new\)/m
+          }
 
           remaining = []
           %w[lib/bibtex/bibliography.rb lib/bibtex/entry.rb].each do |relative_path|
             path = File.join(root, relative_path)
             body = File.read(path)
-            unsafe.each do |signature|
-              remaining << "#{relative_path}: #{signature}" if body.include?(signature)
+            unsafe_patterns.each do |label, regex|
+              remaining << "#{relative_path}: #{label}" if body.match?(regex)
             end
           end
 
