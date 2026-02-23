@@ -466,9 +466,9 @@ article.post-content > .post-section .post-subsection {
 }
 
 .tensor-example-basis .tensor-entry-box {
-  width: 100%;
-  max-width: 760px;
-  margin-left: auto !important;
+  width: calc(100% + 1.4rem);
+  max-width: none;
+  margin-left: -0.95rem !important;
   margin-right: 0 !important;
   transform: none;
 }
@@ -479,8 +479,9 @@ article.post-content > .post-section .post-subsection {
 }
 
 .tensor-example-basis.tensor-example-basis-wide-right .tensor-entry-box {
-  width: 100%;
-  max-width: 760px;
+  width: calc(100% + 1.8rem);
+  max-width: none;
+  margin-left: -0.95rem !important;
   margin-right: 0 !important;
   transform: none;
 }
@@ -511,19 +512,23 @@ article.post-content > .post-section .post-subsection {
 
 .tensor-entry-list {
   list-style: none;
-  padding: 0;
-  margin: 0.35rem 0 0;
+  padding: 0 !important;
+  margin: 0.2rem 0 0 !important;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 1.25rem;
+  column-gap: 0.9rem;
   row-gap: 0.1rem;
+  justify-items: start;
 }
 
 .tensor-entry-list li {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 0.45rem;
-  margin: 0.35rem 0;
+  margin: 0.2rem 0;
+  padding: 0;
+  width: 100%;
 }
 
 .tensor-entry-swatch {

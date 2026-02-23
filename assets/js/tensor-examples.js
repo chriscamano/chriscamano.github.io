@@ -765,7 +765,6 @@
       period: 80,
       timer: null,
       pointerActive: false,
-      interactionReleaseTimer: null,
       pointerDownHandler: null,
       mouseDownHandler: null,
       touchStartHandler: null,
@@ -883,10 +882,6 @@
         state.autoRotate = false;
         state.currentStep = 0;
         state.programmaticRelayout = false;
-        if (state.interactionReleaseTimer) {
-          clearTimeout(state.interactionReleaseTimer);
-          state.interactionReleaseTimer = null;
-        }
         syncFromLiveCamera();
         if (state.returningToPerspective) {
           state.returningToPerspective = false;
@@ -897,27 +892,10 @@
           }
         }
       } else {
-        if (state.interactionReleaseTimer) {
-          clearTimeout(state.interactionReleaseTimer);
-          state.interactionReleaseTimer = null;
-        }
         syncFromLiveCamera();
         state.autoRotate = true;
         startPerspectiveReturn();
       }
-    }
-
-    function bumpInteractionFromRelayout() {
-      setInteractionActive(true);
-      if (state.interactionReleaseTimer) {
-        clearTimeout(state.interactionReleaseTimer);
-      }
-      state.interactionReleaseTimer = setTimeout(function () {
-        state.interactionReleaseTimer = null;
-        if (!state.pointerActive) {
-          setInteractionActive(false);
-        }
-      }, 140);
     }
 
     if (!plotDiv.__tensorInteractionHooked) {
@@ -963,7 +941,6 @@
       function applyCameraEvent(ev) {
         if (state.programmaticRelayout) return;
         if (!ev) return;
-        bumpInteractionFromRelayout();
         var camEvent = ev["scene.camera"] || null;
         var eye = ev["scene.camera.eye"] || (camEvent && camEvent.eye);
         if (eye && isFiniteNumber(eye.x) && isFiniteNumber(eye.y) && isFiniteNumber(eye.z)) {
