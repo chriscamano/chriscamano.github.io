@@ -34,6 +34,56 @@ jobs:
           ruby-version: "3.1"
           bundler-cache: true
 
+      - name: Patch bibtex-ruby for Ruby 3
+        run: |
+          ruby <<'RUBY'
+          root = `bundle show bibtex-ruby`.strip
+          abort("Could not resolve bibtex-ruby path") if root.empty?
+
+          path = File.join(root, "lib/bibtex/bibliography.rb")
+          src = File.read(path)
+          original = src.dup
+
+          src.gsub!(
+            /def each\s*\n\s*if block_given\?\s*\n\s*data\.each\(&Proc\.new\)\s*\n\s*self\s*\n\s*else\s*\n\s*to_enum\s*\n\s*end\s*\n\s*end/m,
+            <<~'PATCH'
+              def each(&block)
+                if block
+                  data.each(&block)
+                  self
+                else
+                  to_enum(:each)
+                end
+              end
+            PATCH
+          )
+
+          src.gsub!(
+            /def each_entry\s*\n\s*if block_given\?\s*\n\s*q\('@entry'\)\.each\(&Proc\.new\)\s*\n\s*else\s*\n\s*q\('@entry'\)\.to_enum\s*\n\s*end\s*\n\s*end/m,
+            <<~'PATCH'
+              def each_entry(&block)
+                if block
+                  q('@entry').each(&block)
+                else
+                  q('@entry').to_enum
+                end
+              end
+            PATCH
+          )
+
+          if src == original
+            puts "No bibtex-ruby patch needed"
+          else
+            File.write(path, src)
+            puts "Patched #{path}"
+          end
+
+          check = File.read(path)
+          if check.include?("data.each(&Proc.new)") || check.include?("q('@entry').each(&Proc.new)")
+            abort("bibtex-ruby compatibility patch did not apply cleanly")
+          end
+          RUBY
+
       - name: Build site
         run: bundle exec jekyll build --trace
 
