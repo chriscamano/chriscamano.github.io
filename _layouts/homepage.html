@@ -227,6 +227,68 @@
       text-decoration: none !important;
     }
 
+    .wrapper > header h1 {
+      margin: 0 0 0.42rem;
+      line-height: 1.12;
+    }
+
+    .wrapper > header position {
+      display: block;
+      margin: 0 0 0.2rem;
+      line-height: 1.24;
+      font-size: 1.1rem;
+    }
+
+    .wrapper > header > a[rel="noopener"] {
+      display: block;
+      margin: 0 0 0.1rem;
+      line-height: 1.24;
+      text-decoration: none !important;
+    }
+
+    .wrapper > header email {
+      display: block;
+      margin: 0 0 0.55rem;
+      line-height: 1.24;
+    }
+
+    .wrapper > header .social-icons {
+      margin: 0 0 0.3rem;
+      line-height: 1;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.36rem;
+      white-space: nowrap;
+    }
+
+    .wrapper > header .social-icons a {
+      margin: 0 !important;
+    }
+
+    @media (min-width: 961px) {
+      .wrapper > header {
+        max-height: calc(100vh - 5.5rem);
+        overflow-y: auto;
+        overflow-x: visible;
+        padding-bottom: 0.9rem;
+        scrollbar-width: thin;
+      }
+
+      .wrapper > footer {
+        display: none;
+      }
+
+      .latest-post-btn {
+        display: block;
+        width: fit-content;
+        max-width: 100%;
+        margin: 0.55rem auto 0;
+        white-space: normal;
+      }
+    }
+
     /* On small screens, stop wrapping and stack instead */
     @media (max-width: 700px) {
       .home-tensor-block {
@@ -320,20 +382,17 @@
         <h1>{{ site.title }}</h1>
 
         {% if site.position %}
-        <position style="font-size:1.10rem;">{{ site.position }}</position>
-        <br>
+        <position>{{ site.position }}</position>
         {% endif %}
         {% if site.affiliation %}
         <a href="https://www.caltech.edu/" rel="noopener">
           <autocolor>{{ site.affiliation }}</autocolor>
         </a>
-        <br>
         {% endif %}
         {% if site.email %}
         <email>{{ site.email }}</email>
         {% endif %}
 
-        <br>
         <div class="social-icons">
         {% if site.google_scholar %}
         <a style="margin: 0 5px 0 0" href="{{ site.google_scholar }}">
@@ -368,7 +427,6 @@
         {% if latest_post %}
         <a class="latest-post-btn" href="{{ latest_post.url | relative_url }}">latest blog post</a>
         {% endif %}
-        <br>
 
       </header>
       <section>

@@ -38,6 +38,8 @@ I am currently funded through the [National Science Foundation Graduate Research
 
 ## Research Interests
 
+<hr style="border: none; height: 3px; background-color: #463935; margin: 0.35em 0 0.55em;">
+
 - <span style="font-size:1.05em; font-weight:bold;">Randomized Numerical Linear Algebra</span>: Sketching, low-rank matrix approximation, randomized eigencomputation, and fast algorithms.
 - <span style="font-size:1.05em; font-weight:bold;">Tensor Networks and Quantum Simulation</span>: MPO/MPS contraction algorithms, randomized tensor-network methods, and efficient Hamiltonian time evolution/ground state preparation.
 - <span style="font-size:1.05em; font-weight:bold;">Approximate Gaussian Processes</span>: sub-cubic Gaussian process models, inducing-point approximations, and scalable conjugate-gradient solvers for kernel inversion.
@@ -47,6 +49,7 @@ I am currently funded through the [National Science Foundation Graduate Research
 
 <h2 id="publications" style="margin: 2px 0px -15px;padding-top:1em;">News </h2>
 <hr style="border: none; height: 3px; background-color: #463935; margin: 1em 0;">
+- **[May 2026]** Invited to speak at the [2026 International Linear Algebra Society Conference](https://ilas2026.math.vt.edu/), presenting on randomized tensor network Krylov methods
 - **[Feb. 2026]** Attended the [ICERM workshop on Randomized Numerical Linear Algebra
 ](https://icerm.brown.edu/program/semester_program_workshop/sp-s26-w1), presenting a poster on [sparse and tensor sketching](https://arxiv.org/abs/2508.21189)
 - **[Jan. 2026]** Attended the [SIAM Symposium on Simplicity in Algorithms (SOSA 2026)](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems), to give a talk on [debiasing polynomial regression with random matrix theory](https://arxiv.org/abs/2508.05920)
