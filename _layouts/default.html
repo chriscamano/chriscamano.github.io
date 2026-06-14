@@ -13,12 +13,14 @@
   {% endif %}
   <link rel="canonical" href="{{ page.url | absolute_url }}"/>
   <meta name="robots" content="index,follow">
+  <meta name="author" content="{{ page.author | default: site.title }}">
 
   <!-- Open Graph / Twitter (basic) -->
-  <meta property="og:type" content="website">
+  {% if page.author %}<meta property="og:type" content="article">{% else %}<meta property="og:type" content="website">{% endif %}
   <meta property="og:title" content="{{ page.title }}{% if site.title %} | {{ site.title }}{% endif %}">
   <meta property="og:description" content="{{ page.excerpt | default: site.description | strip_newlines | strip | escape }}">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
+  {% if page.author %}<meta property="article:author" content="{{ page.author }}">{% endif %}
   {% assign preview_image = page.og_image | default: page.twitter_image | default: page.thumbnail | default: page.image | default: site.social_preview_image %}
   {% if preview_image %}
     <meta property="og:image" content="{{ preview_image | absolute_url }}">
