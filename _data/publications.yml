@@ -1,4 +1,12 @@
 recent:
+  - title: "Linear algebra at exponential scale via tensor network dimension reduction (2026)"
+    authors: "Chris Camaño, Ethan N. Epperly, Raphael A. Meyer, and Joel A. Tropp"
+    conference_short: "arxiv"
+    pdf: "https://arxiv.org/abs/2606.15350"
+    code: "https://github.com/chriscamano/TNrandNLA"
+    image: "./assets/img/rmpsbanner.png"
+    notes:
+
   - title: "Faster Linear Algebra Algorithms with Structured Random Matrices (2025)"
     authors: "Chris Camaño, Ethan N. Epperly, Raphael A. Meyer, and Joel A. Tropp"
     conference_short: "arxiv"
@@ -9,7 +17,7 @@ recent:
     notes:
 
   - title: "Debiasing Polynomial and Fourier Regression (2025)"
-    authors: "Chris Camaño, Raphael A. Meyer, Kevin Shu"
+    authors: "Chris Camaño, Raphael A. Meyer, and Kevin Shu"
     conference_short: "SOSA"
     pdf: "https://www.semanticscholar.org/paper/Debiasing-Polynomial-and-Fourier-Regression-Camano-Meyer/c59ea77db57b014a2499f5785eb3253b4daa783c"
     code: "https://github.com/chriscamano/Debiased-Polynomial-Regression"
@@ -18,13 +26,14 @@ recent:
     notes:
 
   - title: "Successive randomized compression: A randomized algorithm for the compressed MPO-MPS product (2025)"
-    authors: "Chris Camaño, Ethan N. Epperly, Joel A. Tropp"
+    authors: "Chris Camaño, Ethan N. Epperly, and Joel A. Tropp"
     conference_short: "Quantum"
     pdf: "https://www.semanticscholar.org/paper/Successive-randomized-compression%3A-A-randomized-for-Camano-Epperly/e3eb789b4eb3ee41935e2a8610e9b3e30e1ef3a7"
     code: "https://github.com/chriscamano/RandomMPOMPS"
     image: "./assets/img/TDVP2.png"
     notes:
 
+past:
   - title: "SoftKI: High-Dimensional Gaussian Process Regression with Soft Kernel Interpolation (2024/2025)"
     authors: "Daniel Huang, Chris Camaño"
     conference_short: "TMLR"
@@ -33,9 +42,8 @@ recent:
     image: "./assets/img/SGPRComparison7.png"
     notes:
 
-past:
   - title: "Push: Concurrent Probabilistic Programming for Bayesian Deep Learning (2023)"
-    authors: "Daniel Huang, Chris Camaño, Jonathan Tsegaye, Jonathan Austin Gale"
+    authors: "Daniel Huang, Chris Camaño, Jonathan Tsegaye, and Jonathan Austin Gale"
     conference_short: "arxiv"
     pdf: "https://arxiv.org/pdf/2306.06528.pdf"
     code: "https://github.com/lbai-lab/push"

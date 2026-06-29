@@ -34,29 +34,25 @@ title: About Me
 
 I’m a second-year PhD student in the [Applied and Computational Mathematics department](https://www.cms.caltech.edu/academics/grad/grad_acm) at Caltech, advised by Professor [Joel Tropp](https://tropp.caltech.edu). My research focuses on the intersection of randomized numerical linear algebra (rNLA) and large-scale data science, with an emphasis on *random tensors*.
 
-I am currently funded through the [National Science Foundation Graduate Research Fellowship](https://www.nsfgrfp.org), and the [Kortschak Scholars Fellowship](https://www.cms.caltech.edu/research/kortschak-scholars).
+I am currently funded through the [National Science Foundation Graduate Research Fellowship](https://www.nsfgrfp.org) and the [Kortschak Scholars Fellowship](https://www.cms.caltech.edu/research/kortschak-scholars).
 
 ## Research Interests
 
 <hr style="border: none; height: 3px; background-color: #463935; margin: 0.35em 0 0.55em;">
 
 - <span style="font-size:1.05em; font-weight:bold;">Randomized Numerical Linear Algebra</span>: Sketching, low-rank matrix approximation, randomized eigencomputation, and fast algorithms.
-- <span style="font-size:1.05em; font-weight:bold;">Tensor Networks and Quantum Simulation</span>: MPO/MPS contraction algorithms, randomized tensor-network methods, and efficient Hamiltonian time evolution/ground state preparation.
-- <span style="font-size:1.05em; font-weight:bold;">Approximate Gaussian Processes</span>: sub-cubic Gaussian process models, inducing-point approximations, and scalable conjugate-gradient solvers for kernel inversion.
-<!-- - **Bayesian Inference**: Approximate Gaussian processes, structured priors and uncertainty quantification in modern machine learning models. -->
+- <span style="font-size:1.05em; font-weight:bold;">Tensor Networks and Quantum Simulation</span>: Matrix Product State (MPS) and Matrix Product Operator (MPO) representations, randomized tensor network algorithms, and efficient Hamiltonian time evolution/ground state preparation.
 
 {% include_relative _includes/publications.md %}
 
 <h2 id="publications" style="margin: 2px 0px -15px;padding-top:1em;">News </h2>
 <hr style="border: none; height: 3px; background-color: #463935; margin: 1em 0;">
-- **[May 2026]** Invited to speak at the [2026 International Linear Algebra Society Conference](https://ilas2026.math.vt.edu/), presenting on randomized tensor network Krylov methods
-- **[Feb. 2026]** Attended the [ICERM workshop on Randomized Numerical Linear Algebra
-](https://icerm.brown.edu/program/semester_program_workshop/sp-s26-w1), presenting a poster on [sparse and tensor sketching](https://arxiv.org/abs/2508.21189)
-- **[Jan. 2026]** Attended the [SIAM Symposium on Simplicity in Algorithms (SOSA 2026)](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems), to give a talk on [debiasing polynomial regression with random matrix theory](https://arxiv.org/abs/2508.05920)
-- **[Oct. 2025]** Attended the [Simon's Institute workshop on Linear Systems and Eigenvalue Problems](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems), presenting a poster on [sparse and tensor sketching](https://arxiv.org/abs/2508.21189).
-- **[Aug. 2025]** Attended the [Institute of Pure and Applied Mathematics (IPAM) RNLA workshop](https://www.ipam.ucla.edu/programs/special-events-and-conferences/research-collaboration-workshop-randomized-numerical-linear-algebra-rnla/) on randomized Krylov methods.
-- **[Apr. 2025]** Invited to speak at [Southern California Applied Math Symposium](https://www.math.uci.edu/node/38364) on randomized tensor networks.
-- **[Apr. 2025]** Invited to speak at [UCSD Mathematics of Information, Data, and Signals Seminar](https://sites.google.com/ucsd.edu/ucsd-minds/home) on randomized tensor networks.
+- **[June 2026]** Invited to speak at the [ETH Zurich Data, Algorithms, Combinatorics, and Optimization (DACO) Seminar](https://math.ethz.ch/sam/news-and-events/daco-seminar.html) on moment calculations for random tensor networks using Penrose diagrams.
+- **[June 2026]** Invited to speak at the Bernoulli Center for Fundamental Studies [RandNLA workshop](https://sites.google.com/view/randnlaworkshop/home) on [randomized tensor network dimension reduction](https://arxiv.org/abs/2606.15350).
+- **[June 2026]** Invited for a research stay at EPFL to work with [Laura Grigori](https://who.rocq.inria.fr/Laura.Grigori/) on random tensor networks.
+- **[May 2026]** Invited to speak at the [2026 International Linear Algebra Society Conference](https://ilas2026.math.vt.edu/) on randomized tensor network Krylov methods.
+- **[Feb. 2026]** Attended the [ICERM workshop on Randomized Numerical Linear Algebra](https://icerm.brown.edu/program/semester_program_workshop/sp-s26-w1), presenting a poster on [sparse and tensor sketching](https://arxiv.org/abs/2508.21189).
+- **[Jan. 2026]** Invited to speak at the [SIAM Symposium on Simplicity in Algorithms (SOSA 2026)](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems) on [debiasing polynomial regression with random matrix theory](https://arxiv.org/abs/2508.05920).
 
 
 <details>
@@ -66,8 +62,12 @@ I am currently funded through the [National Science Foundation Graduate Research
 
 <div markdown="1">
 
+- **[Oct. 2025]** Attended the [Simons Institute workshop on Linear Systems and Eigenvalue Problems](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems), presenting a poster on [sparse and tensor sketching](https://arxiv.org/abs/2508.21189).
+- **[Aug. 2025]** Attended the [Institute of Pure and Applied Mathematics (IPAM) RNLA workshop](https://www.ipam.ucla.edu/programs/special-events-and-conferences/research-collaboration-workshop-randomized-numerical-linear-algebra-rnla/) on randomized Krylov methods.
+- **[Apr. 2025]** Invited to speak at [Southern California Applied Math Symposium](https://www.math.uci.edu/node/38364) on randomized tensor networks.
+- **[Apr. 2025]** Invited to speak at [UCSD Mathematics of Information, Data, and Signals Seminar](https://sites.google.com/ucsd.edu/ucsd-minds/home) on randomized tensor networks.
 - **[Feb. 2025]** Invited to speak at the [Argonne National Laboratory Toward Next-Generation Ecosystems for Scientific Computing workshop](https://events.cels.anl.gov/event/602/registrations/268/) on randomized tensor networks.
-- **[March. 2024]** Awarded the NSF GRFP & Kortschak fellowships 🎉.  
+- **[Mar. 2024]** Awarded the NSF GRFP & Kortschak fellowships 🎉.  
 - **[Feb. 2024]** Accepted to the Caltech PhD program 🎉.  
 - **[Jan. 2024]** Invited to speak at the [Joint Math Meeting](https://jointmathematicsmeetings.org/jmm) 2024 on randomized tensor networks.  
 - **[Oct. 2023]** Invited to speak on UMAP at the [Great Minds in STEM conference](https://greatmindsinstem.org/) 2023 (3rd place).  
