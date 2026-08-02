@@ -155,15 +155,22 @@
       font-weight: 700;
     }
 
-    .tensor-reroll-control {
+    .tensor-controls-stack {
       position: absolute;
-      top: 0.9rem;
-      right: -0.05rem;
+      top: 1.5rem;
+      right: -1.15rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.65rem;
+      z-index: 5;
+    }
+
+    .tensor-reroll-control {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.08rem;
-      z-index: 5;
     }
 
     .tensor-reroll-btn {
@@ -186,6 +193,11 @@
       border-color: rgba(70, 57, 53, 0.45);
       transform: translateY(-1px);
       outline: none;
+    }
+
+    .tensor-reroll-btn.is-active {
+      background: rgba(199, 62, 42, 0.16);
+      border-color: rgba(199, 62, 42, 0.55);
     }
 
     .tensor-reroll-btn svg {
@@ -296,6 +308,11 @@
         margin: 1rem auto;
         max-width: 320px;
       }
+    }
+
+    /* Stop wrapping around the floated tensor block here; run full-width instead */
+    .clear-tensor-float {
+      clear: both;
     }
   </style>
 
@@ -444,6 +461,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var frontPlotDiv = document.getElementById("tensor-plot-front");
   var backPlotDiv = document.getElementById("tensor-plot-back");
   var rerollBtn = document.getElementById("tensor-reroll-btn");
+  var symmetryBtn = document.getElementById("tensor-symmetry-btn");
   var plotStackEl = document.querySelector(".tensor-plot-stack");
   if (!frontPlotDiv || !backPlotDiv) return; // only on pages with tensor stack
   var readyPlots = new WeakMap();
@@ -451,6 +469,20 @@ document.addEventListener("DOMContentLoaded", function () {
   var precomputedSample = null;
   var precomputeInFlight = null;
   var paletteIndex = 0;
+  var showingSymmetryAxis = false;
+
+  function applySymmetryView(targetPlotDiv, show) {
+    if (!targetPlotDiv || !readyPlots.get(targetPlotDiv)) return;
+    // trace order: 0 voxels (full), 1 bbox, 2 axis, 3-5 planes,
+    // 6 voxels-dimmed (all, grey), 7 voxels-sector (i<=j<=k, full color)
+    // One restyle call across all 7 affected traces instead of two, so
+    // plotly.js only does a single WebGL redraw pass for the toggle.
+    Plotly.restyle(
+      targetPlotDiv,
+      { visible: [!show, show, show, show, show, show, show] },
+      [0, 2, 3, 4, 5, 6, 7]
+    );
+  }
 
   function ensureTensorLoadingOverlay() {
     if (!plotStackEl) return;
@@ -740,57 +772,70 @@ document.addEventListener("DOMContentLoaded", function () {
     // -------------------------------------------------------
     //  Build voxel mesh: each logical cell shrunk by 5%
     // -------------------------------------------------------
-    var X = [], Y = [], Z = [];
-    var I = [], J = [], K = [];
-    var intensity = [];
+    function makeCubeBuffers() {
+      var X = [], Y = [], Z = [];
+      var I = [], J = [], K = [];
+      var intensity = [];
 
-    function addCube(cellI, cellJ, cellK, colorVal) {
-      var base = X.length;
+      function addCube(cellI, cellJ, cellK, colorVal) {
+        var base = X.length;
 
-      var x0 = cellI + pad;
-      var x1 = cellI + 1 - pad;
-      var y0 = cellJ + pad;
-      var y1 = cellJ + 1 - pad;
-      var z0 = cellK + pad;
-      var z1 = cellK + 1 - pad;
+        var x0 = cellI + pad;
+        var x1 = cellI + 1 - pad;
+        var y0 = cellJ + pad;
+        var y1 = cellJ + 1 - pad;
+        var z0 = cellK + pad;
+        var z1 = cellK + 1 - pad;
 
-      var verts = [
-        [x0, y0, z0],
-        [x1, y0, z0],
-        [x1, y1, z0],
-        [x0, y1, z0],
-        [x0, y0, z1],
-        [x1, y0, z1],
-        [x1, y1, z1],
-        [x0, y1, z1]
-      ];
+        var verts = [
+          [x0, y0, z0],
+          [x1, y0, z0],
+          [x1, y1, z0],
+          [x0, y1, z0],
+          [x0, y0, z1],
+          [x1, y0, z1],
+          [x1, y1, z1],
+          [x0, y1, z1]
+        ];
 
-      for (var t = 0; t < 8; t++) {
-        X.push(verts[t][0]);
-        Y.push(verts[t][1]);
-        Z.push(verts[t][2]);
-        intensity.push(colorVal);
+        for (var t = 0; t < 8; t++) {
+          X.push(verts[t][0]);
+          Y.push(verts[t][1]);
+          Z.push(verts[t][2]);
+          intensity.push(colorVal);
+        }
+
+        var faces = [
+          [0, 1, 2], [0, 2, 3],
+          [4, 5, 6], [4, 6, 7],
+          [0, 1, 5], [0, 5, 4],
+          [3, 2, 6], [3, 6, 7],
+          [0, 4, 7], [0, 7, 3],
+          [1, 2, 6], [1, 6, 5]
+        ];
+
+        faces.forEach(function (f) {
+          I.push(base + f[0]);
+          J.push(base + f[1]);
+          K.push(base + f[2]);
+        });
       }
 
-      var faces = [
-        [0, 1, 2], [0, 2, 3],
-        [4, 5, 6], [4, 6, 7],
-        [0, 1, 5], [0, 5, 4],
-        [3, 2, 6], [3, 6, 7],
-        [0, 4, 7], [0, 7, 3],
-        [1, 2, 6], [1, 6, 5]
-      ];
-
-      faces.forEach(function (f) {
-        I.push(base + f[0]);
-        J.push(base + f[1]);
-        K.push(base + f[2]);
-      });
+      return { X: X, Y: Y, Z: Z, I: I, J: J, K: K, intensity: intensity, addCube: addCube };
     }
+
+    // All voxels, full color — the normal (non-symmetry) view.
+    var allBuf = makeCubeBuffers();
+    // Just the fundamental sector x<=y<=z, full color — the "generator" wedge
+    // that addPermutations mirrors out to produce the rest of the tensor.
+    var sectorBuf = makeCubeBuffers();
 
     triples.forEach(function (p) {
       var normalized = (p.v - minVal) / (maxVal - minVal); // ∈ [0,1]
-      addCube(p.x, p.y, p.z, normalized);
+      allBuf.addCube(p.x, p.y, p.z, normalized);
+      if (p.x <= p.y && p.y <= p.z) {
+        sectorBuf.addCube(p.x, p.y, p.z, normalized);
+      }
     });
 
     var paletteChoices = [
@@ -802,29 +847,74 @@ document.addEventListener("DOMContentLoaded", function () {
     var chosenColorscale = paletteChoices[paletteIndex % paletteChoices.length];
     paletteIndex += 1;
 
+    var sharedLighting = {
+      ambient: 0.85,
+      diffuse: 0.35,
+      specular: 0.15,
+      roughness: 0.95
+    };
+    var sharedLightPosition = { x: 1.5, y: 1.2, z: 2.4 };
+
     var traceVoxels = {
       type: "mesh3d",
-      x: X,
-      y: Y,
-      z: Z,
-      i: I,
-      j: J,
-      k: K,
-      intensity: intensity,
+      x: allBuf.X,
+      y: allBuf.Y,
+      z: allBuf.Z,
+      i: allBuf.I,
+      j: allBuf.J,
+      k: allBuf.K,
+      intensity: allBuf.intensity,
       colorscale: chosenColorscale,
       cmin: 0,
       cmax: 1,
       opacity: 1.0,
       flatshading: true,
-      lighting: {
-        ambient: 0.85,
-        diffuse: 0.35,
-        specular: 0.15,
-        roughness: 0.95
-      },
-      lightposition: { x: 1.5, y: 1.2, z: 2.4 },
+      lighting: sharedLighting,
+      lightposition: sharedLightPosition,
       showscale: false,
       name: "voxels"
+    };
+
+    // Symmetry-view companions: all voxels dimmed to grey (context), plus the
+    // fundamental sector re-drawn on top at full color (the "original" wedge
+    // being reflected into the rest by the symmetry).
+    var traceVoxelsDimmed = {
+      type: "mesh3d",
+      x: allBuf.X,
+      y: allBuf.Y,
+      z: allBuf.Z,
+      i: allBuf.I,
+      j: allBuf.J,
+      k: allBuf.K,
+      color: "rgb(150, 150, 150)",
+      opacity: 0.12,
+      flatshading: true,
+      lighting: { ambient: 1, diffuse: 0, specular: 0 },
+      hoverinfo: "skip",
+      showscale: false,
+      visible: false,
+      name: "voxels-dimmed"
+    };
+
+    var traceVoxelsSector = {
+      type: "mesh3d",
+      x: sectorBuf.X,
+      y: sectorBuf.Y,
+      z: sectorBuf.Z,
+      i: sectorBuf.I,
+      j: sectorBuf.J,
+      k: sectorBuf.K,
+      intensity: sectorBuf.intensity,
+      colorscale: chosenColorscale,
+      cmin: 0,
+      cmax: 1,
+      opacity: 1.0,
+      flatshading: true,
+      lighting: sharedLighting,
+      lightposition: sharedLightPosition,
+      showscale: false,
+      visible: false,
+      name: "voxels-sector"
     };
 
     // -------------------------------------------------------
@@ -872,8 +962,77 @@ document.addEventListener("DOMContentLoaded", function () {
       name: "bbox"
     };
 
+    // Full symmetry structure the sample simultaneously respects, since it's
+    // built by symmetrizing over all 6 permutations of (i, j, k) (S3): the
+    // three diagonal mirror planes i=j, j=k, i=k (each the fixed-point set of
+    // one transposition) plus the x=y=z line where all three meet (the fixed
+    // point of the whole group). One shared accent color throughout, since
+    // these are all instances of the same kind of object (a mirror plane) —
+    // distinguishing them by hue read as clutter rather than information.
+    var symmetryAccentColor = "rgb(199, 62, 42)";
+
+    var traceSymmetryAxis = {
+      type: "scatter3d",
+      x: [minC, maxC],
+      y: [minC, maxC],
+      z: [minC, maxC],
+      mode: "lines",
+      line: {
+        color: symmetryAccentColor,
+        width: 6
+      },
+      hoverinfo: "skip",
+      showlegend: false,
+      visible: false,
+      name: "symmetry-axis"
+    };
+
+    function diagonalPlaneTrace(corners, name) {
+      return {
+        type: "mesh3d",
+        x: corners.map(function (c) { return c[0]; }),
+        y: corners.map(function (c) { return c[1]; }),
+        z: corners.map(function (c) { return c[2]; }),
+        i: [0, 0],
+        j: [1, 2],
+        k: [2, 3],
+        color: symmetryAccentColor,
+        opacity: 0.12,
+        flatshading: true,
+        lighting: { ambient: 1, diffuse: 0, specular: 0 },
+        hoverinfo: "skip",
+        showlegend: false,
+        visible: false,
+        name: name
+      };
+    }
+
+    // i=j plane (contains x=y for all z)
+    var traceSymmetryPlaneIJ = diagonalPlaneTrace([
+      [minC, minC, minC], [maxC, maxC, minC], [maxC, maxC, maxC], [minC, minC, maxC]
+    ], "symmetry-plane-ij");
+
+    // j=k plane (contains y=z for all x)
+    var traceSymmetryPlaneJK = diagonalPlaneTrace([
+      [minC, minC, minC], [minC, maxC, maxC], [maxC, maxC, maxC], [maxC, minC, minC]
+    ], "symmetry-plane-jk");
+
+    // i=k plane (contains x=z for all y)
+    var traceSymmetryPlaneIK = diagonalPlaneTrace([
+      [minC, minC, minC], [maxC, minC, maxC], [maxC, maxC, maxC], [minC, maxC, minC]
+    ], "symmetry-plane-ik");
+
     return {
-      traces: [traceVoxels, traceBox],
+      traces: [
+        traceVoxels,
+        traceBox,
+        traceSymmetryAxis,
+        traceSymmetryPlaneIJ,
+        traceSymmetryPlaneJK,
+        traceSymmetryPlaneIK,
+        traceVoxelsDimmed,
+        traceVoxelsSector
+      ],
       minC: minC,
       maxC: maxC
     };
@@ -940,6 +1099,7 @@ document.addEventListener("DOMContentLoaded", function () {
   renderRandomTensorSample(frontPlotDiv, initialSample).then(function () {
     setTensorLoading(false);
     ensureRelayoutHandler(frontPlotDiv);
+    applySymmetryView(frontPlotDiv, showingSymmetryAxis);
     ensurePrecomputedSample();
   }).catch(function () {
     setTensorLoading(false);
@@ -973,6 +1133,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return renderRandomTensorSample(backPlotDiv, sampleForBack, activeEye);
       }).then(function () {
         ensureRelayoutHandler(backPlotDiv);
+        applySymmetryView(backPlotDiv, showingSymmetryAxis);
         ensurePrecomputedSample();
       });
 
@@ -1029,6 +1190,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  if (symmetryBtn) {
+    symmetryBtn.addEventListener("click", function () {
+      showingSymmetryAxis = !showingSymmetryAxis;
+      symmetryBtn.classList.toggle("is-active", showingSymmetryAxis);
+      symmetryBtn.setAttribute("aria-pressed", showingSymmetryAxis ? "true" : "false");
+      applySymmetryView(frontPlotDiv, showingSymmetryAxis);
+    });
+  }
+
   // -------------------------------------------------------
   //  Gentle camera auto-rotate with user override
   // -------------------------------------------------------
@@ -1049,10 +1219,18 @@ document.addEventListener("DOMContentLoaded", function () {
   var returningToPerspective = false;
   var returnToken = 0;
   var programmaticRelayout = false;
-  var baseStep = 0.01;
-  var currentStep = baseStep;
+  var period = 80; // reference period (ms) the original step/glide constants were tuned against
+  var baseStep = 0.01;             // rad per `period` ms
+  var baseStepPerMs = baseStep / period;
+  var currentStepPerMs = baseStepPerMs;
   var glideMs = 1200;
-  var period = 80;
+  var relayoutInFlight = false;
+  // Bumped whenever a user drag starts, so an auto-rotate relayout that was
+  // already in flight can detect it landed mid-drag and skip clobbering it
+  // (plotly.js only writes the live drag camera back into layout.scene.camera
+  // on mouseup, so any relayout that resolves before then reapplies a stale
+  // pre-drag camera on top of the user's in-progress orbit).
+  var cameraGeneration = 0;
 
   function wrapAngle(a) {
     while (a > Math.PI) a -= 2 * Math.PI;
@@ -1064,20 +1242,22 @@ document.addEventListener("DOMContentLoaded", function () {
     return wrapAngle(target - current);
   }
 
-  function tick() {
-    baseAngle += baseStep;
+  function tick(dtMs) {
     if (!autoRotate || userInteracting) return;
+    baseAngle += baseStepPerMs * dtMs;
     if (returningToPerspective) return;
+    if (relayoutInFlight) return; // don't pile up relayout calls behind a slow frame
 
     // Ease angular speed back to baseline after user interaction.
-    if (currentStep < baseStep) {
-      var accel = (period / glideMs) * baseStep;
-      currentStep = Math.min(baseStep, currentStep + accel);
+    if (currentStepPerMs < baseStepPerMs) {
+      var accel = (baseStepPerMs / glideMs) * dtMs;
+      currentStepPerMs = Math.min(baseStepPerMs, currentStepPerMs + accel);
     }
 
+    var stepMax = currentStepPerMs * dtMs;
     var drift = phaseDeltaNearest(baseAngle, angle);
-    if (Math.abs(drift) > currentStep) {
-      angle += (drift > 0 ? currentStep : -currentStep);
+    if (Math.abs(drift) > stepMax) {
+      angle += (drift > 0 ? stepMax : -stepMax);
     } else {
       angle = baseAngle;
     }
@@ -1087,13 +1267,32 @@ document.addEventListener("DOMContentLoaded", function () {
       z: height
     };
     var camera = { eye: eye, up: cameraUp, center: cameraCenter };
+    var generationAtCall = cameraGeneration;
     programmaticRelayout = true;
+    relayoutInFlight = true;
     Plotly.relayout(frontPlotDiv, { "scene.camera": camera })
       .finally(function () {
         programmaticRelayout = false;
+        relayoutInFlight = false;
+        // If a drag started while this relayout was in flight, plotly.js has
+        // been driving the camera live and hasn't written it back to
+        // layout.scene.camera yet (that only happens on mouseup) — so our
+        // resolved (now-stale) `eye`/`angle` state must not be trusted or
+        // reapplied on top of the user's in-progress drag.
+        if (generationAtCall !== cameraGeneration) return;
       });
   }
-  var timer = setInterval(tick, period);
+
+  var lastTickTime = null;
+  function rafLoop(now) {
+    if (lastTickTime === null) lastTickTime = now;
+    var dtMs = now - lastTickTime;
+    lastTickTime = now;
+    // Guard against huge dt after a tab was backgrounded/throttled.
+    tick(Math.min(dtMs, 250));
+    requestAnimationFrame(rafLoop);
+  }
+  requestAnimationFrame(rafLoop);
 
   function lerp(a, b, t) {
     return a + (b - a) * t;
@@ -1156,7 +1355,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (done) {
         returningToPerspective = false;
-        currentStep = 0;
+        currentStepPerMs = 0;
         return;
       }
       requestAnimationFrame(stepReturn);
@@ -1168,14 +1367,21 @@ document.addEventListener("DOMContentLoaded", function () {
   function setInteractionActive(active) {
     userInteracting = active;
     if (active) {
+      cameraGeneration += 1;
       autoRotate = false;
-      currentStep = 0;
+      currentStepPerMs = 0;
+      // Drop any in-flight auto-rotate relayout's claim on the camera so the
+      // drag handler's plotly_relayouting events aren't ignored while it
+      // resolves (applyCameraEvent bails whenever programmaticRelayout is
+      // true).
+      programmaticRelayout = false;
       if (returningToPerspective) {
         returningToPerspective = false;
         returnToken += 1;
       }
     } else {
       autoRotate = true;
+      baseAngle = angle; // resume rotation from wherever the drag left off, not a stale pre-drag angle
       startPerspectiveReturn();
     }
   }
@@ -1184,18 +1390,29 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!div || div.__tensorInteractionHooked) return;
     div.__tensorInteractionHooked = true;
 
+    var pressStartedHere = false;
+
+    // Capture phase: plotly.js binds its own orbit-drag start handler on the
+    // inner WebGL canvas, a child of `div`. A bubble-phase listener here would
+    // run *after* that handler on the way back up, leaving a window where
+    // Plotly is already orbiting before userInteracting flips true. Capturing
+    // on the way down ensures our flag (and any auto-rotate relayout it
+    // blocks) lands first.
     div.addEventListener("pointerdown", function (ev) {
       if (div !== frontPlotDiv) return;
+      pressStartedHere = true;
       setInteractionActive(true);
-    });
+    }, true);
 
     window.addEventListener("pointerup", function (ev) {
-      if (div !== frontPlotDiv) return;
+      if (!pressStartedHere) return;
+      pressStartedHere = false;
       setInteractionActive(false);
     });
 
     window.addEventListener("pointercancel", function (ev) {
-      if (div !== frontPlotDiv) return;
+      if (!pressStartedHere) return;
+      pressStartedHere = false;
       setInteractionActive(false);
     });
   }
