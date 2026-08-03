@@ -99,12 +99,14 @@
       justify-content: center;
       pointer-events: none;
       opacity: 0;
+      background: #fdf6e3;
       transition: opacity 140ms ease;
       z-index: 4;
     }
 
     .tensor-plot-stack.is-loading .tensor-plot-loading-overlay {
       opacity: 1;
+      transition: none; /* cover the plot instantly; only fade out smoothly */
     }
 
     .tensor-plot-loading-spinner {
@@ -146,6 +148,8 @@
     }
 
     .tensor-caption {
+      position: relative;
+      z-index: 5;
       text-align: center;
       font-size: 0.9rem;
       margin-top: -1.5rem;
@@ -471,8 +475,23 @@ document.addEventListener("DOMContentLoaded", function () {
   var paletteIndex = 0;
   var showingSymmetryAxis = false;
 
+  // Rapid clicking can fire restyle calls faster than plotly.js can redraw
+  // the WebGL scene; queuing them up makes the toggle visibly lag behind the
+  // clicks. Instead, track only the most recently requested state per plot
+  // and let an in-flight restyle finish before applying it, dropping any
+  // intermediate requests superseded by a newer click.
+  var symmetryRestyleInFlight = new WeakMap();
+  var symmetryPendingState = new WeakMap();
+
   function applySymmetryView(targetPlotDiv, show) {
     if (!targetPlotDiv || !readyPlots.get(targetPlotDiv)) return;
+
+    if (symmetryRestyleInFlight.get(targetPlotDiv)) {
+      symmetryPendingState.set(targetPlotDiv, show);
+      return;
+    }
+
+    symmetryRestyleInFlight.set(targetPlotDiv, true);
     // trace order: 0 voxels (full), 1 bbox, 2 axis, 3-5 planes,
     // 6 voxels-dimmed (all, grey), 7 voxels-sector (i<=j<=k, full color)
     // One restyle call across all 7 affected traces instead of two, so
@@ -481,7 +500,14 @@ document.addEventListener("DOMContentLoaded", function () {
       targetPlotDiv,
       { visible: [!show, show, show, show, show, show, show] },
       [0, 2, 3, 4, 5, 6, 7]
-    );
+    ).finally(function () {
+      symmetryRestyleInFlight.set(targetPlotDiv, false);
+      var pending = symmetryPendingState.get(targetPlotDiv);
+      if (pending !== undefined) {
+        symmetryPendingState.delete(targetPlotDiv);
+        applySymmetryView(targetPlotDiv, pending);
+      }
+    });
   }
 
   function ensureTensorLoadingOverlay() {
@@ -1096,7 +1122,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var initialSample = buildRandomTensorSample();
   setTensorLoading(true);
-  renderRandomTensorSample(frontPlotDiv, initialSample).then(function () {
+  renderRandomTensorSample(frontPlotDiv, initialSample, { x: 1.8, y: 1.6, z: 1.2 }).then(function () {
     setTensorLoading(false);
     ensureRelayoutHandler(frontPlotDiv);
     applySymmetryView(frontPlotDiv, showingSymmetryAxis);
@@ -1128,59 +1154,63 @@ document.addEventListener("DOMContentLoaded", function () {
         samplePromise = Promise.resolve(buildRandomTensorSample());
       }
 
-      var renderPromise = samplePromise.then(function (sampleForBack) {
+      // Render the new sample into the hidden back layer FIRST, and only
+      // start the reveal wipe once it's actually ready — otherwise the wipe
+      // (which runs in parallel via a bare setTimeout) can uncover a back
+      // layer that's still showing a stale or half-built plot.
+      samplePromise.then(function (sampleForBack) {
         precomputedSample = null;
         return renderRandomTensorSample(backPlotDiv, sampleForBack, activeEye);
       }).then(function () {
         ensureRelayoutHandler(backPlotDiv);
         applySymmetryView(backPlotDiv, showingSymmetryAxis);
-        ensurePrecomputedSample();
-      });
 
-      frontPlotDiv.classList.remove("is-wiping");
-      void frontPlotDiv.offsetWidth;
-      frontPlotDiv.classList.add("is-wiping");
-
-      var wipePromise = new Promise(function (resolve) {
-        setTimeout(resolve, 620);
-      });
-
-      Promise.all([renderPromise, wipePromise]).then(function () {
-        var liveEye = null;
-        if (frontPlotDiv._fullLayout &&
-            frontPlotDiv._fullLayout.scene &&
-            frontPlotDiv._fullLayout.scene.camera &&
-            frontPlotDiv._fullLayout.scene.camera.eye) {
-          liveEye = frontPlotDiv._fullLayout.scene.camera.eye;
-        }
-
-        if (liveEye) {
-          // Keep rotation phase continuous across the layer swap.
-          baseEye = { x: liveEye.x, y: liveEye.y, z: liveEye.z };
-          radius  = Math.sqrt(baseEye.x * baseEye.x + baseEye.y * baseEye.y);
-          height  = baseEye.z;
-          angle   = Math.atan2(baseEye.y, baseEye.x);
-          Plotly.relayout(backPlotDiv, { "scene.camera.eye": liveEye });
-        }
-
-        frontPlotDiv.classList.remove("is-wiping", "tensor-plot-front");
-        frontPlotDiv.classList.add("tensor-plot-back");
-
-        backPlotDiv.classList.remove("tensor-plot-back");
-        backPlotDiv.classList.add("tensor-plot-front");
-
-        var temp = frontPlotDiv;
-        frontPlotDiv = backPlotDiv;
-        backPlotDiv = temp;
-
-        // Defer purge to avoid blocking the first rotation frames after swap.
-        setTimeout(function () {
-          Plotly.purge(backPlotDiv);
-          readyPlots.delete(backPlotDiv);
-        }, 0);
-
-        rerollAnimating = false;
+        frontPlotDiv.classList.remove("is-wiping");
+        void frontPlotDiv.offsetWidth;
+        frontPlotDiv.classList.add("is-wiping");
         setTensorLoading(false);
+
+        var wipePromise = new Promise(function (resolve) {
+          setTimeout(resolve, 620);
+        });
+
+        wipePromise.then(function () {
+          var liveEye = null;
+          if (frontPlotDiv._fullLayout &&
+              frontPlotDiv._fullLayout.scene &&
+              frontPlotDiv._fullLayout.scene.camera &&
+              frontPlotDiv._fullLayout.scene.camera.eye) {
+            liveEye = frontPlotDiv._fullLayout.scene.camera.eye;
+          }
+
+          if (liveEye) {
+            // Keep rotation phase continuous across the layer swap.
+            baseEye = { x: liveEye.x, y: liveEye.y, z: liveEye.z };
+            radius  = Math.sqrt(baseEye.x * baseEye.x + baseEye.y * baseEye.y);
+            height  = baseEye.z;
+            angle   = Math.atan2(baseEye.y, baseEye.x);
+            Plotly.relayout(backPlotDiv, { "scene.camera.eye": liveEye });
+          }
+
+          frontPlotDiv.classList.remove("is-wiping", "tensor-plot-front");
+          frontPlotDiv.classList.add("tensor-plot-back");
+
+          backPlotDiv.classList.remove("tensor-plot-back");
+          backPlotDiv.classList.add("tensor-plot-front");
+
+          var temp = frontPlotDiv;
+          frontPlotDiv = backPlotDiv;
+          backPlotDiv = temp;
+
+          // Defer purge to avoid blocking the first rotation frames after swap.
+          setTimeout(function () {
+            Plotly.purge(backPlotDiv);
+            readyPlots.delete(backPlotDiv);
+          }, 0);
+
+          rerollAnimating = false;
+          ensurePrecomputedSample();
+        });
       }).catch(function () {
         frontPlotDiv.classList.remove("is-wiping");
         ensurePrecomputedSample();
@@ -1247,6 +1277,9 @@ document.addEventListener("DOMContentLoaded", function () {
     baseAngle += baseStepPerMs * dtMs;
     if (returningToPerspective) return;
     if (relayoutInFlight) return; // don't pile up relayout calls behind a slow frame
+    // A symmetry-toggle restyle is using the WebGL context on this div right
+    // now; skip this tick rather than queue a relayout behind it.
+    if (symmetryRestyleInFlight.get(frontPlotDiv)) return;
 
     // Ease angular speed back to baseline after user interaction.
     if (currentStepPerMs < baseStepPerMs) {
