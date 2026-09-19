@@ -60,6 +60,7 @@ I’m a second-year PhD student in the [Applied and Computational Mathematics de
 
 <h2 id="news" style="margin: 2px 0px -15px;padding-top:1em;">News</h2>
 <hr style="border: none; height: 3px; background-color: #463935; margin: 1em 0;">
+- **[Sept. 2026]** Invited to speak at the [UC Berkeley / Lawrence Berkeley Laboratory Applied Mathematics Seminar](https://berkeleyams.lbl.gov/fall26/camano.html) on random tensor networks and tensor network dimension reduction.
 - **[June 2026]** Invited to speak at the [ETH Zurich Data, Algorithms, Combinatorics, and Optimization (DACO) Seminar](https://math.ethz.ch/sam/news-and-events/daco-seminar.html) on moment calculations for random tensor networks using Penrose diagrams.
 - **[June 2026]** Invited to speak at the Bernoulli Center for Fundamental Studies [RandNLA workshop](https://sites.google.com/view/randnlaworkshop/home) on [randomized tensor network dimension reduction](https://arxiv.org/abs/2606.15350).
 - **[June 2026]** Invited for a research stay at EPFL to work with [Laura Grigori](https://who.rocq.inria.fr/Laura.Grigori/) on random tensor networks.
