@@ -53,41 +53,62 @@ I’m a second-year PhD student in the [Applied and Computational Mathematics de
 
 <hr style="border: none; height: 3px; background-color: #463935; margin: 1em 0;">
 
-- <span style="font-size:1.05em; font-weight:bold;">Randomized Numerical Linear Algebra</span>: Sketching, low-rank matrix approximation, randomized eigencomputation, and fast algorithms.
+- <span style="font-size:1.05em; font-weight:bold;">Randomized Numerical Linear Algebra</span>: Low-rank approximation, stochastic trace estimation, randomized eigencomputation, and fast algorithms.
 - <span style="font-size:1.05em; font-weight:bold;">Tensor Networks and Quantum Simulation</span>: Matrix Product State (MPS) and Matrix Product Operator (MPO) representations, randomized tensor network algorithms, and efficient Hamiltonian time evolution/ground state preparation.
 
 {% include_relative _includes/publications.md %}
 
 <h2 id="news" style="margin: 2px 0px -15px;padding-top:1em;">News</h2>
 <hr style="border: none; height: 3px; background-color: #463935; margin: 1em 0;">
-- **[Sept. 2026]** Invited to speak at the [UC Berkeley / Lawrence Berkeley Laboratory Applied Mathematics Seminar](https://berkeleyams.lbl.gov/fall26/camano.html) on random tensor networks and tensor network dimension reduction.
-- **[June 2026]** Invited to speak at the [ETH Zurich Data, Algorithms, Combinatorics, and Optimization (DACO) Seminar](https://math.ethz.ch/sam/news-and-events/daco-seminar.html) on moment calculations for random tensor networks using Penrose diagrams.
-- **[June 2026]** Invited to speak at the Bernoulli Center for Fundamental Studies [RandNLA workshop](https://sites.google.com/view/randnlaworkshop/home) on [randomized tensor network dimension reduction](https://arxiv.org/abs/2606.15350).
-- **[June 2026]** Invited for a research stay at EPFL to work with [Laura Grigori](https://who.rocq.inria.fr/Laura.Grigori/) on random tensor networks.
-- **[May 2026]** Invited to speak at the [2026 International Linear Algebra Society Conference](https://ilas2026.math.vt.edu/) on randomized tensor network Krylov methods.
-- **[Feb. 2026]** Attended the [ICERM workshop on Randomized Numerical Linear Algebra](https://icerm.brown.edu/program/semester_program_workshop/sp-s26-w1), presenting a poster on [sparse and tensor sketching](https://arxiv.org/abs/2508.21189).
+- **[Sept. 2026]** Invited to speak at *New Methods and Applications of Tensor Networks* at the [Flatiron Center for Computational Quantum Physics](https://www.simonsfoundation.org/flatiron/center-for-computational-quantum-physics/) on <span style="font-weight:800;">random tensor networks</span>.
+- **[Sept. 2026]** Participated in the [2026 ITensor School](https://github.com/ITensor/ITensorSchool-2026) on tensor network computation.
+- **[Sept. 2026]** Invited to speak at the [UC Berkeley / Lawrence Berkeley Laboratory Applied Mathematics Seminar](https://berkeleyams.lbl.gov/fall26/camano.html) on <span style="font-weight:800;">random tensor networks</span> and tensor network dimension reduction.
+- **[June 2026]** Invited to speak at the [ETH Zurich Data, Algorithms, Combinatorics, and Optimization (DACO) Seminar](https://math.ethz.ch/sam/news-and-events/daco-seminar.html) on moment calculations for <span style="font-weight:800;">random tensor networks</span> using Penrose diagrams.
+- **[June 2026]** Invited to speak at the Bernoulli Center for Fundamental Studies [RandNLA workshop](https://sites.google.com/view/randnlaworkshop/home) on [<span style="font-weight:800;">randomized tensor network dimension reduction</span>](https://arxiv.org/abs/2606.15350).
+- **[June 2026]** Invited for a research stay at EPFL to work with [Laura Grigori](https://who.rocq.inria.fr/Laura.Grigori/) on <span style="font-weight:800;">random tensor networks</span>.
+- **[May 2026]** Invited to speak at the [2026 International Linear Algebra Society Conference](https://ilas2026.math.vt.edu/) on <span style="font-weight:800;">randomized tensor network</span> Krylov methods.
+- **[Feb. 2026]** Attended the [ICERM workshop on Randomized Numerical Linear Algebra](https://icerm.brown.edu/program/semester_program_workshop/sp-s26-w1), presenting a poster on [sparse and <span style="font-weight:800;">random tensor</span> dimension reduction](https://arxiv.org/abs/2508.21189).
 - **[Jan. 2026]** Invited to speak at the [SIAM Symposium on Simplicity in Algorithms (SOSA 2026)](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems) on [debiasing polynomial regression with random matrix theory](https://arxiv.org/abs/2508.05920).
 
 
-<details>
+<style>
+  .older-news ul {
+    margin: 0 0 0.12em;
+  }
+
+  .older-news hr {
+    margin: 0.12em 0 0.16em !important;
+  }
+</style>
+
+<details class="older-news">
 <summary style="cursor:pointer; font-weight:bold;font-size:1.25em;">Older news</summary>
 
-<hr style="border: none; height: 2px; background-color: #463935; margin: 0.5em 0;">
+<hr style="border: none; height: 1px; background-color: #b8aaa4; margin: 0.08em 0 0.22em;">
 
 <div markdown="1">
 
-- **[Oct. 2025]** Attended the [Simons Institute workshop on Linear Systems and Eigenvalue Problems](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems), presenting a poster on [sparse and tensor sketching](https://arxiv.org/abs/2508.21189).
+- **[Oct. 2025]** Attended the [Simons Institute workshop on Linear Systems and Eigenvalue Problems](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems), presenting a poster on [sparse and <span style="font-weight:800;">random tensor</span> dimension reduction](https://arxiv.org/abs/2508.21189).
 - **[Aug. 2025]** Attended the [Institute of Pure and Applied Mathematics (IPAM) RNLA workshop](https://www.ipam.ucla.edu/programs/special-events-and-conferences/research-collaboration-workshop-randomized-numerical-linear-algebra-rnla/) on randomized Krylov methods.
-- **[Apr. 2025]** Invited to speak at [Southern California Applied Math Symposium](https://www.math.uci.edu/node/38364) on randomized tensor networks.
-- **[Apr. 2025]** Invited to speak at [UCSD Mathematics of Information, Data, and Signals Seminar](https://sites.google.com/ucsd.edu/ucsd-minds/home) on randomized tensor networks.
-- **[Feb. 2025]** Invited to speak at the [Argonne National Laboratory Toward Next-Generation Ecosystems for Scientific Computing workshop](https://events.cels.anl.gov/event/602/registrations/268/) on randomized tensor networks.
+- **[Apr. 2025]** Invited to speak at [Southern California Applied Math Symposium](https://www.math.uci.edu/node/38364) on <span style="font-weight:800;">randomized tensor networks</span>.
+- **[Apr. 2025]** Invited to speak at [UCSD Mathematics of Information, Data, and Signals Seminar](https://sites.google.com/ucsd.edu/ucsd-minds/home) on <span style="font-weight:800;">randomized tensor networks</span>.
+- **[Feb. 2025]** Invited to speak at the [Argonne National Laboratory Toward Next-Generation Ecosystems for Scientific Computing workshop](https://events.cels.anl.gov/event/602/registrations/268/) on <span style="font-weight:800;">randomized tensor networks</span>.
+
+<hr style="border: none; height: 1px; background-color: #b8aaa4; margin: 0.08em 0 0.22em;">
+
 - **[Mar. 2024]** Awarded the NSF GRFP & Kortschak fellowships 🎉.  
 - **[Feb. 2024]** Accepted to the Caltech PhD program 🎉.  
-- **[Jan. 2024]** Invited to speak at the [Joint Math Meeting](https://jointmathematicsmeetings.org/jmm) 2024 on randomized tensor networks.  
+- **[Jan. 2024]** Invited to speak at the [Joint Math Meeting](https://jointmathematicsmeetings.org/jmm) 2024 on <span style="font-weight:800;">randomized tensor networks</span>.  
+
+<hr style="border: none; height: 1px; background-color: #b8aaa4; margin: 0.08em 0 0.22em;">
+
 - **[Oct. 2023]** Invited to speak on UMAP at the [Great Minds in STEM conference](https://greatmindsinstem.org/) 2023 (3rd place).  
-- **[Jun. 2023]** Invited to research with [Joel Tropp](https://tropp.caltech.edu/) and [Ethan Epperly](https://www.ethanepperly.com) at Caltech University on randomized tensor networks.  
+- **[Jun. 2023]** Invited to research with [Joel Tropp](https://tropp.caltech.edu/) and [Ethan Epperly](https://www.ethanepperly.com) at Caltech University on <span style="font-weight:800;">randomized tensor networks</span>.  
 - **[Jun. 2023]** Invited to the [Mathematical Science Research Institute (MSRI)](https://www.slmath.org) Formalization of Mathematics summer school to learn the *Lean4* language. Project culminated with a PR to [*mathlib4*](https://github.com/leanprover-community/mathlib4).  
 - **[Jan. 2023]** Invited to speak on randomized eigensolvers & tensor networks at the [Joint Math Meeting](https://jointmathematicsmeetings.org/jmm) 2023.  
+
+<hr style="border: none; height: 1px; background-color: #b8aaa4; margin: 0.08em 0 0.22em;">
+
 - **[Jun. 2022]** Invited to research with [Xiaoye Li](https://crd.lbl.gov/divisions/amcr/applied-mathematics-dept/scalable-solvers/members/staff-members/xiaoye-li/) and [Roel Van Beeumen](https://crd.lbl.gov/divisions/amcr/applied-mathematics-dept/scalable-solvers/members/staff-members/roel-van-beeumen/) at [Lawrence Berkeley National Laboratory](https://crd.lbl.gov/divisions/amcr/computational-science-dept/).  
 
 </div>
