@@ -60,14 +60,15 @@ I’m a second-year PhD student in the [Applied and Computational Mathematics de
 
 <h2 id="news" style="margin: 2px 0px -15px;padding-top:1em;">News</h2>
 <hr style="border: none; height: 3px; background-color: #463935; margin: 1em 0;">
-- **[Sept. 2026]** Invited to speak at *New Methods and Applications of Tensor Networks* at the [Flatiron Center for Computational Quantum Physics](https://www.simonsfoundation.org/flatiron/center-for-computational-quantum-physics/) on <span style="font-weight:800;">random tensor networks</span>.
+- **[October. 2026]** Invited to speak at the [Princeton Applied Mathematics department IDeAS seminar ](https://www.pacm.princeton.edu/events/linear-algebra-exponential-scale-tensor-network-dimension-reduction) on <span style="font-weight:800;">random tensor networks</span> and tensor network dimension reduction.
+- **[Sept. 2026]** Invited to speak at *New Methods and Applications of Tensor Networks* conference at the [Flatiron Center for Computational Quantum Physics](https://www.simonsfoundation.org/flatiron/center-for-computational-quantum-physics/) on <span style="font-weight:800;">random tensor networks</span>.
 - **[Sept. 2026]** Participated in the [2026 ITensor School](https://github.com/ITensor/ITensorSchool-2026) on tensor network computation.
-- **[Sept. 2026]** Invited to speak at the [UC Berkeley / Lawrence Berkeley Laboratory Applied Mathematics Seminar](https://berkeleyams.lbl.gov/fall26/camano.html) on <span style="font-weight:800;">random tensor networks</span> and tensor network dimension reduction.
+- **[Sept. 2026]** Invited to speak at the [UC Berkeley / Lawrence Berkeley Laboratory Applied Mathematics department Seminar](https://berkeleyams.lbl.gov/fall26/camano.html) on <span style="font-weight:800;">random tensor networks</span> and tensor network dimension reduction.
 - **[June 2026]** Invited to speak at the [ETH Zurich Data, Algorithms, Combinatorics, and Optimization (DACO) Seminar](https://math.ethz.ch/sam/news-and-events/daco-seminar.html) on moment calculations for <span style="font-weight:800;">random tensor networks</span> using Penrose diagrams.
 - **[June 2026]** Invited to speak at the Bernoulli Center for Fundamental Studies [RandNLA workshop](https://sites.google.com/view/randnlaworkshop/home) on [<span style="font-weight:800;">randomized tensor network dimension reduction</span>](https://arxiv.org/abs/2606.15350).
 - **[June 2026]** Invited for a research stay at EPFL to work with [Laura Grigori](https://who.rocq.inria.fr/Laura.Grigori/) on <span style="font-weight:800;">random tensor networks</span>.
 - **[May 2026]** Invited to speak at the [2026 International Linear Algebra Society Conference](https://ilas2026.math.vt.edu/) on <span style="font-weight:800;">randomized tensor network</span> Krylov methods.
-- **[Feb. 2026]** Attended the [ICERM workshop on Randomized Numerical Linear Algebra](https://icerm.brown.edu/program/semester_program_workshop/sp-s26-w1), presenting a poster on [sparse and <span style="font-weight:800;">random tensor</span> dimension reduction](https://arxiv.org/abs/2508.21189).
+- **[Feb. 2026]** Attended the [ICERM workshop on Randomized Numerical Linear Algebra](https://icerm.brown.edu/program/semester_program_workshop/sp-s26-w1), presenting a poster on sparse and <span style="font-weight:800;">random tensor</span> dimension reduction.
 - **[Jan. 2026]** Invited to speak at the [SIAM Symposium on Simplicity in Algorithms (SOSA 2026)](https://simons.berkeley.edu/workshops/linear-systems-eigenvalue-problems) on [debiasing polynomial regression with random matrix theory](https://arxiv.org/abs/2508.05920).
 
 
