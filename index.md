@@ -60,6 +60,7 @@ I’m a second-year PhD student in the [Applied and Computational Mathematics de
 
 <h2 id="news" style="margin: 2px 0px -15px;padding-top:1em;">News</h2>
 <hr style="border: none; height: 3px; background-color: #463935; margin: 1em 0;">
+- **[Nov. 2026]** Invited to speak at the [Online Seminar for Tensors: Theory and Application](https://hrluo.github.io/tensor.html) on <span style="font-weight:800;">random tensor networks</span> and tensor network dimension reduction.
 - **[October. 2026]** Invited to speak at the [Princeton Applied Mathematics department IDeAS seminar ](https://www.pacm.princeton.edu/events/linear-algebra-exponential-scale-tensor-network-dimension-reduction) on <span style="font-weight:800;">random tensor networks</span> and tensor network dimension reduction.
 - **[Sept. 2026]** Invited to speak at *New Methods and Applications of Tensor Networks* conference at the [Flatiron Center for Computational Quantum Physics](https://www.simonsfoundation.org/flatiron/center-for-computational-quantum-physics/) on <span style="font-weight:800;">random tensor networks</span>.
 - **[Sept. 2026]** Participated in the [2026 ITensor School](https://github.com/ITensor/ITensorSchool-2026) on tensor network computation.
